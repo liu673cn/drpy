@@ -3,6 +3,7 @@
 # File  : app.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
+import os
 
 from flask import Flask, jsonify, abort,request,redirect,make_response,render_template
 from js.rules import getRules
@@ -85,6 +86,17 @@ def vod():
     # return jsonify({'rule':rule,'js_code':js_code})
     home_data = cms.homeContent()
     return jsonify(home_data)
+
+@app.route('/clear')
+def clear():
+    rule = getParmas('rule')
+    if not rule:
+        return jsonify(error.failed('规则字段必填'))
+    cache_path = f'cache/{rule}.js'
+    if not os.path.exists(cache_path):
+        return jsonify(error.failed('服务端没有此规则的缓存文件!'))
+    os.remove(cache_path)
+    return jsonify(error.success('成功删除文件:'+cache_path))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=9000)
