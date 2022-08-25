@@ -1,0 +1,4 @@
+PyExecJS
+pyquery
+flask
+requests
