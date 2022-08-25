@@ -46,14 +46,16 @@ def index():  # put application's code here
 def vod():
     rule = getParmas('rule')
     ext = getParmas('ext')
-    if not rule:
+    if not ext.startswith('http') and not rule:
         return jsonify(error.failed('规则字段必填'))
-    if not rule in rule_list:
-        msg = f'仅支持以下规则:{",".join(rule_list)}'
+    if not ext.startswith('http') and not rule in rule_list:
+        msg = f'服务端本地仅支持以下规则:{",".join(rule_list)}'
         return jsonify(error.failed(msg))
 
     js_path = f'js/{rule}.js' if not ext.startswith('http') else ext
     ctx,js_code = parser.runJs(js_path)
+    if not js_code:
+        return jsonify(error.failed('爬虫规则加载失败'))
     rule = ctx.eval('rule')
     cms = CMS(rule)
     wd = getParmas('wd')

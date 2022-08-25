@@ -21,10 +21,24 @@ def runJs(jsPath):
     # base_path = os.path.dirname(os.path.abspath(__file__)) # 当前文件所在目录
     # base_path = os.path.dirname(os.getcwd()) # 当前主程序所在工作目录
     # base_path = os.path.dirname(os.path.abspath('.')) # 上级目录
+    # js_code = 'var rule={}'
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
     if str(jsPath).startswith('http'):
-        jscode = requests.get(jsPath).text
+        js_name = jsPath.split('/')[-1]
+        cache_path = os.path.join(base_path, f'cache/{js_name}')
+        print('远程规则:',js_name)
+        if not os.path.exists(cache_path):
+            try:
+                js_code = requests.get(jsPath,timeout=2).text
+                with open(cache_path,mode='w+',encoding='utf-8') as f:
+                    f.write(js_code)
+            except Exception as e:
+                print('发生了错误:',e)
+                return None, ''
+        else:
+            with open(cache_path, 'r', encoding='UTF-8') as fp:
+                js_code = fp.read()
     else:
-        base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__))) # 上级目录
         js_path = os.path.join(base_path, jsPath)
         with open(js_path, 'r', encoding='UTF-8') as fp:
             js_code = fp.read()
