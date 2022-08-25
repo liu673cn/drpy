@@ -5,3 +5,4 @@
 #### 测试地址
 [远程网站](http://mao.jx.mudery.com/index)  
 [本地网站](http://192.168.10.99:5705/index)
+[需要安装nodejs](https://registry.npmmirror.com/binary.html?path=node/latest-v14.x/)
