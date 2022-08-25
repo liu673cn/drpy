@@ -1,0 +1,9 @@
+{
+    "key":"dr_yanaifei",
+    "name":"鸭奈飞",
+    "type":4,
+    "api":"http://127.0.0.1:9000/vod?rule=鸭奈飞",
+    "searchable":1,
+    "quickSearch":1,
+    "filterable":0
+}
