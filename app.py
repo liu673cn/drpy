@@ -45,13 +45,14 @@ def index():  # put application's code here
 @app.route('/vod')
 def vod():
     rule = getParmas('rule')
+    ext = getParmas('ext')
     if not rule:
         return jsonify(error.failed('规则字段必填'))
     if not rule in rule_list:
         msg = f'仅支持以下规则:{",".join(rule_list)}'
         return jsonify(error.failed(msg))
 
-    js_path = f'js/{rule}.js'
+    js_path = f'js/{rule}.js' if not ext.startswith('http') else ext
     ctx,js_code = parser.runJs(js_path)
     rule = ctx.eval('rule')
     cms = CMS(rule)
@@ -63,7 +64,6 @@ def vod():
     filter = getParmas('filter')
     t = getParmas('t')
     pg = getParmas('pg')
-    ext = getParmas('ext')
     ids = getParmas('ids')
     q = getParmas('q')
 

@@ -2,7 +2,7 @@
     "key":"dr_yanaifei",
     "name":"鸭奈飞",
     "type":1,
-    "api":"http://192.168.10.99:9000/vod?rule=鸭奈飞",
+    "api":"http://192.168.10.99:9000/vod?rule=鸭奈飞&ext=https://gitcode.net/qq_32394351/dr_py/-/raw/master/js/鸭奈飞.js",
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1
@@ -11,7 +11,7 @@
     "key":"dr_lmys",
     "name":"蓝莓影视",
     "type":1,
-    "api":"http://192.168.10.99:9000/vod?rule=蓝莓影视",
+    "api":"http://192.168.10.99:9000/vod?rule=蓝莓影视&ext=https://gitcode.net/qq_32394351/dr_py/-/raw/master/js/蓝莓影视.js",
     "searchable": 0,
     "quickSearch": 0,
     "filterable": 1
@@ -20,7 +20,7 @@
     "key":"dr_555",
     "name":"555影视",
     "type":1,
-    "api":"http://192.168.10.99:9000/vod?rule=555影视",
+    "api":"http://192.168.10.99:9000/vod?rule=555影视&ext=https://gitcode.net/qq_32394351/dr_py/-/raw/master/js/555影视.js",
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1
