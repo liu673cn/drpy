@@ -92,12 +92,12 @@ def clear():
     rule = getParmas('rule')
     if not rule:
         return jsonify(error.failed('规则字段必填'))
-    cache_path = f'cache/{rule}.js'
+    cache_path = os.path.abspath(f'cache/{rule}.js')
     if not os.path.exists(cache_path):
-        return jsonify(error.failed('服务端没有此规则的缓存文件!'))
+        return jsonify(error.failed('服务端没有此规则的缓存文件!'+cache_path))
     os.remove(cache_path)
     return jsonify(error.success('成功删除文件:'+cache_path))
 
 if __name__ == '__main__':
-    # app.run(host="0.0.0.0", port=5705)
-    app.run(debug=True, host='0.0.0.0', port=5705)
+    app.run(host="0.0.0.0", port=5705)
+    # app.run(debug=True, host='0.0.0.0', port=5705)
