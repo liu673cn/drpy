@@ -5,7 +5,7 @@
 # Date  : 2022/8/25
 
 from flask import Flask, jsonify, abort,request,redirect,make_response,render_template
-from js.rules import rule_list
+from js.rules import getRules
 from utils import error,parser
 import sys
 import codecs
@@ -15,6 +15,8 @@ sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
 from utils.web import *
+rule_list = getRules()
+print(rule_list)
 
 def getParmas(key=None):
     """
