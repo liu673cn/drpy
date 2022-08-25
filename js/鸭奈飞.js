@@ -1,4 +1,5 @@
 var rule = {
+    title:'鸭奈飞',
     url:'https://yanetflix.com/vodshow/dianying--------fypage---.html',
     searchUrl:'/vodsearch/**----------fypage---.html',
     ua:'MOBILE_UA',

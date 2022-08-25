@@ -9,17 +9,12 @@ from js.rules import rule_list
 from utils import error,parser
 import sys
 import codecs
+from models.cms import CMS
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
-MOBILE_UA = 'Mozilla/5.0 (Linux; Android 11; M2007J3SC Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045714 Mobile Safari/537.36'
-PC_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36'
-UA = 'Mozilla/5.0'
-headers = {
-        'Referer': 'https://www.baidu.com',
-        'user-agent': UA,
-}
+from utils.web import *
 
 def getParmas(key=None):
     """
@@ -54,13 +49,12 @@ def vod():
         msg = f'仅支持以下规则:{",".join(rule_list)}'
         return jsonify(error.failed(msg))
 
-    # with open(f'js/{rule}.js',mode='r',encoding='utf-8') as f:
-    #     js_code = f.read()
     js_path = f'js/{rule}.js'
     ctx,js_code = parser.runJs(js_path)
-    a = ctx.eval('rule')
-    print(a)
-    print(type(a))
+    rule = ctx.eval('rule')
+    cms = CMS(rule)
+    print(cms)
+    print(cms.title)
     return jsonify({'rule':rule,'js_code':js_code})
 
 if __name__ == '__main__':
