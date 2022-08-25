@@ -12,6 +12,7 @@ from utils.htmlParser import jsoup
 class CMS:
     def __init__(self,rule):
         self.url = rule.get('url','').rstrip('/')
+        self.detailUrl = rule.get('detailUrl','').rstrip('/')
         self.searchUrl = rule.get('searchUrl','')
         ua = rule.get('ua','')
         if ua == 'MOBILE_UA':
@@ -101,8 +102,9 @@ class CMS:
         pdfh = jsp.pdfh
         pdfa = jsp.pdfa
         pd = jsp.pd
-        print(pdfh(r.text,p[0]))
-
+        # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(1)&&Text'))
+        # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(0)'))
+        # print(pdfh(r.text,'body a.module-poster-item.module-item:first'))
         items = pdfa(r.text, p[0])
         videos = []
         for item in items:
@@ -127,6 +129,95 @@ class CMS:
         result['total'] = 999999
         return result
 
+    def detailContent(self, array):
+        """
+        cms二级数据
+        :param array:
+        :return:
+        """
+        # video-info-header
+        fyid = array[0]
+        url = self.detailUrl.replace('fyid', fyid)
+        print(url)
+        headers = {'user-agent': self.ua}
+        r = requests.get(url, headers=headers)
+        html = r.text
+        # print(html)
+        p = self.二级  # 解析
+        jsp = jsoup(self.url)
+        pdfh = jsp.pdfh
+        pdfa = jsp.pdfa
+        pd = jsp.pd
+        pq = jsp.pq
+        obj = {}
+        vod_name = ''
+        if p.get('title'):
+            p1 = p['title'].split(';')
+            vod_name = pdfh(html,p1[0]).replace('\n',' ')
+            title = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+            # print(title)
+            obj['title'] = title
+        if p.get('desc'):
+            p1 = p['desc'].split(';')
+            desc = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+            obj['desc'] = desc
+
+        if p.get('content'):
+            p1 = p['content'].split(';')
+            content = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+            obj['content'] = content
+
+        if p.get('img'):
+            p1 = p['img'].split(';')
+            img = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+            obj['img'] = img
+
+        vod = {
+            "vod_id": fyid,
+            "vod_name": vod_name,
+            "vod_pic": obj.get('img',''),
+            "type_name": obj.get('title',''),
+            "vod_year": "",
+            "vod_area": "",
+            "vod_remarks": obj.get('desc',''),
+            "vod_actor": "",
+            "vod_director": "",
+            "vod_content": obj.get('content','')
+        }
+
+        vod_play_from = '$$$'
+        playFrom = []
+        if p.get('tabs'):
+            vodHeader = pdfa(html,p['tabs'])
+            vodHeader = [pq(v).text() for v in vodHeader]
+        else:
+            vodHeader = ['道长在线']
+
+        for v in vodHeader:
+            playFrom.append(v)
+        vod_play_from = vod_play_from.join(playFrom)
+
+        vod_play_url = '$$$'
+        vod_tab_list = []
+        if p.get('lists'):
+            for i in range(len(vodHeader)):
+               p1 = p['lists'].replace('#id',str(i))
+               vodList = pdfa(html,p1) # 1条线路的选集列表
+               vodList = [pq(i).text()+'$'+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
+               vlist = '#'.join(vodList) # 拼多个选集
+               vod_tab_list.append(vlist)
+            vod_play_url = vod_play_url.join(vod_tab_list)
+        # print(vod_play_url)
+        vod['vod_play_from'] = vod_play_from
+        vod['vod_play_url'] = vod_play_url
+
+        result = {
+            'list': [
+                vod
+            ]
+        }
+        return result
+
 if __name__ == '__main__':
     from utils import parser
     js_path = f'js/鸭奈飞.js'
@@ -134,5 +225,6 @@ if __name__ == '__main__':
     rule = ctx.eval('rule')
     cms = CMS(rule)
     print(cms.title)
-    print(cms.homeContent())
-    cms.categoryContent('dianying',1)
+    # print(cms.homeContent())
+    # cms.categoryContent('dianying',1)
+    print(cms.detailContent(['67391']))

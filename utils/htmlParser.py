@@ -18,8 +18,8 @@ class jsoup:
             option = parse.split('&&')[1]
             parse = parse.split('&&')[0]
 
-        ret = doc(parse)
         if option:
+            ret = doc(parse)
             if option == 'Text':
                 ret = ret.text()
             elif option == 'Html':
@@ -29,16 +29,22 @@ class jsoup:
                 if pd and option in ['url','src','href','data-original']:
                     ret = urljoin(self.MY_URL,ret)
         else:
-            ret = ret.next()
-            print(ret)
-            ret = str(ret('fisrt'))
+            # ret = doc(parse+':first')
+            ret = doc(parse) # 由于是生成器,直接转str就能拿到第一条数据,不需要next
+            # ret = ret.next()  # 取第一条数据
+            # ret = doc(parse) # 下面注释的写法不对的
+            # ret = ret.find(':first')
+            # ret = ret.children(':first')
+            ret = str(ret)
         return ret
 
     def pdfa(self,html,parse):
         doc = pq(html)
-        # print(doc(parse)[0])
         # return [item.html() for item in doc(parse).items()]
         return [str(item) for item in doc(parse).items()]
 
     def pd(self,html,parse):
         return self.pdfh(html,parse,True)
+
+    def pq(self,html):
+        return pq(html)
