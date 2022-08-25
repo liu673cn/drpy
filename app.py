@@ -99,4 +99,5 @@ def clear():
     return jsonify(error.success('成功删除文件:'+cache_path))
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=9000)
+    # app.run(host="0.0.0.0", port=5705)
+    app.run(debug=True, host='0.0.0.0', port=5705)
