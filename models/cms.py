@@ -8,6 +8,7 @@ import requests
 from utils.web import *
 from utils.config import config
 from utils.htmlParser import jsoup
+from urllib.parse import urljoin
 
 class CMS:
     def __init__(self,rule):
@@ -92,8 +93,8 @@ class CMS:
         # params = '-'.join(urlParams)
         # print(params)
         # url = self.url + '/{0}.html'.format(params)
-        fypage = str(fypage)
-        url = self.url.replace('fyclass',fyclass).replace('fypage',fypage)
+        pg = str(fypage)
+        url = self.url.replace('fyclass',fyclass).replace('fypage',pg)
         print(url)
         headers = {'user-agent': self.ua}
         r = requests.get(url, headers=headers)
@@ -113,7 +114,7 @@ class CMS:
             img = pd(item, p[2])
             desc = pdfh(item, p[3])
             link = pd(item, p[4])
-            content = ''
+            content = '' if len(p) < 6 else pdfh(item, p[5])
             # sid = self.regStr(sid, "/video/(\\S+).html")
             videos.append({
                 "vod_id": link,
@@ -218,6 +219,43 @@ class CMS:
         }
         return result
 
+    def searchContent(self, key, fypage=1,quick=1):
+        pg = str(fypage)
+        url = self.searchUrl.replace('**', key).replace('fypage',pg)
+        if not str(url).startswith('http'):
+            url = urljoin(self.url,url)
+        print(url)
+        headers = {'user-agent': self.ua}
+        r = requests.get(url, headers=headers)
+        html = r.text
+        p = self.搜索.split(';')  # 解析
+        jsp = jsoup(self.url)
+        pdfh = jsp.pdfh
+        pdfa = jsp.pdfa
+        pd = jsp.pd
+        pq = jsp.pq
+        items = pdfa(html, p[0])
+        videos = []
+        for item in items:
+            # print(item)
+            title = pdfh(item, p[1])
+            img = pd(item, p[2])
+            desc = pdfh(item, p[3])
+            link = pd(item, p[4])
+            content = '' if len(p) < 6 else pdfh(item, p[5])
+            # sid = self.regStr(sid, "/video/(\\S+).html")
+            videos.append({
+                "vod_id": link,
+                "vod_name": title,
+                "vod_pic": img,
+                "vod_remarks": desc,
+                "vod_content": content,
+            })
+        result = {
+            'list': videos
+        }
+        return result
+
 if __name__ == '__main__':
     from utils import parser
     js_path = f'js/鸭奈飞.js'
@@ -227,4 +265,5 @@ if __name__ == '__main__':
     print(cms.title)
     # print(cms.homeContent())
     # cms.categoryContent('dianying',1)
-    print(cms.detailContent(['67391']))
+    # print(cms.detailContent(['67391']))
+    print(cms.searchContent('斗罗大陆'))

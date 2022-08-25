@@ -55,6 +55,19 @@ def vod():
     cms = CMS(rule)
     print(cms)
     print(cms.title)
+    wd = getParmas('wd')
+    ac = getParmas('ac')
+    quick = getParmas('quick')
+    play = getParmas('play')
+    flag = getParmas('flag')
+    filter = getParmas('filter')
+    t = getParmas('t')
+    pg = getParmas('pg')
+    ext = getParmas('ext')
+    ids = getParmas('ids')
+    q = getParmas('q')
+    print(getParmas())
+
     return jsonify({'rule':rule,'js_code':js_code})
 
 if __name__ == '__main__':
