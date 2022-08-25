@@ -53,8 +53,6 @@ def vod():
     ctx,js_code = parser.runJs(js_path)
     rule = ctx.eval('rule')
     cms = CMS(rule)
-    print(cms)
-    print(cms.title)
     wd = getParmas('wd')
     ac = getParmas('ac')
     quick = getParmas('quick')
@@ -66,9 +64,23 @@ def vod():
     ext = getParmas('ext')
     ids = getParmas('ids')
     q = getParmas('q')
-    print(getParmas())
 
-    return jsonify({'rule':rule,'js_code':js_code})
+    if ac and t: # 一级
+        data = cms.categoryContent(t,pg)
+        # print(data)
+        return jsonify(data)
+    if ac and ids: # 二级
+        data = cms.detailContent(ids.split(','))
+        # print(data)
+        return jsonify(data)
+    if wd: # 搜索
+        data = cms.searchContent(wd)
+        # print(data)
+        return jsonify(data)
+
+    # return jsonify({'rule':rule,'js_code':js_code})
+    home_data = cms.homeContent()
+    return jsonify(home_data)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=9000)

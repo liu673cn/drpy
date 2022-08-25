@@ -121,8 +121,11 @@ class CMS:
         :return:
         """
         # video-info-header
-        fyid = array[0]
-        url = self.detailUrl.replace('fyid', fyid)
+        fyid = str(array[0])
+        if not fyid.startswith('http'):
+            url = self.detailUrl.replace('fyid', fyid)
+        else:
+            url = fyid
         print(url)
         headers = {'user-agent': self.ua}
         r = requests.get(url, headers=headers)
@@ -203,7 +206,7 @@ class CMS:
         }
         return result
 
-    def searchContent(self, key, fypage=1,quick=1):
+    def searchContent(self, key, fypage=1):
         pg = str(fypage)
         url = self.searchUrl.replace('**', key).replace('fypage',pg)
         if not str(url).startswith('http'):

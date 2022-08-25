@@ -1,7 +1,7 @@
 var rule = {
     title:'鸭奈飞',
     url:'https://yanetflix.com/vodshow/fyclass--------fypage---.html',
-    detailUrl:'https://yanetflix.com/voddetail/fyid.html',
+    detailUrl:'https://yanetflix.com/voddetail/fyid.html',//非必填
     // url:'https://yanetflix.com/vodshow/',
     searchUrl:'/vodsearch/**----------fypage---.html',
     ua:'MOBILE_UA',
