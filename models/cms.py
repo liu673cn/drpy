@@ -91,7 +91,7 @@ class CMS:
         # params = '-'.join(urlParams)
         # print(params)
         # url = self.url + '/{0}.html'.format(params)
-        pg = str(fypage)
+        fypage = str(fypage)
         url = self.url.replace('fyclass',fyclass).replace('fypage',fypage)
         print(url)
         headers = {'user-agent': self.ua}
@@ -101,6 +101,7 @@ class CMS:
         pdfh = jsp.pdfh
         pdfa = jsp.pdfa
         pd = jsp.pd
+        print(pdfh(r.text,p[0]))
 
         items = pdfa(r.text, p[0])
         videos = []
@@ -120,7 +121,7 @@ class CMS:
                 "vod_content": content,
             })
         result['list'] = videos
-        result['page'] = pg
+        result['page'] = fypage
         result['pagecount'] = 9999
         result['limit'] = 90
         result['total'] = 999999

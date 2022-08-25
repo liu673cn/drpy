@@ -29,7 +29,9 @@ class jsoup:
                 if pd and option in ['url','src','href','data-original']:
                     ret = urljoin(self.MY_URL,ret)
         else:
-            ret = ret('fisrt').html()
+            ret = ret.next()
+            print(ret)
+            ret = str(ret('fisrt'))
         return ret
 
     def pdfa(self,html,parse):
