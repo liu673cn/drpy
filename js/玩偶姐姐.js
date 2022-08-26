@@ -7,7 +7,6 @@ var rule = {
         'User-Agent':'MOBILE_UA'
     },
     timeout:5000,
-    searchUrl:'/vodsearch/**----------fypage---.html',
     class_parse:'#side-menu:lt(1) li;a&&Text;a&&href;com/(.*?)/',
     一级:'.col-sm-6;h3&&Text;img&&data-src;.date&&Text;a&&href',
     二级:'*',
