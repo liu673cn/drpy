@@ -4,7 +4,7 @@
     "key":"dr_yanaifei",
     "name":"鸭奈飞(道长)",
     "type":1,
-    "api":"http://cms.nokia.press/vod?rule=鸭奈飞",
+    "api":"http://192.168.10.99:5705/vod?rule=鸭奈飞",
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1
@@ -13,7 +13,7 @@
     "key":"dr_lmys",
     "name":"蓝莓影视(道长)",
     "type":1,
-    "api":"http://cms.nokia.press/vod?rule=蓝莓影视",
+    "api":"http://192.168.10.99:5705/vod?rule=蓝莓影视",
     "searchable": 0,
     "quickSearch": 0,
     "filterable": 1
@@ -22,7 +22,16 @@
     "key":"dr_555",
     "name":"555影视（道长)",
     "type":1,
-    "api":"http://cms.nokia.press/vod?rule=555影视",
+    "api":"http://192.168.10.99:5705/vod?rule=555影视",
+    "searchable": 1,
+    "quickSearch": 1,
+    "filterable": 1
+},
+    {
+    "key":"dr_wojj",
+    "name":"玩偶姐姐（道长)",
+    "type":1,
+    "api":"http://192.168.10.99:5705/vod?rule=玩偶姐姐",
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1

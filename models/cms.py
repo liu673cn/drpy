@@ -25,6 +25,7 @@ class CMS:
         self.searchUrl = rule.get('searchUrl','')
         self.class_name = rule.get('class_name','')
         self.class_url = rule.get('class_url','')
+        self.class_parse = rule.get('class_parse','')
         self.一级 = rule.get('一级','')
         self.二级 = rule.get('二级','')
         self.搜索 = rule.get('搜索','')
@@ -245,12 +246,12 @@ class CMS:
 
 if __name__ == '__main__':
     from utils import parser
-    js_path = f'js/鸭奈飞.js'
+    js_path = f'js/玩偶姐姐.js'
     ctx, js_code = parser.runJs(js_path)
     rule = ctx.eval('rule')
     cms = CMS(rule)
     print(cms.title)
-    # print(cms.homeContent())
+    print(cms.homeContent())
     # cms.categoryContent('dianying',1)
     # print(cms.detailContent(['67391']))
-    print(cms.searchContent('斗罗大陆'))
+    # print(cms.searchContent('斗罗大陆'))
