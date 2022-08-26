@@ -32,9 +32,9 @@
     "name":"玩偶姐姐（道长)",
     "type":1,
     "api":"http://192.168.10.99:5705/vod?rule=玩偶姐姐",
-    "searchable": 1,
-    "quickSearch": 1,
-    "filterable": 1
+    "searchable": 0,
+    "quickSearch": 0,
+    "filterable": 0
 }
 ],
 "parses":[
