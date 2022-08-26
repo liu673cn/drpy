@@ -44,6 +44,14 @@
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1
+},{
+    "key":"dr_ckmv",
+    "name":"cokemv（道长)",
+    "type":1,
+    "api":"http://localhost:5705/vod?rule=cokemv",
+    "searchable": 1,
+    "quickSearch": 1,
+    "filterable": 1
 }
 ],
 "parses":[

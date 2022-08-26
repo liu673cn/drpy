@@ -443,16 +443,16 @@ if __name__ == '__main__':
     from utils import parser
     # js_path = f'js/玩偶姐姐.js'
     # js_path = f'js/555影视.js'
-    js_path = f'js/喵喵.js'
+    js_path = f'js/cokemv.js'
     ctx, js_code = parser.runJs(js_path)
     rule = ctx.eval('rule')
     cms = CMS(rule)
     print(cms.title)
-    print(cms.homeContent())
+    # print(cms.homeContent())
     # print(cms.categoryContent('5',1))
     # print(cms.categoryContent('latest',1))
     # print(cms.detailContent(['https://www.2345ka.com/v/45499.html']))
-    # print(cms.detailContent(1,['https://www.2345ka.com/v/78499.html']))
+    # print(cms.detailContent(1,['https://cokemv.me/voddetail/40573.html']))
     # cms.categoryContent('dianying',1)
     # print(cms.detailContent(['67391']))
     print(cms.searchContent('斗罗大陆'))
