@@ -1,8 +1,13 @@
 var rule = {
     title:'555影视',
-    url:'https://www.5dy5.cc/vodshow/fyclass--------fypage---.html',
+    host:'https://www.5dy5.cc',
+    // homeUrl:'/',
+    url:'/vodshow/fyclass--------fypage---.html',
     searchUrl:'/vodsearch/**----------fypage---.html',
-    ua:'MOBILE_UA',
+    headers:{//网站的请求头,完整支持所有的,常带ua和cookies
+        'User-Agent':'MOBILE_UA',
+        "Cookie": "searchneed=ok"
+    },
     class_name:'电影&连续剧&福利&动漫&综艺',
     class_url:'1&2&124&4&3',
     一级:'body a.module-poster-item.module-item;a&&title;.lazyload&&data-original;.module-item-note&&Text;a&&href',

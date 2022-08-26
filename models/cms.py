@@ -14,7 +14,7 @@ class CMS:
     def __init__(self,rule):
         host = rule.get('host','').rstrip('/')
         timeout = rule.get('timeout',2000)
-        homeUrl = rule.get('homeUrl','')
+        homeUrl = rule.get('homeUrl','/')
         url = rule.get('url','')
         detailUrl = rule.get('detailUrl','')
         searchUrl = rule.get('searchUrl','')
@@ -116,7 +116,7 @@ class CMS:
                     'type_id': class_urls[i]
                 })
         # print(self.url)
-        if self.homeUrl and self.class_parse:
+        if self.homeUrl.startswith('http') and self.class_parse:
             # print(self.homeUrl)
             # print(self.class_parse)
             try:
@@ -204,7 +204,6 @@ class CMS:
                 "vod_remarks": desc,
                 "vod_content": content,
             })
-        print(videos)
         result['list'] = videos
         result['page'] = fypage
         result['pagecount'] = 9999
@@ -364,14 +363,16 @@ class CMS:
 
 if __name__ == '__main__':
     from utils import parser
-    js_path = f'js/玩偶姐姐.js'
+    # js_path = f'js/玩偶姐姐.js'
+    js_path = f'js/蓝莓影视.js'
     ctx, js_code = parser.runJs(js_path)
     rule = ctx.eval('rule')
     cms = CMS(rule)
     print(cms.title)
-    # print(cms.homeContent())
+    print(cms.homeContent())
+    print(cms.categoryContent('20',1))
     # print(cms.categoryContent('latest',1))
-    print(cms.detailContent(['https://hongkongdollvideo.com/video/b22c7cb6df40a3c4.html']))
+    # print(cms.detailContent(['https://hongkongdollvideo.com/video/b22c7cb6df40a3c4.html']))
     # cms.categoryContent('dianying',1)
     # print(cms.detailContent(['67391']))
     # print(cms.searchContent('斗罗大陆'))

@@ -1,8 +1,9 @@
 var rule = {
     title:'蓝莓影视',
-    url:'https://lanmeiguojiang.com/show/fyclass--------fypage---.html',
+    host:'https://lanmeiguojiang.com',
+    // homeUrl:'/',
+    url:'/show/fyclass--------fypage---.html',
     searchUrl:'/vodsearch/**----------fypage---.html',
-    ua:'MOBILE_UA',
     class_name:'电影&网剧&剧集&动漫&综艺&记录',
     class_url:'20&1&2&3&4&23',
     一级:'body a.module-poster-item.module-item;a&&title;.lazyload&&data-original;.module-item-note&&Text;a&&href',
