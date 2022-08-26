@@ -13,6 +13,16 @@
 ######  特性说明
 1. 参考了海阔视界dr模板设计思路
 2. 参考tv_box的t4项目思路重新设计了cms接口
+
+######  本地搭建
+1. 安装zero termux
+2. 在termux里安装tome 虚拟机
+3. tome 虚拟机 里安装ubuntu1804容器
+4. ubuntu1804容器里安装python3-pip,nodejs
+5. pip3换源并安装requirements.txt
+6. python3 app.py运行项目(也可以其他方式)
+7. 访问地址加/index查看dr_py主页
+
 #### 测试地址
 [远程网站](http://cms.nokia.press/index)  
 [本地网站](http://192.168.10.99:5705/index)  
