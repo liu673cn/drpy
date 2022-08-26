@@ -47,7 +47,7 @@
     "key":"dr_ckmv",
     "name":"cokemv（道长)",
     "type":1,
-    "api":"http://cms.nokia.press/vod?rule=cokemv",
+    "api":"http://cms.nokia.press/vod?rule=cokemv&ext=https://gitcode.net/qq_32394351/dr_py/-/raw/master/js/cokemv.js",
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1

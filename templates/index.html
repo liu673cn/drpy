@@ -8,14 +8,31 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>dr_py首页</title>
 </head>
+<style>
+    .btn{
+        margin-bottom: 2rem;
+        border:1px solid #F00;
+        width: 180px;
+        height: 30px;
+        text-align: center;
+        background-color: #1379cb;
+        color: #ffffff;
+    }
+    .btn a{
+        color: #ffffff;
+    }
+</style>
 <body>
 <h1>欢迎使用dr_py项目</h1>
 <p>可以简单的自定义爬虫实现cms数据接口</p>
-<div>
+<div class="btn">
     <a href="/clear?rule=">缓存清理接口</a>
 </div>
-<div>
-    <a href="/rules">缓存文件列表</a>
+<div class="btn">
+    <a href="/rules">缓存文件列表-清除</a>
+</div>
+<div class="btn">
+    <a href="/raw">缓存文件列表-查看</a>
 </div>
 </body>
 </html>

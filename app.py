@@ -102,19 +102,33 @@ def clear():
     os.remove(cache_path)
     return jsonify(error.success('成功删除文件:'+cache_path))
 
-@app.route('/rules')
-def rules():
-    # base_path = os.path.dirname(os.path.abspath(__file__))+'cache'  # 当前文件所在目录
+def getRules():
     base_path = 'cache/'  # 当前文件所在目录
     print(base_path)
     file_name = os.listdir(base_path)
     file_name = list(filter(lambda x: str(x).endswith('.js'), file_name))
     # print(file_name)
     rule_list = [file.replace('.js', '') for file in file_name]
-    rules = {'list':rule_list,'count':len(rule_list)}
-    # print(rule_list)
-    # return jsonify(obj)
-    return render_template('rules.html',rules=rules)
+    rules = {'list': rule_list, 'count': len(rule_list)}
+    return rules
+
+@app.route('/rules')
+def rules():
+    return render_template('rules.html',rules=getRules())
+
+@app.route('/raw')
+def rules_raw():
+    return render_template('raw.html',rules=getRules())
+
+@app.route("/plugin/<name>",methods=['GET'])
+def plugin(name):
+    # name=道长影视模板.js
+    if not name or not name.split('.')[-1] in ['js','txt','py','json']:
+        return jsonify(error.failed(f'非法威胁,未指定文件名。必须包含js|txt|json|py'))
+    try:
+        return parser.toJs(name)
+    except Exception as e:
+        return jsonify(error.failed(f'非法猥亵\n{e}'))
 
 
 if __name__ == '__main__':

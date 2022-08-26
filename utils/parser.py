@@ -48,7 +48,8 @@ def runJs(jsPath):
 
 def toJs(jsPath):
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__))) # 上级目录
-    js_path = os.path.join(base_path, jsPath)
+    js_path = os.path.join(base_path, f'cache/{jsPath}')
+    print(js_path)
     if not os.path.exists(js_path):
         return jsonify({'code': -2, 'msg': f'非法猥亵,文件不存在'})
     with open(js_path, 'r', encoding='UTF-8') as fp:
@@ -59,7 +60,7 @@ def toJs(jsPath):
 
 def toHtml(jsPath):
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__))) # 上级目录
-    js_path = os.path.join(base_path, jsPath)
+    js_path = os.path.join(base_path, f'cache/{jsPath}')
     with open(js_path, 'r', encoding='UTF-8') as fp:
         js = fp.read()
     response = make_response(js)
