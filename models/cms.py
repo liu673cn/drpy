@@ -4,7 +4,7 @@
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
 import requests
-
+import re
 from utils.web import *
 from utils.config import config
 from utils.htmlParser import jsoup
@@ -12,19 +12,36 @@ from urllib.parse import urljoin
 
 class CMS:
     def __init__(self,rule):
-        self.host = rule.get('host','').rstrip('/')
-        self.homeUrl = rule.get('homeUrl','')
-        self.url = rule.get('url','').rstrip('/')
-        self.detailUrl = rule.get('detailUrl','').rstrip('/')
-        self.searchUrl = rule.get('searchUrl','')
-        ua = rule.get('ua','')
-        if ua == 'MOBILE_UA':
-            self.ua = MOBILE_UA
-        elif ua == 'PC_UA':
-            self.ua = PC_UA
+        host = rule.get('host','').rstrip('/')
+        timeout = rule.get('timeout',2000)
+        homeUrl = rule.get('homeUrl','')
+        url = rule.get('url','')
+        detailUrl = rule.get('detailUrl','')
+        searchUrl = rule.get('searchUrl','')
+        headers = rule.get('headers',{})
+        keys = headers.keys()
+        for k in headers.keys():
+            if str(k).lower() == 'user-agent':
+                v = headers[k]
+                if v == 'MOBILE_UA':
+                    headers[k] = MOBILE_UA
+                elif v == 'PC_UA':
+                    headers[k] = PC_UA
+        lower_keys = list(map(lambda x:x.lower(),keys))
+        if not 'user-agent' in lower_keys:
+            headers['User-Agent'] = UA
+        self.headers = headers
+        self.host = host
+        self.homeUrl = urljoin(host,homeUrl) if host and homeUrl else homeUrl
+        if url.find('[') >-1 and url.find(']') > -1:
+            u1 = url.split('[')[0]
+            u2 = url.split('[')[1].split(']')[0]
+            self.url = urljoin(host,u1)+'['+urljoin(host,u2)+']' if host and url else url
         else:
-            self.ua = UA
-        self.searchUrl = rule.get('searchUrl','')
+            self.url = urljoin(host, url) if host and url else url
+
+        self.detailUrl = urljoin(host,detailUrl) if host and detailUrl else detailUrl
+        self.searchUrl = urljoin(host,searchUrl) if host and searchUrl else searchUrl
         self.class_name = rule.get('class_name','')
         self.class_url = rule.get('class_url','')
         self.class_parse = rule.get('class_parse','')
@@ -32,26 +49,98 @@ class CMS:
         self.二级 = rule.get('二级','')
         self.搜索 = rule.get('搜索','')
         self.title = rule.get('title','')
+        self.timeout = round(int(timeout)/1000,2)
         self.filter = rule.get('filter',[])
         self.extend = rule.get('extend',[])
 
     def getName(self):
         return self.title
 
+    def regexp(self,prule,text,pos=None):
+        ret = re.search(prule,text).groups()
+        if pos != None and isinstance(pos,int):
+            return ret[pos]
+        else:
+            return ret
+
+    def test(self,text,string):
+        searchObj = re.search(rf'{text}', string, re.M | re.I)
+        # print(searchObj)
+        # global vflag
+        if searchObj:
+            # vflag = searchObj.group()
+            pass
+        return searchObj
+
+    def blank(self):
+        result = {
+            'list': []
+        }
+        return result
+
+    def blank_vod(self):
+        return {
+            "vod_id": "",
+            "vod_name": "",
+            "vod_pic": "",
+            "type_name": "",
+            "vod_year": "",
+            "vod_area": "",
+            "vod_remarks": "",
+            "vod_actor": "",
+            "vod_director": "",
+            "vod_content": ""
+        }
+
+    def jsoup(self):
+        jsp = jsoup(self.url)
+        pdfh = jsp.pdfh
+        pdfa = jsp.pdfa
+        pd = jsp.pd
+        pq = jsp.pq
+        return pdfh,pdfa,pd,pq
+
     def homeContent(self):
         # yanaifei
         # https://yanetflix.com/vodtype/dianying.html
         result = {}
-        class_names = self.class_name.split('&')
-        class_urls = self.class_url.split('&')
-        cnt = min(len(class_urls),len(class_names))
         classes = []
-        for i in range(cnt):
-            classes.append({
-                'type_name': class_names[i],
-                'type_id': class_urls[i]
-            })
-        print(self.url)
+
+        if self.class_url and self.class_name:
+            class_names = self.class_name.split('&')
+            class_urls = self.class_url.split('&')
+            cnt = min(len(class_urls), len(class_names))
+            for i in range(cnt):
+                classes.append({
+                    'type_name': class_names[i],
+                    'type_id': class_urls[i]
+                })
+        # print(self.url)
+        if self.homeUrl and self.class_parse:
+            # print(self.homeUrl)
+            # print(self.class_parse)
+            try:
+                r = requests.get(self.homeUrl,headers=self.headers,timeout=self.timeout)
+                html = r.text
+                p = self.class_parse.split(';')
+                jsp = jsoup(self.url)
+                pdfh = jsp.pdfh
+                pdfa = jsp.pdfa
+                pd = jsp.pd
+                items = pdfa(html,p[0])
+                for item in items:
+                    title = pdfh(item, p[1])
+                    url = pd(item, p[2])
+                    tag = url
+                    if len(p) > 3 and p[3].strip():
+                        tag = self.regexp(p[3].strip(),url,0)
+                    classes.append({
+                        'type_name': title,
+                        'type_id': tag
+                    })
+            except Exception as e:
+                print(e)
+
         result['class'] = classes
         if self.filter:
             result['filters'] = config['filter']
@@ -83,10 +172,14 @@ class CMS:
         # url = self.url + '/{0}.html'.format(params)
         pg = str(fypage)
         url = self.url.replace('fyclass',fyclass).replace('fypage',pg)
-        print(url)
-        headers = {'user-agent': self.ua}
-        r = requests.get(url, headers=headers)
+        if fypage == 1 and self.test('[\[\]]',url):
+            url = url.split('[')[1].split(']')[0]
+        r = requests.get(url, headers=self.headers,timeout=self.timeout)
+        print(r.url)
         p = self.一级.split(';')  # 解析
+        if len(p) < 5:
+            return self.blank()
+
         jsp = jsoup(self.url)
         pdfh = jsp.pdfh
         pdfa = jsp.pdfa
@@ -125,17 +218,34 @@ class CMS:
         :return:
         """
         # video-info-header
-        fyid = str(array[0])
-        if not fyid.startswith('http'):
-            url = self.detailUrl.replace('fyid', fyid)
+        detailUrl = str(array[0])
+        print(detailUrl)
+        if not detailUrl.startswith('http'):
+            url = self.detailUrl.replace('fyid', detailUrl)
         else:
-            url = fyid
+            url = detailUrl
         print(url)
-        headers = {'user-agent': self.ua}
-        r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=self.headers,timeout=self.timeout)
         html = r.text
         # print(html)
         p = self.二级  # 解析
+        if p == '*':
+            vod = self.blank_vod()
+            vod['vod_play_from'] = '道长在线'
+            vod['desc'] = detailUrl
+            vod['vod_actor'] = '没有二级,只有一级链接直接嗅探播放'
+            vod['content'] = detailUrl
+            vod['vod_play_url'] = '嗅探播放$'+detailUrl
+            result = {
+                'list': [
+                    vod
+                ]
+            }
+            return result
+
+        if not isinstance(p,dict):
+            return self.blank()
+
         jsp = jsoup(self.url)
         pdfh = jsp.pdfh
         pdfa = jsp.pdfa
@@ -165,7 +275,7 @@ class CMS:
             obj['img'] = img
 
         vod = {
-            "vod_id": fyid,
+            "vod_id": detailUrl,
             "vod_name": vod_name,
             "vod_pic": obj.get('img',''),
             "type_name": obj.get('title',''),
@@ -212,14 +322,18 @@ class CMS:
 
     def searchContent(self, key, fypage=1):
         pg = str(fypage)
+        if not self.searchUrl:
+            return self.blank()
         url = self.searchUrl.replace('**', key).replace('fypage',pg)
-        if not str(url).startswith('http'):
-            url = urljoin(self.url,url)
         print(url)
-        headers = {'user-agent': self.ua}
-        r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=self.headers)
         html = r.text
-        p = self.搜索.split(';')  # 解析
+        if not self.搜索:
+            return self.blank()
+        p = self.一级.split(';') if self.搜索 == '*' and self.一级 else self.搜索.split(';')  # 解析
+        if len(p) < 5:
+            return self.blank()
+
         jsp = jsoup(self.url)
         pdfh = jsp.pdfh
         pdfa = jsp.pdfa
@@ -254,7 +368,9 @@ if __name__ == '__main__':
     rule = ctx.eval('rule')
     cms = CMS(rule)
     print(cms.title)
-    print(cms.homeContent())
+    # print(cms.homeContent())
+    # print(cms.categoryContent('latest',1))
+    print(cms.detailContent(['https://hongkongdollvideo.com/video/b22c7cb6df40a3c4.html']))
     # cms.categoryContent('dianying',1)
     # print(cms.detailContent(['67391']))
     # print(cms.searchContent('斗罗大陆'))
