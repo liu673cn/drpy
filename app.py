@@ -13,7 +13,7 @@ import codecs
 from models.cms import CMS
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='static',static_url_path='/static')
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
 from utils.web import *
 rule_list = getRules()
@@ -101,6 +101,21 @@ def clear():
         return jsonify(error.failed('服务端没有此规则的缓存文件!'+cache_path))
     os.remove(cache_path)
     return jsonify(error.success('成功删除文件:'+cache_path))
+
+@app.route('/rules')
+def rules():
+    # base_path = os.path.dirname(os.path.abspath(__file__))+'cache'  # 当前文件所在目录
+    base_path = 'cache/'  # 当前文件所在目录
+    print(base_path)
+    file_name = os.listdir(base_path)
+    file_name = list(filter(lambda x: str(x).endswith('.js'), file_name))
+    # print(file_name)
+    rule_list = [file.replace('.js', '') for file in file_name]
+    rules = {'list':rule_list,'count':len(rule_list)}
+    # print(rule_list)
+    # return jsonify(obj)
+    return render_template('rules.html',rules=rules)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5705)
