@@ -22,6 +22,7 @@ class CMS:
         searchUrl = rule.get('searchUrl','')
         headers = rule.get('headers',{})
         limit = rule.get('limit',6)
+        encoding = rule.get('编码', 'utf-8')
         self.limit = min(limit,20)
         keys = headers.keys()
         for k in headers.keys():
@@ -55,6 +56,7 @@ class CMS:
         self.搜索 = rule.get('搜索','')
         self.推荐 = rule.get('推荐','')
         self.title = rule.get('title','')
+        self.encoding = encoding
         self.timeout = round(int(timeout)/1000,2)
         self.filter = rule.get('filter',[])
         self.extend = rule.get('extend',[])
@@ -128,7 +130,7 @@ class CMS:
             # print(self.class_parse)
             try:
                 r = requests.get(self.homeUrl,headers=self.headers,timeout=self.timeout)
-                r.encoding = r.apparent_encoding
+                r.encoding = self.encoding
                 html = r.text
                 if self.class_parse:
                     p = self.class_parse.split(';')
@@ -245,7 +247,7 @@ class CMS:
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
         r = requests.get(url, headers=self.headers,timeout=self.timeout)
-        r.encoding = r.apparent_encoding
+        r.encoding = self.encoding
         print(r.url)
         p = self.一级.split(';')  # 解析
         if len(p) < 5:
@@ -291,7 +293,7 @@ class CMS:
             url = detailUrl
         # print(url)
         r = requests.get(url, headers=self.headers,timeout=self.timeout)
-        r.encoding = r.apparent_encoding
+        r.encoding = self.encoding
         html = r.text
         # print(html)
         p = self.二级  # 解析
@@ -402,7 +404,7 @@ class CMS:
         url = self.searchUrl.replace('**', key).replace('fypage',pg)
         print(url)
         r = requests.get(url, headers=self.headers)
-        r.encoding = r.apparent_encoding
+        r.encoding = self.encoding
         html = r.text
         if not self.搜索:
             return self.blank()
