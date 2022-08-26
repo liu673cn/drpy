@@ -204,6 +204,7 @@ class CMS:
                 "vod_remarks": desc,
                 "vod_content": content,
             })
+        print(videos)
         result['list'] = videos
         result['page'] = fypage
         result['pagecount'] = 9999

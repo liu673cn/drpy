@@ -26,7 +26,7 @@ class jsoup:
                 ret = ret.html()
             else:
                 ret = ret.attr(option)
-                if pd and option in ['url','src','href','data-original']:
+                if pd and option in ['url','src','href','data-original','data-src']:
                     ret = urljoin(self.MY_URL,ret)
         else:
             # ret = doc(parse+':first')
