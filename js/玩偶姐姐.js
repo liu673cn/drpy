@@ -1,6 +1,8 @@
 var rule = {
     title:'玩偶姐姐',
-    url:'https://hongkongdollvideo.com/fyclass/fypage.html',
+    host:'https://hongkongdollvideo.com',
+    homeUrl:'/latest/',
+    url:'/fyclass/fypage.html[/fypage/]',
     searchUrl:'/vodsearch/**----------fypage---.html',
     ua:'MOBILE_UA',
     class_name:'最新&Hongkong Doll&麻豆传媒&91制片厂&天美传媒&蜜桃传媒&皇家华人&星空传媒&精东影业&乐播传媒&成人头条&乌鸦传媒&兔子先生&杏吧原创&mini传媒&大象传媒&开心鬼传媒&PsychoPorn&糖心Vlog',

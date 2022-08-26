@@ -12,6 +12,8 @@ from urllib.parse import urljoin
 
 class CMS:
     def __init__(self,rule):
+        self.host = rule.get('host','').rstrip('/')
+        self.homeUrl = rule.get('homeUrl','')
         self.url = rule.get('url','').rstrip('/')
         self.detailUrl = rule.get('detailUrl','').rstrip('/')
         self.searchUrl = rule.get('searchUrl','')
@@ -49,6 +51,7 @@ class CMS:
                 'type_name': class_names[i],
                 'type_id': class_urls[i]
             })
+        print(self.url)
         result['class'] = classes
         if self.filter:
             result['filters'] = config['filter']
