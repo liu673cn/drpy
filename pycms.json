@@ -35,6 +35,14 @@
     "searchable": 0,
     "quickSearch": 0,
     "filterable": 0
+},{
+    "key":"dr_mm",
+    "name":"喵喵（道长)",
+    "type":1,
+    "api":"http://cms.nokia.press/vod?rule=喵喵",
+    "searchable": 1,
+    "quickSearch": 1,
+    "filterable": 1
 }
 ],
 "parses":[
