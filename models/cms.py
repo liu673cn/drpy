@@ -5,20 +5,24 @@
 # Date  : 2022/8/25
 import requests
 import re
+import math
 from utils.web import *
 from utils.config import config
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
+from concurrent.futures import ThreadPoolExecutor  # 引入线程池
 
 class CMS:
     def __init__(self,rule):
         host = rule.get('host','').rstrip('/')
-        timeout = rule.get('timeout',2000)
+        timeout = rule.get('timeout',5000)
         homeUrl = rule.get('homeUrl','/')
         url = rule.get('url','')
         detailUrl = rule.get('detailUrl','')
         searchUrl = rule.get('searchUrl','')
         headers = rule.get('headers',{})
+        limit = rule.get('limit',6)
+        self.limit = min(limit,20)
         keys = headers.keys()
         for k in headers.keys():
             if str(k).lower() == 'user-agent':
@@ -45,9 +49,11 @@ class CMS:
         self.class_name = rule.get('class_name','')
         self.class_url = rule.get('class_url','')
         self.class_parse = rule.get('class_parse','')
+        self.double = rule.get('double',False)
         self.一级 = rule.get('一级','')
         self.二级 = rule.get('二级','')
         self.搜索 = rule.get('搜索','')
+        self.推荐 = rule.get('推荐','')
         self.title = rule.get('title','')
         self.timeout = round(int(timeout)/1000,2)
         self.filter = rule.get('filter',[])
@@ -100,11 +106,12 @@ class CMS:
         pq = jsp.pq
         return pdfh,pdfa,pd,pq
 
-    def homeContent(self):
+    def homeContent(self,fypage=1):
         # yanaifei
         # https://yanetflix.com/vodtype/dianying.html
         result = {}
         classes = []
+        video_result = self.blank()
 
         if self.class_url and self.class_name:
             class_names = self.class_name.split('&')
@@ -116,41 +123,104 @@ class CMS:
                     'type_id': class_urls[i]
                 })
         # print(self.url)
-        if self.homeUrl.startswith('http') and self.class_parse:
+        if self.homeUrl.startswith('http'):
             # print(self.homeUrl)
             # print(self.class_parse)
             try:
                 r = requests.get(self.homeUrl,headers=self.headers,timeout=self.timeout)
+                r.encoding = r.apparent_encoding
                 html = r.text
-                p = self.class_parse.split(';')
-                jsp = jsoup(self.url)
-                pdfh = jsp.pdfh
-                pdfa = jsp.pdfa
-                pd = jsp.pd
-                items = pdfa(html,p[0])
-                for item in items:
-                    title = pdfh(item, p[1])
-                    url = pd(item, p[2])
-                    tag = url
-                    if len(p) > 3 and p[3].strip():
-                        tag = self.regexp(p[3].strip(),url,0)
-                    classes.append({
-                        'type_name': title,
-                        'type_id': tag
-                    })
+                if self.class_parse:
+                    p = self.class_parse.split(';')
+                    jsp = jsoup(self.url)
+                    pdfh = jsp.pdfh
+                    pdfa = jsp.pdfa
+                    pd = jsp.pd
+                    items = pdfa(html,p[0])
+                    for item in items:
+                        title = pdfh(item, p[1])
+                        url = pd(item, p[2])
+                        tag = url
+                        if len(p) > 3 and p[3].strip():
+                            tag = self.regexp(p[3].strip(),url,0)
+                        classes.append({
+                            'type_name': title,
+                            'type_id': tag
+                        })
+
+                video_result = self.homeVideoContent(html,fypage)
             except Exception as e:
                 print(e)
 
         result['class'] = classes
         if self.filter:
             result['filters'] = config['filter']
+        result.update(video_result)
         return result
 
-    def homeVideoContent(self):
-        result = {
-            'list': []
-        }
-        return result
+    def homeVideoContent(self,html,fypage=1):
+        if not self.推荐:
+            return self.blank()
+
+        p = self.推荐.split(';')  # 解析
+        if not self.double and len(p) < 5:
+            return self.blank()
+        if self.double and len(p) < 6:
+            return self.blank()
+        result = {}
+        videos = []
+        jsp = jsoup(self.homeUrl)
+        pdfh = jsp.pdfh
+        pdfa = jsp.pdfa
+        pd = jsp.pd
+        try:
+            if self.double:
+                items = pdfa(html, p[0])
+                for item in items:
+                    items2 = pdfa(item,p[1])
+                    for item2 in items2:
+                        title = pdfh(item2, p[2])
+                        img = pd(item2, p[3])
+                        desc = pdfh(item2, p[4])
+                        link = pd(item2, p[5])
+                        content = '' if len(p) < 7 else pdfh(item2, p[6])
+                        videos.append({
+                            "vod_id": link,
+                            "vod_name": title,
+                            "vod_pic": img,
+                            "vod_remarks": desc,
+                            "vod_content": content,
+                            "type_id": 1,
+                            "type_name": "首页推荐",
+                        })
+            else:
+                items = pdfa(html, p[0])
+                for item in items:
+                    title = pdfh(item, p[1])
+                    img = pd(item, p[2])
+                    desc = pdfh(item, p[3])
+                    link = pd(item, p[4])
+                    content = '' if len(p) < 6 else pdfh(item, p[5])
+                    videos.append({
+                        "vod_id": link,
+                        "vod_name": title,
+                        "vod_pic": img,
+                        "vod_remarks": desc,
+                        "vod_content": content,
+                        "type_id": 1,
+                        "type_name": "首页推荐",
+                    })
+            result['list'] = videos
+            result['code'] = 1
+            result['msg'] = '数据列表'
+            result['page'] = fypage
+            result['pagecount'] = math.ceil(len(videos)/self.limit)
+            result['limit'] = self.limit
+            result['total'] = len(videos)
+            return result
+        except Exception as e:
+            print(f'首页内容获取失败:{e}')
+            return self.blank()
 
     def categoryContent(self, fyclass, fypage):
         """
@@ -175,6 +245,7 @@ class CMS:
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
         r = requests.get(url, headers=self.headers,timeout=self.timeout)
+        r.encoding = r.apparent_encoding
         print(r.url)
         p = self.一级.split(';')  # 解析
         if len(p) < 5:
@@ -207,25 +278,20 @@ class CMS:
         result['list'] = videos
         result['page'] = fypage
         result['pagecount'] = 9999
-        result['limit'] = 90
+        result['limit'] = 9999
         result['total'] = 999999
         return result
 
-    def detailContent(self, array):
-        """
-        cms二级数据
-        :param array:
-        :return:
-        """
-        # video-info-header
-        detailUrl = str(array[0])
-        print(detailUrl)
+    def detailOneVod(self,id):
+        detailUrl = str(id)
+        vod = {}
         if not detailUrl.startswith('http'):
             url = self.detailUrl.replace('fyid', detailUrl)
         else:
             url = detailUrl
-        print(url)
+        # print(url)
         r = requests.get(url, headers=self.headers,timeout=self.timeout)
+        r.encoding = r.apparent_encoding
         html = r.text
         # print(html)
         p = self.二级  # 解析
@@ -236,15 +302,10 @@ class CMS:
             vod['vod_actor'] = '没有二级,只有一级链接直接嗅探播放'
             vod['content'] = detailUrl
             vod['vod_play_url'] = '嗅探播放$'+detailUrl
-            result = {
-                'list': [
-                    vod
-                ]
-            }
-            return result
+            return vod
 
         if not isinstance(p,dict):
-            return self.blank()
+            return vod
 
         jsp = jsoup(self.url)
         pdfh = jsp.pdfh
@@ -313,10 +374,24 @@ class CMS:
         vod['vod_play_from'] = vod_play_from
         vod['vod_play_url'] = vod_play_url
 
+        return vod
+
+    def detailContent(self, fypage, array):
+        """
+        cms二级数据
+        :param array:
+        :return:
+        """
+        array = array[(fypage-1)*self.limit:min(self.limit*fypage,len(array))]
+        thread_pool = ThreadPoolExecutor(min(self.limit,len(array)))  # 定义线程池来启动多线程执行此任务
+        obj_list = []
+        for vod_url in array:
+            obj = thread_pool.submit(self.detailOneVod, vod_url)
+            obj_list.append(obj)
+        thread_pool.shutdown(wait=True)  # 等待所有子线程并行完毕
+        vod_list = [obj.result() for obj in obj_list]
         result = {
-            'list': [
-                vod
-            ]
+            'list': vod_list
         }
         return result
 
@@ -327,6 +402,7 @@ class CMS:
         url = self.searchUrl.replace('**', key).replace('fypage',pg)
         print(url)
         r = requests.get(url, headers=self.headers)
+        r.encoding = r.apparent_encoding
         html = r.text
         if not self.搜索:
             return self.blank()
@@ -364,13 +440,13 @@ class CMS:
 if __name__ == '__main__':
     from utils import parser
     # js_path = f'js/玩偶姐姐.js'
-    js_path = f'js/蓝莓影视.js'
+    js_path = f'js/555影视.js'
     ctx, js_code = parser.runJs(js_path)
     rule = ctx.eval('rule')
     cms = CMS(rule)
     print(cms.title)
     print(cms.homeContent())
-    print(cms.categoryContent('20',1))
+    # print(cms.categoryContent('20',1))
     # print(cms.categoryContent('latest',1))
     # print(cms.detailContent(['https://hongkongdollvideo.com/video/b22c7cb6df40a3c4.html']))
     # cms.categoryContent('dianying',1)

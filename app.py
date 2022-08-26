@@ -19,7 +19,7 @@ from utils.web import *
 rule_list = getRules()
 print(rule_list)
 
-def getParmas(key=None):
+def getParmas(key=None,value=''):
     """
     获取链接参数
     :param key:
@@ -31,7 +31,7 @@ def getParmas(key=None):
     elif request.method == 'GET':
         args = request.args
     if key:
-        return args.get(key,'')
+        return args.get(key,value)
     else:
         return args
 
@@ -66,7 +66,8 @@ def vod():
     flag = getParmas('flag')
     filter = getParmas('filter')
     t = getParmas('t')
-    pg = getParmas('pg')
+    pg = getParmas('pg','1')
+    pg = int(pg)
     ids = getParmas('ids')
     q = getParmas('q')
 
@@ -75,7 +76,10 @@ def vod():
         # print(data)
         return jsonify(data)
     if ac and ids: # 二级
-        data = cms.detailContent(ids.split(','))
+        id_list = ids.split(',')
+        # print(len(id_list))
+        # print(id_list)
+        data = cms.detailContent(pg,id_list)
         # print(data)
         return jsonify(data)
     if wd: # 搜索
@@ -84,7 +88,7 @@ def vod():
         return jsonify(data)
 
     # return jsonify({'rule':rule,'js_code':js_code})
-    home_data = cms.homeContent()
+    home_data = cms.homeContent(pg)
     return jsonify(home_data)
 
 @app.route('/clear')

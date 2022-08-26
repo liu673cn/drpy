@@ -29,7 +29,7 @@ var rule = {
         'User-Agent':'MOBILE_UA',
         "Cookie": "searchneed=ok"
     },
-    timeout:5000,//网站的全局请求超时,默认是2000毫秒
+    timeout:5000,//网站的全局请求超时,默认是3000毫秒
     //动态分类获取 列表;标题;链接;正则提取 不需要正则的时候后面别加分号
     class_parse:'#side-menu:lt(1) li;a&&Text;a&&href;com/(.*?)/',
     // 类似海阔一级 列表;标题;图片;描述;链接;详情 其中最后一个参数选填
