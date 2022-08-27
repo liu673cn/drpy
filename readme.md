@@ -39,7 +39,7 @@
 [本地网站](http://192.168.10.99:5705/index)  
 [需要安装nodejs](https://registry.npmmirror.com/binary.html?path=node/latest-v14.x/)  
 [本地服务配置地址](http://localhost:5705/config/0)  
-[远程服务配置地址](http://cms.nokia.press/config/1)  
+[远程服务配置地址](http://cms.nokia.press/config/2)  
 
 ### 配置相关
 本地地址  clan://localhost/pycms_local.json  
