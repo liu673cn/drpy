@@ -9,19 +9,12 @@ import math
 from utils.web import *
 from models import *
 from utils.config import config
+from utils.log import get_logger
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
-import logging
-from js.rules import getRules
 
-_logger = logging.getLogger(__name__)
-print(_logger)
-rule_list = getRules()
-print(rule_list)
-
-_logger.info('cms类装载完毕')
-print(f'http://{getHost(1, 5705)}/index\nhttp://localhost:5705/index')
+logger = get_logger('dr.log')
 
 class CMS:
     def __init__(self,rule,db=None,RuleClass=None):

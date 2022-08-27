@@ -6,8 +6,6 @@
 
 from flask_sqlalchemy import SQLAlchemy
 import config
-import socket
-from gevent.pywsgi import WSGIServer
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -18,7 +16,7 @@ from utils import error,parser
 from utils.web import *
 import sys
 import codecs
-from classes.cms import CMS
+from classes.cms import CMS,logger
 import json
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
@@ -26,12 +24,16 @@ app = Flask(__name__,static_folder='static',static_url_path='/static')
 
 # app.config["JSON_AS_ASCII"] = False # jsonify返回的中文正常显示
 app.config.from_object(config) # 单独的配置文件里写了，这里就不用弄json中文显示了
+app.logger.name="drLogger"
 db = SQLAlchemy(app)
 
 rule_list = getRules()
-# print(rule_list)
+logger.info(rule_list)
+logger.info(f'http://{getHost(1, 5705)}/index\nhttp://localhost:5705/index')
 
 from models import *
+from gevent.pywsgi import WSGIServer
+# from geventwebsocket.handler import WebSocketHandler
 
 RuleClass = rule_classes.init(db)
 
@@ -57,6 +59,7 @@ def forbidden():  # put application's code here
 
 @app.route('/index')
 def index():  # put application's code here
+    logger.info("进入了首页")
     return render_template('index.html',getHost=getHost)
 
 @app.route('/vod')
@@ -214,5 +217,8 @@ def database():
 if __name__ == '__main__':
     # app.run(host="0.0.0.0", port=5705)
     # app.run(debug=True, host='0.0.0.0', port=5705)
-    WSGIServer(('0.0.0.0', 5705), app).serve_forever()
+    # server = WSGIServer(('0.0.0.0', 5705), app, handler_class=WebSocketHandler,log=app.logger)
+    server = WSGIServer(('0.0.0.0', 5705), app,log=logger)
+    # server = WSGIServer(('0.0.0.0', 5705), app, handler_class=WebSocketHandler,log=None)
+    server.serve_forever()
     # WSGIServer(('0.0.0.0', 5705), app,log=None).serve_forever()
