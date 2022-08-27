@@ -5,12 +5,13 @@
 # Date  : 2022/8/25
 import os
 
-from flask import Flask, jsonify, abort,request,redirect,make_response,render_template
+from flask import Flask, jsonify, abort,request,redirect,make_response,render_template,send_from_directory
 from js.rules import getRules
 from utils import error,parser
 import sys
 import codecs
 from models.cms import CMS
+import json
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 app = Flask(__name__,static_folder='static',static_url_path='/static')
@@ -41,7 +42,7 @@ def forbidden():  # put application's code here
 
 @app.route('/index')
 def index():  # put application's code here
-    return render_template('index.html')
+    return render_template('index.html',getHost=getHost)
 
 @app.route('/vod')
 def vod():
@@ -102,15 +103,36 @@ def clear():
     os.remove(cache_path)
     return jsonify(error.success('成功删除文件:'+cache_path))
 
-def getRules():
-    base_path = 'cache/'  # 当前文件所在目录
-    print(base_path)
+def getRules(path='cache'):
+    base_path = path+'/'  # 当前文件所在目录
+    # print(base_path)
+    os.makedirs(base_path,exist_ok=True)
     file_name = os.listdir(base_path)
     file_name = list(filter(lambda x: str(x).endswith('.js'), file_name))
     # print(file_name)
     rule_list = [file.replace('.js', '') for file in file_name]
     rules = {'list': rule_list, 'count': len(rule_list)}
     return rules
+
+def getHost(mode=0):
+    ip = request.remote_addr
+    port = request.environ.get('SERVER_PORT')
+    # mode 为0是本地,1是局域网 2是线上
+    if mode == 0:
+        host = f'localhost:{port}'
+    elif mode == 1:
+        host = f'{ip}:{port}'
+    else:
+        host = 'cms.nokia.press'
+    return host
+
+
+@app.route('/favicon.ico')  # 设置icon
+def favicon():
+    return app.send_static_file('img/favicon.svg')
+    # 对于当前文件所在路径,比如这里是static下的favicon.ico
+    return send_from_directory(os.path.join(app.root_path, 'static'),  'img/favicon.svg', mimetype='image/vnd.microsoft.icon')
+
 
 @app.route('/rules')
 def rules():
@@ -119,6 +141,33 @@ def rules():
 @app.route('/raw')
 def rules_raw():
     return render_template('raw.html',rules=getRules())
+
+@app.route('/config/<int:mode>')
+def config_render(mode):
+    html = render_template('config.txt',rules=getRules('js'),host=getHost(mode),mode=mode)
+    response = make_response(html)
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    return response
+
+@app.route('/configs')
+def config_gen():
+    # 生成文件
+    set_local = render_template('config.txt',rules=getRules('js'),mode=0,host=getHost(0))
+    set_area = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(1))
+    set_online = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(2))
+    with open('pycms0.json','w+',encoding='utf-8') as f:
+        set_dict = json.loads(set_local)
+        f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
+    with open('pycms1.json','w+',encoding='utf-8') as f:
+        set_dict = json.loads(set_area)
+        f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
+
+    with open('pycms2.json','w+',encoding='utf-8') as f:
+        set_dict = json.loads(set_online)
+        f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
+    files = [os.path.abspath(f'pycms{i}.json') for i in range(3)]
+    # print(files)
+    return jsonify(error.success('猫配置生成完毕，文件位置在:\n'+'\n'.join(files)))
 
 @app.route("/plugin/<name>",methods=['GET'])
 def plugin(name):

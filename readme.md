@@ -1,6 +1,12 @@
 #### dr模板的python实现
 ###### 更新日志
-2022/08/26
+###### 2022/08/27
+- [X] 1.增加PC_UA变量
+- [X] 2.首页增加更多功能按钮  
+- [X] 3.增加猫配置自动生成，分别有本地配置，局域网配置，在线配置
+- [ ] 4.引入sqlite3数据进行缓存分类定位到的标签
+- [ ] 5.增加filter一键爬取和入库(filter_name,filter_url,filter_parse)
+###### 2022/08/26
 - [X] 1.支持首页推荐功能,模板属性增加limit参数  
 - [X] 2.支持纯一级的功能(比如车车网没二级)  
 - [X] 3.解决配置首页报错和嗅探播放报错问题
@@ -29,6 +35,8 @@
 [远程网站](http://cms.nokia.press/index)  
 [本地网站](http://192.168.10.99:5705/index)  
 [需要安装nodejs](https://registry.npmmirror.com/binary.html?path=node/latest-v14.x/)  
+[本地服务配置地址](http://localhost:5705/config/0)  
+[远程服务配置地址](http://cms.nokia.press/config/1)  
 
 ### 配置相关
 本地地址  clan://localhost/pycms_local.json  

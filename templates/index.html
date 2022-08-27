@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <meta http-equiv="Cache-Control" content="no-siteapp;no-transform">
     <meta name="applicable-device" content="pc,mobile">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>dr_py首页</title>
+    <script src="/static/js/jquery.min.js"></script>
 </head>
 <style>
     .btn{
@@ -23,6 +25,18 @@
     }
 </style>
 <body>
+<script>
+    $(document).ready(function(){
+        $("#gen_config").click(function(){
+            // let rule = this.innerText.trim();
+            let code = $.ajax({url:"/configs",async:false}).responseText;
+            code = typeof(code) === "object"?code:JSON.parse(code);
+            if(code.code === 200){
+                alert(code.msg);
+            }
+        });
+});
+</script>
 <h1>欢迎使用dr_py项目</h1>
 <p>可以简单的自定义爬虫实现cms数据接口</p>
 <div class="btn">
@@ -33,6 +47,18 @@
 </div>
 <div class="btn">
     <a href="/raw">缓存文件列表-查看</a>
+</div>
+<div class="btn">
+    <a href="http://{{ getHost(0) }}/config/0">本地配置地址</a>
+</div>
+<div class="btn">
+    <a href="http://{{ getHost(1) }}/config/1">局域网配置地址</a>
+</div>
+<div class="btn">
+    <a href="http://{{ getHost(2) }}/config/2">远程配置地址</a>
+</div>
+<div class="btn">
+    <a href="javascript:void(0);" id="gen_config">生成配置文件</a>
 </div>
 </body>
 </html>

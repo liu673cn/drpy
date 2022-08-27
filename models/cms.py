@@ -32,6 +32,8 @@ class CMS:
                     headers[k] = MOBILE_UA
                 elif v == 'PC_UA':
                     headers[k] = PC_UA
+                elif v == 'UC_UA':
+                    headers[k] = UC_UA
         lower_keys = list(map(lambda x:x.lower(),keys))
         if not 'user-agent' in lower_keys:
             headers['User-Agent'] = UA
@@ -50,6 +52,9 @@ class CMS:
         self.class_name = rule.get('class_name','')
         self.class_url = rule.get('class_url','')
         self.class_parse = rule.get('class_parse','')
+        self.filter_name = rule.get('filter_name', '')
+        self.filter_url = rule.get('filter_url', '')
+        self.filter_parse = rule.get('filter_parse', '')
         self.double = rule.get('double',False)
         self.一级 = rule.get('一级','')
         self.二级 = rule.get('二级','')

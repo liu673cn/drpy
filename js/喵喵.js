@@ -5,7 +5,7 @@ var rule = {
     url:'/t/fyclass/fypage.html',
     searchUrl:'/s/**/fypage.html',
     headers:{
-        'User-Agent':'Mozilla/5.0 (Linux; U; Android 9; zh-CN; MI 9 Build/PKQ1.181121.001) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/12.5.5.1035 Mobile Safari/537.36'
+        'User-Agent':'UC_UA'
     },
     timeout:5000,
     class_parse:'.bm-item-list a:gt(0):lt(7);a&&Text;a&&href;/(\\d+).html',
