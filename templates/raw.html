@@ -31,9 +31,16 @@
             let rule = this.innerText.trim();
             location.href = '/plugin/'+rule+'.js';
         });
+
+        $(".cls").click(function(){
+            // location.reload();
+            let cls = this.innerText.trim();
+            location.href = '/cls/'+cls;
+        });
 });
 
 </script>
+<h1>缓存规则列表</h1>
 {% if rules.count < 1 %}
 <h3>暂无已缓存的规则</h3>
 {% endif %}
@@ -57,6 +64,23 @@
       	<!-- if条件必须有endif，否则会报错 -->
 
      {% endfor %}
+<h1>缓存分类列表</h1>
+{% if classes|length < 1 %}
+<h3>暂无已缓存的分类</h3>
+{% endif %}
+{% for cls in classes %}
+    {% if cls|length > 2 %}
+        <li class="red">
+            <a class="cls" href="javascript:void(0);">{{ cls }}</a>
+        </li>
+
+    {% else %}
+        <li class="yellow">
+            <a class="cls" href="javascript:void(0);">{{ cls }}</a>
+        </li>
+
+    {% endif %}
+ {% endfor %}
 </body>
 
 </html>

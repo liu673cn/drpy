@@ -16,6 +16,10 @@ def init(db):
         class_name = db.Column(db.String(255))
         class_url = db.Column(db.String(255))
 
+        def __repr__(self):
+            return "<RuleClass(name='%s', class_name='%s', class_url='%s')>" % (
+                self.name, self.class_name, self.class_url)
+
     # db.create_all()
     db.create_all()
     return RuleClass

@@ -132,6 +132,27 @@ def getRules(path='cache'):
     rules = {'list': rule_list, 'count': len(rule_list)}
     return rules
 
+def getClasses():
+    if not db:
+        msg = '未提供数据库连接'
+        logger.info(msg)
+        return []
+    res = db.session.query(RuleClass).all()
+    return [rc.name for rc in res]
+
+def getClassInfo(cls):
+    if not db:
+        msg = f'未提供数据库连接,获取{cls}详情失败'
+        logger.info(msg)
+        return None
+    logger.info(f'开始查询{cls}的分类详情')
+    res = db.session.query(RuleClass).filter(RuleClass.name == cls).first()
+    if res:
+        logger.info(str(res))
+        return str(res)
+    else:
+        return f'数据库不存在{cls}的分类缓存'
+
 
 @app.route('/favicon.ico')  # 设置icon
 def favicon():
@@ -139,6 +160,10 @@ def favicon():
     # 对于当前文件所在路径,比如这里是static下的favicon.ico
     return send_from_directory(os.path.join(app.root_path, 'static'),  'img/favicon.svg', mimetype='image/vnd.microsoft.icon')
 
+@app.route('/cls/<cls>')
+def getClassInfoApi(cls):
+    info = getClassInfo(cls)
+    return jsonify({'msg':info})
 
 @app.route('/rules')
 def rules():
@@ -146,7 +171,7 @@ def rules():
 
 @app.route('/raw')
 def rules_raw():
-    return render_template('raw.html',rules=getRules())
+    return render_template('raw.html',rules=getRules(),classes=getClasses())
 
 @app.route('/config/<int:mode>')
 def config_render(mode):
