@@ -6,11 +6,11 @@ var rule = {
     headers:{
         'User-Agent':'MOBILE_UA'
     },
-    searchUrl:'/vodsearch/**----------fypage---.html',
+    searchUrl:'/search/**-fypage.html',
     // class_name:'电影&网剧&剧集&动漫&综艺&记录',
     // class_url:'20&1&2&3&4&23',
     class_parse:'.navbar-items li:gt(1):lt(8);a&&Text;a&&href;/(\\d+).html',
-    limit:5,
+    limit:30,
     推荐:'.tab-list.active;a.module-poster-item.module-item;.module-poster-item-title&&Text;.lazyload&&data-original;.module-item-note&&Text;a&&href',
     double:true, // 推荐内容是否双层定位
     一级:'body a.module-poster-item.module-item;a&&title;.lazyload&&data-original;.module-item-note&&Text;a&&href',

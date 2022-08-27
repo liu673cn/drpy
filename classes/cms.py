@@ -13,6 +13,7 @@ from utils.log import logger
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
+from time import time
 
 class CMS:
     def __init__(self,rule,db=None,RuleClass=None):
@@ -27,7 +28,7 @@ class CMS:
         headers = rule.get('headers',{})
         limit = rule.get('limit',6)
         encoding = rule.get('编码', 'utf-8')
-        self.limit = min(limit,20)
+        self.limit = min(limit,30)
         keys = headers.keys()
         for k in headers.keys():
             if str(k).lower() == 'user-agent':
@@ -132,7 +133,7 @@ class CMS:
             cls2 = res.class_url.split('&')
             classes = [{'type_name':cls[i],'type_id':cls2[i]} for i in range(len(cls))]
             # _logger.info(classes)
-            logger.info(f"使用缓存分类:{classes}")
+            logger.info(f"{self.getName()}使用缓存分类:{classes}")
             return classes
         else:
             return []
@@ -149,21 +150,21 @@ class CMS:
         # self.db.metadata.clear()
         # RuleClass = rule_classes.init(self.db)
         res = self.db.session.query(self.RuleClass).filter(self.RuleClass.name == name).first()
-        print(res)
+        # print(res)
         if res:
             res.class_name = class_name
             res.class_url = class_url
             self.db.session.add(res)
-            msg = f'修改成功:{res.id}'
+            msg = f'{self.getName()}修改成功:{res.id}'
         else:
             res = self.RuleClass(name=name, class_name=class_name, class_url=class_url)
             self.db.session.add(res)
             res = self.db.session.query(self.RuleClass).filter(self.RuleClass.name == name).first()
-            msg = f'新增成功:{res.id}'
+            msg = f'{self.getName()}新增成功:{res.id}'
 
         try:
             self.db.session.commit()
-            print(msg)
+            logger.info(msg)
         except Exception as e:
             return f'发生了错误:{e}'
 
@@ -171,6 +172,7 @@ class CMS:
     def homeContent(self,fypage=1):
         # yanaifei
         # https://yanetflix.com/vodtype/dianying.html
+        t1 = time()
         result = {}
         classes = []
         video_result = self.blank()
@@ -191,43 +193,56 @@ class CMS:
             # print(self.class_parse)
             try:
                 if self.class_parse:
+                    t3 = time()
                     cache_classes = self.getClasses()
+                    t4 = time()
+                    logger.info(f'{self.getName()}读取缓存耗时:{round((t4-t3)*1000,2)}毫秒')
                     if len(cache_classes) > 0:
                         classes = cache_classes
                         # print(cache_classes)
                         has_cache = True
-                new_classes = []
-                r = requests.get(self.homeUrl, headers=self.headers, timeout=self.timeout)
-                r.encoding = self.encoding
-                html = r.text
-                if self.class_parse and not has_cache:
-                    p = self.class_parse.split(';')
-                    jsp = jsoup(self.url)
-                    pdfh = jsp.pdfh
-                    pdfa = jsp.pdfa
-                    pd = jsp.pd
-                    items = pdfa(html,p[0])
-                    for item in items:
-                        title = pdfh(item, p[1])
-                        url = pd(item, p[2])
-                        tag = url
-                        if len(p) > 3 and p[3].strip():
-                            tag = self.regexp(p[3].strip(),url,0)
-                        new_classes.append({
-                            'type_name': title,
-                            'type_id': tag
-                        })
-                    if len(new_classes) > 0:
-                        classes.extend(new_classes)
-                        self.saveClass(classes)
-                video_result = self.homeVideoContent(html,fypage)
+                # logger.info(f'是否有缓存分类:{has_cache}')
+                if has_cache and not self.推荐:
+                    pass
+                else:
+                    new_classes = []
+                    r = requests.get(self.homeUrl, headers=self.headers, timeout=self.timeout)
+                    r.encoding = self.encoding
+                    html = r.text
+                    if self.class_parse and not has_cache:
+                        p = self.class_parse.split(';')
+                        print(p)
+                        jsp = jsoup(self.url)
+                        pdfh = jsp.pdfh
+                        pdfa = jsp.pdfa
+                        pd = jsp.pd
+                        items = pdfa(html,p[0])
+                        print(len(items))
+                        print(items)
+                        for item in items:
+                            title = pdfh(item, p[1])
+                            url = pd(item, p[2])
+                            print(url)
+                            tag = url
+                            if len(p) > 3 and p[3].strip():
+                                tag = self.regexp(p[3].strip(),url,0)
+                            new_classes.append({
+                                'type_name': title,
+                                'type_id': tag
+                            })
+                        if len(new_classes) > 0:
+                            classes.extend(new_classes)
+                            self.saveClass(classes)
+                    video_result = self.homeVideoContent(html,fypage)
             except Exception as e:
-                print(e)
+                logger.info(f'{self.getName()}主页发生错误:{e}')
 
         result['class'] = classes
         if self.filter:
             result['filters'] = config['filter']
         result.update(video_result)
+        t2 = time()
+        logger.info(f'{self.getName()}获取首页耗时:{round((t2-t1)*1000,2)}毫秒')
         return result
 
     def homeVideoContent(self,html,fypage=1):
@@ -291,7 +306,7 @@ class CMS:
             result['total'] = len(videos)
             return result
         except Exception as e:
-            print(f'首页内容获取失败:{e}')
+            logger.info(f'首页内容获取失败:{e}')
             return self.blank()
 
     def categoryContent(self, fyclass, fypage):
@@ -301,7 +316,7 @@ class CMS:
         :param fypage: 页码
         :return: cms一级数据
         """
-
+        
         result = {}
         # urlParams = ["", "", "", "", "", "", "", "", "", "", "", ""]
         # urlParams = [""] * 12
@@ -352,6 +367,7 @@ class CMS:
         result['pagecount'] = 9999
         result['limit'] = 9999
         result['total'] = 999999
+        
         return result
 
     def detailOneVod(self,id):
@@ -454,6 +470,7 @@ class CMS:
         :param array:
         :return:
         """
+        t1 = time()
         array = array[(fypage-1)*self.limit:min(self.limit*fypage,len(array))]
         thread_pool = ThreadPoolExecutor(min(self.limit,len(array)))  # 定义线程池来启动多线程执行此任务
         obj_list = []
@@ -465,6 +482,8 @@ class CMS:
         result = {
             'list': vod_list
         }
+        t2 = time()
+        logger.info(f'{self.getName()}获取详情页耗时:{round((t2-t1)*1000,2)}毫秒')
         return result
 
     def searchContent(self, key, fypage=1):
@@ -472,7 +491,7 @@ class CMS:
         if not self.searchUrl:
             return self.blank()
         url = self.searchUrl.replace('**', key).replace('fypage',pg)
-        print(url)
+        logger.info(f'{self.getName()}搜索链接:{url}')
         r = requests.get(url, headers=self.headers)
         r.encoding = self.encoding
         html = r.text

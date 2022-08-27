@@ -1,16 +1,16 @@
 var rule = {
-    title:'555影视',
-    host:'https://www.5dy6.cc',
+    title:'夜空',
+    host:'https://www.yekong.cc',
     // homeUrl:'/',
-    url:'/vodshow/fyclass--------fypage---.html',
-    searchUrl:'/vodsearch/**----------fypage---.html',
+    url:'/pianku-fyclass--------fypage---/',
+    searchUrl:'/search-**----------fypage---/',
     headers:{//网站的请求头,完整支持所有的,常带ua和cookies
         'User-Agent':'MOBILE_UA',
         "Cookie": "searchneed=ok"
     },
     // class_name:'电影&连续剧&福利&动漫&综艺',
     // class_url:'1&2&124&4&3',
-    class_parse:'.navbar-items li:gt(2):lt(8);a&&Text;a&&href;/(\\d+).html',
+    class_parse:'.navbar-items li:gt(1):lt(7);a&&Text;a&&href;.*v/(.*?)/',
     limit:10,
     推荐:'.tab-list.active;a.module-poster-item.module-item;.module-poster-item-title&&Text;.lazyload&&data-original;.module-item-note&&Text;a&&href',
     double:true, // 推荐内容是否双层定位

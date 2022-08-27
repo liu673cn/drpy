@@ -1,6 +1,6 @@
 var rule = {
-    title:'555影视',
-    host:'https://www.5dy6.cc',
+    title:'瓜皮TV',
+    host:'https://guapitv.xyz',
     // homeUrl:'/',
     url:'/vodshow/fyclass--------fypage---.html',
     searchUrl:'/vodsearch/**----------fypage---.html',
@@ -10,7 +10,7 @@ var rule = {
     },
     // class_name:'电影&连续剧&福利&动漫&综艺',
     // class_url:'1&2&124&4&3',
-    class_parse:'.navbar-items li:gt(2):lt(8);a&&Text;a&&href;/(\\d+).html',
+    class_parse:'.navbar-items li:gt(1):lt(8);a&&Text;a&&href;.*-(.*?).html',
     limit:10,
     推荐:'.tab-list.active;a.module-poster-item.module-item;.module-poster-item-title&&Text;.lazyload&&data-original;.module-item-note&&Text;a&&href',
     double:true, // 推荐内容是否双层定位
