@@ -51,12 +51,17 @@
 <div class="btn">
     <a href="http://{{ getHost(0) }}/config/0">本地配置地址</a>
 </div>
+<!--<a href="{{ getHost(1) }}">局域网:{{ getHost(1) }}</a>-->
+<p>局域网:{{ getHost(1) }}</p>
+{% if '192.168' in getHost(1) %}
 <div class="btn">
     <a href="http://{{ getHost(1) }}/config/1">局域网配置地址</a>
 </div>
+{% endif %}
 <div class="btn">
     <a href="http://{{ getHost(2) }}/config/2">远程配置地址</a>
 </div>
+
 <div class="btn">
     <a href="javascript:void(0);" id="gen_config">生成配置文件</a>
 </div>
