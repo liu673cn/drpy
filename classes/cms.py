@@ -7,13 +7,21 @@ import requests
 import re
 import math
 from utils.web import *
+from models import *
 from utils.config import config
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
+import logging
+
+_logger = logging.getLogger(__name__)
+
+print(_logger)
 
 class CMS:
-    def __init__(self,rule):
+    def __init__(self,rule,db=None,RuleClass=None):
+        self.db = db
+        self.RuleClass = RuleClass
         host = rule.get('host','').rstrip('/')
         timeout = rule.get('timeout',5000)
         homeUrl = rule.get('homeUrl','/')
@@ -113,6 +121,56 @@ class CMS:
         pq = jsp.pq
         return pdfh,pdfa,pd,pq
 
+    def getClasses(self):
+        if not self.db:
+            msg = '未提供数据库连接'
+            print(msg)
+            return []
+        name = self.getName()
+        # self.db.metadata.clear()
+        # RuleClass = rule_classes.init(self.db)
+        res = self.db.session.query(self.RuleClass).filter(self.RuleClass.name == name).first()
+        # _logger.info('xxxxxx')
+        if res:
+            cls = res.class_name.split('&')
+            cls2 = res.class_url.split('&')
+            classes = [{'type_name':cls[i],'type_id':cls2[i]} for i in range(len(cls))]
+            # _logger.info(classes)
+            return classes
+        else:
+            return []
+
+    def saveClass(self, classes):
+        if not self.db:
+            msg = '未提供数据库连接'
+            print(msg)
+            return msg
+        name = self.getName()
+        class_name = '&'.join([cl['type_name'] for cl in classes])
+        class_url = '&'.join([cl['type_id'] for cl in classes])
+        # data = RuleClass.query.filter(RuleClass.name == '555影视').all()
+        # self.db.metadata.clear()
+        # RuleClass = rule_classes.init(self.db)
+        res = self.db.session.query(self.RuleClass).filter(self.RuleClass.name == name).first()
+        print(res)
+        if res:
+            res.class_name = class_name
+            res.class_url = class_url
+            self.db.session.add(res)
+            msg = f'修改成功:{res.id}'
+        else:
+            res = self.RuleClass(name=name, class_name=class_name, class_url=class_url)
+            self.db.session.add(res)
+            res = self.db.session.query(self.RuleClass).filter(self.RuleClass.name == name).first()
+            msg = f'新增成功:{res.id}'
+
+        try:
+            self.db.session.commit()
+            print(msg)
+        except Exception as e:
+            return f'发生了错误:{e}'
+
+
     def homeContent(self,fypage=1):
         # yanaifei
         # https://yanetflix.com/vodtype/dianying.html
@@ -130,14 +188,21 @@ class CMS:
                     'type_id': class_urls[i]
                 })
         # print(self.url)
+        has_cache = False
         if self.homeUrl.startswith('http'):
             # print(self.homeUrl)
             # print(self.class_parse)
             try:
-                r = requests.get(self.homeUrl,headers=self.headers,timeout=self.timeout)
+                if self.class_parse:
+                    cache_classes = self.getClasses()
+                    if len(cache_classes) > 0:
+                        classes = cache_classes
+                        has_cache = True
+
+                r = requests.get(self.homeUrl, headers=self.headers, timeout=self.timeout)
                 r.encoding = self.encoding
                 html = r.text
-                if self.class_parse:
+                if self.class_parse and not has_cache:
                     p = self.class_parse.split(';')
                     jsp = jsoup(self.url)
                     pdfh = jsp.pdfh
@@ -154,7 +219,7 @@ class CMS:
                             'type_name': title,
                             'type_id': tag
                         })
-
+                    self.saveClass(classes)
                 video_result = self.homeVideoContent(html,fypage)
             except Exception as e:
                 print(e)
@@ -453,11 +518,11 @@ if __name__ == '__main__':
     rule = ctx.eval('rule')
     cms = CMS(rule)
     print(cms.title)
-    # print(cms.homeContent())
+    print(cms.homeContent())
     # print(cms.categoryContent('5',1))
     # print(cms.categoryContent('latest',1))
     # print(cms.detailContent(['https://www.2345ka.com/v/45499.html']))
     # print(cms.detailContent(1,['https://cokemv.me/voddetail/40573.html']))
     # cms.categoryContent('dianying',1)
     # print(cms.detailContent(['67391']))
-    print(cms.searchContent('斗罗大陆'))
+    # print(cms.searchContent('斗罗大陆'))

@@ -6,6 +6,10 @@
 
 from flask_sqlalchemy import SQLAlchemy
 import config
+import socket
+from gevent.pywsgi import WSGIServer
+import warnings
+warnings.filterwarnings('ignore')
 
 import os
 from flask import Flask, jsonify, abort,request,redirect,make_response,render_template,send_from_directory
@@ -19,9 +23,11 @@ import json
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 app = Flask(__name__,static_folder='static',static_url_path='/static')
+
 # app.config["JSON_AS_ASCII"] = False # jsonify返回的中文正常显示
 app.config.from_object(config) # 单独的配置文件里写了，这里就不用弄json中文显示了
 db = SQLAlchemy(app)
+
 rule_list = getRules()
 print(rule_list)
 
@@ -68,7 +74,7 @@ def vod():
     if not js_code:
         return jsonify(error.failed('爬虫规则加载失败'))
     rule = ctx.eval('rule')
-    cms = CMS(rule)
+    cms = CMS(rule,db,RuleClass)
     wd = getParmas('wd')
     ac = getParmas('ac')
     quick = getParmas('quick')
@@ -123,9 +129,12 @@ def getRules(path='cache'):
     rules = {'list': rule_list, 'count': len(rule_list)}
     return rules
 
-def getHost(mode=0):
-    ip = request.remote_addr
-    port = request.environ.get('SERVER_PORT')
+def getHost(mode=0,port=None):
+    port = port or request.environ.get('SERVER_PORT')
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    # ip = request.remote_addr
+    # print(ip)
     # mode 为0是本地,1是局域网 2是线上
     if mode == 0:
         host = f'localhost:{port}'
@@ -218,5 +227,9 @@ def database():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5705)
+    print(f'http://{getHost(1, 5705)}/index')
+    # app.run(host="0.0.0.0", port=5705)
     # app.run(debug=True, host='0.0.0.0', port=5705)
+    print('http://localhost:5705/index')
+    WSGIServer(('0.0.0.0', 5705), app).serve_forever()
+    # WSGIServer(('0.0.0.0', 5705), app,log=None).serve_forever()

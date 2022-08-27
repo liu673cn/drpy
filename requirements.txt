@@ -3,3 +3,4 @@ pyquery
 flask
 requests
 flask-sqlalchemy
+gevent

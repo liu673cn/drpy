@@ -8,6 +8,7 @@
 - [X] 5.增加 flask-sqlalchemy 用于驱动sqlite3数据库
 - [ ] 6.引入sqlite3数据进行缓存分类定位到的标签
 - [ ] 7.增加filter一键爬取和入库(filter_name,filter_url,filter_parse)
+- [X] 8.使用gevent作为服务,提升大量性能
 ###### 2022/08/26
 - [X] 1.支持首页推荐功能,模板属性增加limit参数  
 - [X] 2.支持纯一级的功能(比如车车网没二级)  
