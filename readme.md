@@ -5,8 +5,9 @@
 - [X] 2.首页增加更多功能按钮  
 - [X] 3.增加猫配置自动生成，分别有本地配置，局域网配置，在线配置
 - [X] 4.修复默认网站的favicon图标问题
-- [ ] 5.引入sqlite3数据进行缓存分类定位到的标签
-- [ ] 6.增加filter一键爬取和入库(filter_name,filter_url,filter_parse)
+- [X] 5.增加 flask-sqlalchemy 用于驱动sqlite3数据库
+- [ ] 6.引入sqlite3数据进行缓存分类定位到的标签
+- [ ] 7.增加filter一键爬取和入库(filter_name,filter_url,filter_parse)
 ###### 2022/08/26
 - [X] 1.支持首页推荐功能,模板属性增加limit参数  
 - [X] 2.支持纯一级的功能(比如车车网没二级)  
@@ -33,6 +34,7 @@
 7. 访问地址加/index查看dr_py主页
 
 #### 测试地址
+[sqlite3使用教程](https://m.yisu.com/zixun/375448.html)  
 [远程网站](http://cms.nokia.press/index)  
 [本地网站](http://192.168.10.99:5705/index)  
 [需要安装nodejs](https://registry.npmmirror.com/binary.html?path=node/latest-v14.x/)  

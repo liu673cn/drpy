@@ -2,3 +2,4 @@ PyExecJS
 pyquery
 flask
 requests
+flask-sqlalchemy

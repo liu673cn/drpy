@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# File  : __init__.py.py
+# File  : ___init__.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
-# Date  : 2022/8/25
+# Date  : 2022/8/27
 
-from . import rule_classes
+from .cms import *

@@ -3,22 +3,31 @@
 # File  : app.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
-import os
 
+from flask_sqlalchemy import SQLAlchemy
+import config
+
+import os
 from flask import Flask, jsonify, abort,request,redirect,make_response,render_template,send_from_directory
 from js.rules import getRules
 from utils import error,parser
+from utils.web import *
 import sys
 import codecs
-from models.cms import CMS
+from classes.cms import CMS
 import json
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 app = Flask(__name__,static_folder='static',static_url_path='/static')
-app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
-from utils.web import *
+# app.config["JSON_AS_ASCII"] = False # jsonify返回的中文正常显示
+app.config.from_object(config) # 单独的配置文件里写了，这里就不用弄json中文显示了
+db = SQLAlchemy(app)
 rule_list = getRules()
 print(rule_list)
+
+from models import *
+
+RuleClass = rule_classes.init(db)
 
 def getParmas(key=None,value=''):
     """
@@ -178,6 +187,34 @@ def plugin(name):
         return parser.toJs(name)
     except Exception as e:
         return jsonify(error.failed(f'非法猥亵\n{e}'))
+
+def db_test():
+    name = '555影视'
+    class_name = '电影&连续剧&福利&动漫&综艺'
+    class_url = '1&2&124&4&3'
+    # data = RuleClass.query.filter(RuleClass.name == '555影视').all()
+    res = db.session.query(RuleClass).filter(RuleClass.name == name).first()
+    print(res)
+    if res:
+        res.class_name = class_name
+        res.class_url = class_url
+        db.session.add(res)
+        msg = f'修改成功:{res.id}'
+    else:
+        res = RuleClass(name=name, class_name=class_name, class_url=class_url)
+        db.session.add(res)
+        res = db.session.query(RuleClass).filter(RuleClass.name == name).first()
+        msg = f'新增成功:{res.id}'
+
+    try:
+        db.session.commit()
+        return jsonify(error.success(msg))
+    except Exception as e:
+        return jsonify(error.failed(f'{e}'))
+
+@app.route('/db')
+def database():
+    return db_test()
 
 
 if __name__ == '__main__':
