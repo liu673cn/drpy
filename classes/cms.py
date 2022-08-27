@@ -9,12 +9,10 @@ import math
 from utils.web import *
 from models import *
 from utils.config import config
-from utils.log import get_logger
+from utils.log import logger
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
-
-logger = get_logger('dr.log')
 
 class CMS:
     def __init__(self,rule,db=None,RuleClass=None):
@@ -134,6 +132,7 @@ class CMS:
             cls2 = res.class_url.split('&')
             classes = [{'type_name':cls[i],'type_id':cls2[i]} for i in range(len(cls))]
             # _logger.info(classes)
+            logger.info(f"使用缓存分类:{classes}")
             return classes
         else:
             return []

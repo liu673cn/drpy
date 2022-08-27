@@ -59,7 +59,7 @@ def forbidden():  # put application's code here
 
 @app.route('/index')
 def index():  # put application's code here
-    logger.info("进入了首页")
+    # logger.info("进入了首页")
     return render_template('index.html',getHost=getHost)
 
 @app.route('/vod')

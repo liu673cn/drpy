@@ -68,3 +68,5 @@ def get_logger(log_filename, level=logging.DEBUG, when='D', back_count=0):
     logger.addHandler(ch)
 
     return logger
+
+logger = get_logger('dr.log')

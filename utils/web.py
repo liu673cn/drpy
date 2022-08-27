@@ -5,8 +5,9 @@
 # Date  : 2022/8/25
 
 import socket
+from netifaces import interfaces, ifaddresses, AF_INET
 from flask import request
-
+from utils.log import logger
 MOBILE_UA = 'Mozilla/5.0 (Linux; Android 11; M2007J3SC Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045714 Mobile Safari/537.36'
 PC_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36'
 UA = 'Mozilla/5.0'
@@ -15,7 +16,7 @@ headers = {
         'Referer': 'https://www.baidu.com',
         'user-agent': UA,
 }
-def get_host_ip(): # 获取局域网ip
+def get_host_ip2(): # 获取局域网ip
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         # print('8888')
@@ -25,11 +26,23 @@ def get_host_ip(): # 获取局域网ip
         s.close()
     return ip
 
+def get_host_ip(): # 获取局域网ip
+    ips = []
+    for ifaceName in interfaces():
+        addresses = ''.join([i['addr'] for i in ifaddresses(ifaceName).setdefault(AF_INET, [{'addr': ''}])])
+        ips.append(addresses)
+    real_ips = list(filter(lambda x:x and x!='127.0.0.1',ips))
+    logger.info(real_ips)
+    jyw = list(filter(lambda x:str(x).startswith('192.168'),real_ips))
+    return real_ips[-1] if len(jyw) < 1 else jyw[0]
+
+REAL_IP = get_host_ip()
+
 def getHost(mode=0,port=None):
     port = port or request.environ.get('SERVER_PORT')
     # hostname = socket.gethostname()
     # ip = socket.gethostbyname(hostname)
-    ip = get_host_ip()
+    ip = REAL_IP
     # ip = request.remote_addr
     # print(ip)
     # mode 为0是本地,1是局域网 2是线上

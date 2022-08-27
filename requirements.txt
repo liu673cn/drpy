@@ -4,3 +4,4 @@ flask
 requests
 flask-sqlalchemy
 gevent
+netifaces
