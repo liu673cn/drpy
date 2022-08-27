@@ -165,9 +165,20 @@ def getClassInfoApi(cls):
     info = getClassInfo(cls)
     return jsonify({'msg':info})
 
+@app.route('/clearcls/<cls>')
+def clearClassApi(cls):
+    logger.info(f'开始查询{cls}的分类详情')
+    res = db.session.query(RuleClass).filter(RuleClass.name == cls)
+    if res:
+        res.delete()
+        db.session.commit()
+        return jsonify(error.success(f'已清除{cls}的分类缓存'))
+    else:
+        return jsonify(error.failed(f'数据库不存在{cls}的分类缓存'))
+
 @app.route('/rules')
 def rules():
-    return render_template('rules.html',rules=getRules())
+    return render_template('rules.html',rules=getRules(),classes=getClasses())
 
 @app.route('/raw')
 def rules_raw():

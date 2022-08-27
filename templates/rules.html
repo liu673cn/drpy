@@ -37,9 +37,24 @@
             }
 
         });
+
+        $(".cls").click(function(){
+            let cls = this.innerText.trim();
+            if(confirm('确认清除规则'+cls+'缓存的分类?')){
+                let code = $.ajax({url:"/clearcls/"+cls,async:false}).responseText;
+            code = typeof(code) === "object"?code:JSON.parse(code);
+                if(code.code === 200){
+                    alert('操作成功!\n'+code.msg);
+                    location.reload()
+                }else{
+                    alert('操作失败!\n'+code.msg);
+                }
+            }
+        });
 });
 
 </script>
+<h1>缓存规则列表</h1>
 {% if rules.count < 1 %}
 <h3>暂无已缓存的规则</h3>
 {% endif %}
@@ -62,7 +77,25 @@
         {% endif %}
       	<!-- if条件必须有endif，否则会报错 -->
 
-     {% endfor %}
+ {% endfor %}
+
+<h1>缓存分类列表</h1>
+{% if classes|length < 1 %}
+<h3>暂无已缓存的分类</h3>
+{% endif %}
+{% for cls in classes %}
+    {% if cls|length > 2 %}
+        <li class="red">
+            <a class="cls" href="javascript:void(0);">{{ cls }}</a>
+        </li>
+
+    {% else %}
+        <li class="yellow">
+            <a class="cls" href="javascript:void(0);">{{ cls }}</a>
+        </li>
+
+    {% endif %}
+ {% endfor %}
 </body>
 
 </html>
