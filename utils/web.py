@@ -4,6 +4,9 @@
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
 
+import socket
+from flask import request
+
 MOBILE_UA = 'Mozilla/5.0 (Linux; Android 11; M2007J3SC Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045714 Mobile Safari/537.36'
 PC_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36'
 UA = 'Mozilla/5.0'
@@ -12,3 +15,18 @@ headers = {
         'Referer': 'https://www.baidu.com',
         'user-agent': UA,
 }
+
+def getHost(mode=0,port=None):
+    port = port or request.environ.get('SERVER_PORT')
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    # ip = request.remote_addr
+    # print(ip)
+    # mode 为0是本地,1是局域网 2是线上
+    if mode == 0:
+        host = f'localhost:{port}'
+    elif mode == 1:
+        host = f'{ip}:{port}'
+    else:
+        host = 'cms.nokia.press'
+    return host

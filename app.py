@@ -29,7 +29,7 @@ app.config.from_object(config) # 单独的配置文件里写了，这里就不�
 db = SQLAlchemy(app)
 
 rule_list = getRules()
-print(rule_list)
+# print(rule_list)
 
 from models import *
 
@@ -129,21 +129,6 @@ def getRules(path='cache'):
     rules = {'list': rule_list, 'count': len(rule_list)}
     return rules
 
-def getHost(mode=0,port=None):
-    port = port or request.environ.get('SERVER_PORT')
-    hostname = socket.gethostname()
-    ip = socket.gethostbyname(hostname)
-    # ip = request.remote_addr
-    # print(ip)
-    # mode 为0是本地,1是局域网 2是线上
-    if mode == 0:
-        host = f'localhost:{port}'
-    elif mode == 1:
-        host = f'{ip}:{port}'
-    else:
-        host = 'cms.nokia.press'
-    return host
-
 
 @app.route('/favicon.ico')  # 设置icon
 def favicon():
@@ -227,9 +212,7 @@ def database():
 
 
 if __name__ == '__main__':
-    print(f'http://{getHost(1, 5705)}/index')
     # app.run(host="0.0.0.0", port=5705)
     # app.run(debug=True, host='0.0.0.0', port=5705)
-    print('http://localhost:5705/index')
     WSGIServer(('0.0.0.0', 5705), app).serve_forever()
     # WSGIServer(('0.0.0.0', 5705), app,log=None).serve_forever()
