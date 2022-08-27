@@ -202,8 +202,9 @@ class CMS:
                     cache_classes = self.getClasses()
                     if len(cache_classes) > 0:
                         classes = cache_classes
+                        # print(cache_classes)
                         has_cache = True
-
+                new_classes = []
                 r = requests.get(self.homeUrl, headers=self.headers, timeout=self.timeout)
                 r.encoding = self.encoding
                 html = r.text
@@ -220,11 +221,13 @@ class CMS:
                         tag = url
                         if len(p) > 3 and p[3].strip():
                             tag = self.regexp(p[3].strip(),url,0)
-                        classes.append({
+                        new_classes.append({
                             'type_name': title,
                             'type_id': tag
                         })
-                    self.saveClass(classes)
+                    if len(new_classes) > 0:
+                        classes.extend(new_classes)
+                        self.saveClass(classes)
                 video_result = self.homeVideoContent(html,fypage)
             except Exception as e:
                 print(e)
