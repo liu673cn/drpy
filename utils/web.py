@@ -15,11 +15,21 @@ headers = {
         'Referer': 'https://www.baidu.com',
         'user-agent': UA,
 }
+def get_host_ip(): # 获取局域网ip
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # print('8888')
+        s.connect(('8.8.8.8', 80))  # 114.114.114.114也是dns地址
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
+    return ip
 
 def getHost(mode=0,port=None):
     port = port or request.environ.get('SERVER_PORT')
-    hostname = socket.gethostname()
-    ip = socket.gethostbyname(hostname)
+    # hostname = socket.gethostname()
+    # ip = socket.gethostbyname(hostname)
+    ip = get_host_ip()
     # ip = request.remote_addr
     # print(ip)
     # mode 为0是本地,1是局域网 2是线上
