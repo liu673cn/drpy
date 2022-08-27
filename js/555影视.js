@@ -10,7 +10,7 @@ var rule = {
     },
     class_name:'电影&连续剧&福利&动漫&综艺',
     class_url:'1&2&124&4&3',
-    limit:10,
+    limit:6,
     推荐:'.tab-list.active;a.module-poster-item.module-item;.module-poster-item-title&&Text;.lazyload&&data-original;.module-item-note&&Text;a&&href',
     double:true, // 推荐内容是否双层定位
     一级:'body a.module-poster-item.module-item;a&&title;.lazyload&&data-original;.module-item-note&&Text;a&&href',
