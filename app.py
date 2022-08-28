@@ -204,7 +204,8 @@ def rules_raw():
 
 @app.route('/config/<int:mode>')
 def config_render(mode):
-    html = render_template('config.txt',rules=getRules('js'),host=getHost(mode),mode=mode,jxs=getJxs())
+    print(dict(app.config))
+    html = render_template('config.txt',rules=getRules('js'),host=getHost(mode),mode=mode,jxs=getJxs(),config=dict(app.config))
     response = make_response(html)
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     return response
