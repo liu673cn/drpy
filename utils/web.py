@@ -5,6 +5,7 @@
 # Date  : 2022/8/25
 
 import socket
+from werkzeug.utils import import_string
 from netifaces import interfaces, ifaddresses, AF_INET
 from flask import request
 from utils.log import logger
@@ -53,3 +54,13 @@ def getHost(mode=0,port=None):
     else:
         host = 'cms.nokia.press'
     return host
+
+def get_conf(obj):
+    new_conf = {}
+    if isinstance(obj, str):
+        config = import_string(obj)
+    for key in dir(obj):
+        if key.isupper():
+            new_conf[key] = getattr(obj, key)
+    # print(new_conf)
+    return new_conf

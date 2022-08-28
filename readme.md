@@ -73,6 +73,8 @@ var rule = {
     class_url:'1&2&3&4',//静态分类标识拼接
     //动态分类获取 列表;标题;链接;正则提取 不需要正则的时候后面别加分号
     class_parse:'#side-menu:lt(1) li;a&&Text;a&&href;com/(.*?)/',
+    // 服务器解析播放
+    play_parse:true,
     // 首页推荐显示数量
     limit:6,
     double:true,//是否双层列表定位,默认false

@@ -11,6 +11,7 @@ var rule = {
     // class_name:'电影&连续剧&福利&动漫&综艺',
     // class_url:'1&2&124&4&3',
     class_parse:'.navbar-items li:gt(1):lt(7);a&&Text;a&&href;.*v/(.*?)/',
+    play_parse:true,
     limit:10,
     推荐:'.tab-list.active;a.module-poster-item.module-item;.module-poster-item-title&&Text;.lazyload&&data-original;.module-item-note&&Text;a&&href',
     double:true, // 推荐内容是否双层定位

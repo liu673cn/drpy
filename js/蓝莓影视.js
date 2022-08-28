@@ -10,6 +10,7 @@ var rule = {
     // class_name:'电影&网剧&剧集&动漫&综艺&记录',
     // class_url:'20&1&2&3&4&23',
     class_parse:'.navbar-items li:gt(1):lt(8);a&&Text;a&&href;/(\\d+).html',
+    play_parse:true,
     limit:30,
     推荐:'.tab-list.active;a.module-poster-item.module-item;.module-poster-item-title&&Text;.lazyload&&data-original;.module-item-note&&Text;a&&href',
     double:true, // 推荐内容是否双层定位

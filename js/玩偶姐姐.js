@@ -8,6 +8,7 @@ var rule = {
     },
     timeout:5000,
     class_parse:'#side-menu:lt(1) li;a&&Text;a&&href;com/(.*?)/',
+    play_parse:true,
     一级:'.col-sm-6;h3&&Text;img&&data-src;.date&&Text;a&&href',
     二级:'*',
 }

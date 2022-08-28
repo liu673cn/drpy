@@ -6,11 +6,12 @@
 
 from flask_sqlalchemy import SQLAlchemy
 import config
+# import settings
 import warnings
 warnings.filterwarnings('ignore')
 
 import os
-from flask import Flask, jsonify, abort,request,redirect,make_response,render_template,send_from_directory
+from flask import Flask, jsonify, abort,request,redirect,make_response,render_template,send_from_directory,url_for
 from js.rules import getRules
 from utils import error,parser
 from utils.web import *
@@ -19,11 +20,13 @@ import codecs
 from classes.cms import CMS,logger
 import json
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
-
 app = Flask(__name__,static_folder='static',static_url_path='/static')
 
 # app.config["JSON_AS_ASCII"] = False # jsonify返回的中文正常显示
 app.config.from_object(config) # 单独的配置文件里写了，这里就不用弄json中文显示了
+# new_conf = get_conf(settings)
+# print(new_conf)
+print('自定义播放解析地址:',app.config.get('PLAY_URL'))
 app.logger.name="drLogger"
 db = SQLAlchemy(app)
 
@@ -60,10 +63,17 @@ def forbidden():  # put application's code here
 @app.route('/index')
 def index():  # put application's code here
     # logger.info("进入了首页")
+    a = redirect(url_for('vod')).headers['Location']
+    print(a)
     return render_template('index.html',getHost=getHost)
 
 @app.route('/vod')
 def vod():
+    play_url = getParmas('play_url')
+    if play_url:  # 播放
+        logger.info(f'播放重定向到:{play_url}')
+        return redirect(play_url)
+
     rule = getParmas('rule')
     ext = getParmas('ext')
     if not ext.startswith('http') and not rule:
@@ -77,7 +87,7 @@ def vod():
     if not js_code:
         return jsonify(error.failed('爬虫规则加载失败'))
     rule = ctx.eval('rule')
-    cms = CMS(rule,db,RuleClass)
+    cms = CMS(rule,db,RuleClass,app.config)
     wd = getParmas('wd')
     ac = getParmas('ac')
     quick = getParmas('quick')

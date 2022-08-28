@@ -14,9 +14,22 @@ from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
 from time import time
+from flask import url_for,redirect
 
 class CMS:
-    def __init__(self,rule,db=None,RuleClass=None):
+    def __init__(self, rule, db=None, RuleClass=None, new_conf=None):
+        if new_conf is None:
+            new_conf = {}
+        self.play_parse = rule.get('play_parse', False)
+        play_url = new_conf.get('PLAY_URL',getHost(1))
+        if not play_url.startswith('http'):
+            play_url = 'http://'+play_url
+        self.vod = redirect(url_for('vod')).headers['Location']
+        if self.play_parse:
+            self.play_url = play_url + self.vod + '?play_url='
+            logger.info(f'cms重定向链接:{self.play_url}')
+        else:
+            self.play_url = ''
         self.db = db
         self.RuleClass = RuleClass
         host = rule.get('host','').rstrip('/')
@@ -386,7 +399,7 @@ class CMS:
         if p == '*':
             vod = self.blank_vod()
             vod['vod_play_from'] = '道长在线'
-            vod['desc'] = detailUrl
+            vod['desc'] = self.play_url+detailUrl
             vod['vod_actor'] = '没有二级,只有一级链接直接嗅探播放'
             vod['content'] = detailUrl
             vod['vod_play_url'] = '嗅探播放$'+detailUrl
@@ -454,7 +467,8 @@ class CMS:
             for i in range(len(vodHeader)):
                p1 = p['lists'].replace('#id',str(i))
                vodList = pdfa(html,p1) # 1条线路的选集列表
-               vodList = [pq(i).text()+'$'+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
+               # vodList = [pq(i).text()+'$'+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
+               vodList = [pq(i).text()+'$'+self.play_url+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
                vlist = '#'.join(vodList) # 拼多个选集
                vod_tab_list.append(vlist)
             vod_play_url = vod_play_url.join(vod_tab_list)
@@ -483,7 +497,8 @@ class CMS:
             'list': vod_list
         }
         t2 = time()
-        logger.info(f'{self.getName()}获取详情页耗时:{round((t2-t1)*1000,2)}毫秒')
+        logger.info(f'{self.getName()}获取详情页耗时:{round((t2-t1)*1000,2)}毫秒,共计{round(len(str(result))/1000,2)} kb')
+        # print(result)
         return result
 
     def searchContent(self, key, fypage=1):
