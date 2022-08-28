@@ -18,6 +18,7 @@ from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
 from time import time
 from flask import url_for,redirect
+from easydict import EasyDict as edict
 
 class CMS:
     def __init__(self, rule, db=None, RuleClass=None, PlayParse=None,new_conf=None):
@@ -96,9 +97,22 @@ class CMS:
         self.timeout = round(int(timeout)/1000,2)
         self.filter = rule.get('filter',[])
         self.extend = rule.get('extend',[])
+        self.d = self.getObject()
 
     def getName(self):
         return self.title
+
+    def getObject(self):
+        o = edict({
+            'jsp':jsoup(self.url),
+            'getParse':self.getParse,
+            'saveParse':self.saveParse,
+            'headers':self.headers,
+            'encoding':self.encoding,
+            'name':self.title,
+            'timeout':self.timeout,
+        })
+        return o
 
     def regexp(self,prule,text,pos=None):
         ret = re.search(prule,text).groups()
@@ -612,9 +626,7 @@ class CMS:
                 if pos < 0:
                     return play_url
                 pyenv = safePython(self.lazy,pycode[pos:])
-                # print(pyenv)
-                jsp = jsoup(self.url)
-                lazy_url = pyenv.action_task_exec('lazyParse',[play_url,jsp,self.getParse,self.saveParse,self.headers,self.encoding])
+                lazy_url = pyenv.action_task_exec('lazyParse',[play_url,self.d])
                 logger.info(f'播放免嗅结果:{lazy_url}')
                 if isinstance(lazy_url,str) and lazy_url.startswith('http'):
                     play_url = lazy_url

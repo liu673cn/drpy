@@ -9,10 +9,10 @@ import json
 from urllib.parse import urljoin,quote,unquote
 import base64
 
-def lazyParse(input,jsp,getParse,saveParse,headers,encoding):
-    print('lazyParse:',input)
-    r = requests.get(input,headers=headers)
-    r.encoding = encoding
+def lazyParse(input,d):
+    print('通用免嗅:',input)
+    r = requests.get(input, headers=d.headers,timeout=d.timeout)
+    r.encoding = d.encoding
     html = r.text
     # print(html)
     # js = jsp.pdfh(html,'.stui-player__video script:eq(0)&&Html')

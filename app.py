@@ -3,6 +3,7 @@
 # File  : app.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
+import time
 
 from flask_sqlalchemy import SQLAlchemy
 import config
@@ -77,12 +78,20 @@ def vod():
         msg = f'服务端本地仅支持以下规则:{",".join(rule_list)}'
         return jsonify(error.failed(msg))
 
+    t1 = time.time()
     js_path = f'js/{rule}.js' if not ext.startswith('http') else ext
-    ctx,js_code = parser.runJs(js_path)
+    # before = ''
+    with open('js/模板.js', encoding='utf-8') as f:
+        before = f.read()
+    # print(before)
+    ctx,js_code = parser.runJs(js_path,before=before)
     if not js_code:
         return jsonify(error.failed('爬虫规则加载失败'))
 
     rule = ctx.eval('rule')
+    t2 = time.time()
+    logger.info(f'js装载耗时:{round((t2-t1)*1000,2)}毫秒')
+    # print(rule)
     cms = CMS(rule,db,RuleClass,PlayParse,app.config)
     wd = getParmas('wd')
     ac = getParmas('ac')
@@ -137,7 +146,7 @@ def getRules(path='cache'):
     # print(base_path)
     os.makedirs(base_path,exist_ok=True)
     file_name = os.listdir(base_path)
-    file_name = list(filter(lambda x: str(x).endswith('.js'), file_name))
+    file_name = list(filter(lambda x: str(x).endswith('.js') and str(x).find('模板') < 0, file_name))
     # print(file_name)
     rule_list = [file.replace('.js', '') for file in file_name]
     rules = {'list': rule_list, 'count': len(rule_list)}

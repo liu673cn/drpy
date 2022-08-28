@@ -11,7 +11,7 @@ var rule = {
     // class_url:'20&1&2&3&4&23',
     class_parse:'.stui-header__menu li:gt(0):lt(5);a&&Text;a&&href;/(\\d+).html',
     play_parse:true,
-    // lazy:'干饭',
+    lazy:'干饭',
     limit:5,
     推荐:'ul.stui-vodlist.clearfix;li;a&&title;.lazyload&&data-original;;a&&href',
     double:true, // 推荐内容是否双层定位

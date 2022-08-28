@@ -17,7 +17,7 @@ import execjs
 # os.environ["EXECJS_RUNTIME"] = "JScript"
 # print(execjs.get().name)
 
-def runJs(jsPath):
+def runJs(jsPath,before='',after=''):
     # base_path = os.path.dirname(os.path.abspath(__file__)) # 当前文件所在目录
     # base_path = os.path.dirname(os.getcwd()) # 当前主程序所在工作目录
     # base_path = os.path.dirname(os.path.abspath('.')) # 上级目录
@@ -43,7 +43,12 @@ def runJs(jsPath):
         with open(js_path, 'r', encoding='UTF-8') as fp:
             js_code = fp.read()
     # print(js_code)
-    loader = execjs.compile(js_code)
+    jscode_to_run = js_code
+    if before:
+        jscode_to_run = before + jscode_to_run
+    if after:
+        jscode_to_run += after
+    loader = execjs.compile(jscode_to_run)
     return loader,js_code
 
 def toJs(jsPath):
