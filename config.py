@@ -19,3 +19,4 @@ SQLALCHEMY_ECHO = False # 打印sql语句
 JSON_AS_ASCII = False # jsonify返回的中文正常显示
 # PLAY_URL = 'http://localhost:5705' # 匹配远程解析服务器链接
 # PLAY_URL = PLAY_URL.rstrip('/')
+PLAY_DISABLE = False  # 全局禁用播放解析

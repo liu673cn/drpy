@@ -20,16 +20,22 @@ class CMS:
     def __init__(self, rule, db=None, RuleClass=None, new_conf=None):
         if new_conf is None:
             new_conf = {}
-        self.play_parse = rule.get('play_parse', False)
-        play_url = new_conf.get('PLAY_URL',getHost(1))
-        if not play_url.startswith('http'):
-            play_url = 'http://'+play_url
+        self.play_disable = new_conf.get('PLAY_DISABLE',False)
         self.vod = redirect(url_for('vod')).headers['Location']
-        if self.play_parse:
-            self.play_url = play_url + self.vod + '?play_url='
-            logger.info(f'cms重定向链接:{self.play_url}')
+        if not self.play_disable:
+            self.play_parse = rule.get('play_parse', False)
+            play_url = new_conf.get('PLAY_URL',getHost(1))
+            if not play_url.startswith('http'):
+                play_url = 'http://'+play_url
+            if self.play_parse:
+                self.play_url = play_url + self.vod + '?play_url='
+                logger.info(f'cms重定向链接:{self.play_url}')
+            else:
+                self.play_url = ''
         else:
+            self.play_parse = False
             self.play_url = ''
+
         self.db = db
         self.RuleClass = RuleClass
         host = rule.get('host','').rstrip('/')
