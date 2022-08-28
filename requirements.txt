@@ -6,3 +6,4 @@ flask-sqlalchemy
 netifaces
 gevent ; python_version < '3.9'
 supervisor ; sys_platform != 'win32' and python_version < '3.9'
+func_timeout

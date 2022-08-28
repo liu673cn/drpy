@@ -3,6 +3,7 @@
 # File  : cms.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
+import execjs
 import requests
 import re
 import math
@@ -10,6 +11,8 @@ from utils.web import *
 from models import *
 from utils.config import config
 from utils.log import logger
+from utils.safePython import safePython
+from utils.parser import runPy
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
@@ -17,19 +20,23 @@ from time import time
 from flask import url_for,redirect
 
 class CMS:
-    def __init__(self, rule, db=None, RuleClass=None, new_conf=None):
+    def __init__(self, rule, db=None, RuleClass=None, PlayParse=None,new_conf=None):
         if new_conf is None:
             new_conf = {}
+        self.title = rule.get('title', '')
+        self.lazy = rule.get('lazy', False)
         self.play_disable = new_conf.get('PLAY_DISABLE',False)
         self.vod = redirect(url_for('vod')).headers['Location']
+        # if not self.play_disable and self.lazy:
         if not self.play_disable:
             self.play_parse = rule.get('play_parse', False)
             play_url = new_conf.get('PLAY_URL',getHost(1))
             if not play_url.startswith('http'):
                 play_url = 'http://'+play_url
             if self.play_parse:
-                self.play_url = play_url + self.vod + '?play_url='
-                logger.info(f'cms重定向链接:{self.play_url}')
+                # self.play_url = play_url + self.vod + '?play_url='
+                self.play_url = f'{play_url}{self.vod}?rule={self.title}&play_url='
+                # logger.info(f'cms重定向链接:{self.play_url}')
             else:
                 self.play_url = ''
         else:
@@ -38,6 +45,7 @@ class CMS:
 
         self.db = db
         self.RuleClass = RuleClass
+        self.PlayParse = PlayParse
         host = rule.get('host','').rstrip('/')
         timeout = rule.get('timeout',5000)
         homeUrl = rule.get('homeUrl','/')
@@ -84,7 +92,6 @@ class CMS:
         self.二级 = rule.get('二级','')
         self.搜索 = rule.get('搜索','')
         self.推荐 = rule.get('推荐','')
-        self.title = rule.get('title','')
         self.encoding = encoding
         self.timeout = round(int(timeout)/1000,2)
         self.filter = rule.get('filter',[])
@@ -186,6 +193,50 @@ class CMS:
             logger.info(msg)
         except Exception as e:
             return f'发生了错误:{e}'
+
+    def getParse(self,play_url):
+        if not self.db:
+            msg = '未提供数据库连接'
+            print(msg)
+            return ''
+        name = self.getName()
+        # self.db.metadata.clear()
+        # RuleClass = rule_classes.init(self.db)
+        res = self.db.session.query(self.PlayParse).filter(self.PlayParse.play_url == play_url).first()
+        # _logger.info('xxxxxx')
+        if res:
+            real_url = res.real_url
+            logger.info(f"{name}使用缓存播放地址:{real_url}")
+            return real_url
+        else:
+            return []
+
+    def saveParse(self, play_url,real_url):
+        if not self.db:
+            msg = '未提供数据库连接'
+            print(msg)
+            return msg
+        name = self.getName()
+        # data = RuleClass.query.filter(RuleClass.name == '555影视').all()
+        # self.db.metadata.clear()
+        # RuleClass = rule_classes.init(self.db)
+        res = self.db.session.query(self.PlayParse).filter(self.PlayParse.play_url == play_url).first()
+        # print(res)
+        if res:
+            res.real_url = real_url
+            self.db.session.add(res)
+            msg = f'{name}服务端免嗅修改成功:{res.id}'
+        else:
+            res = self.PlayParse(play_url=play_url, real_url=real_url)
+            self.db.session.add(res)
+            res = self.db.session.query(self.PlayParse).filter(self.PlayParse.play_url == play_url).first()
+            msg = f'{name}服务端免嗅新增成功:{res.id}'
+
+        try:
+            self.db.session.commit()
+            logger.info(msg)
+        except Exception as e:
+            return f'{name}发生了错误:{e}'
 
 
     def homeContent(self,fypage=1):
@@ -459,6 +510,8 @@ class CMS:
         playFrom = []
         if p.get('tabs'):
             vodHeader = pdfa(html,p['tabs'])
+            # print(f'线路列表数:{len((vodHeader))}')
+            # print(vodHeader)
             vodHeader = [pq(v).text() for v in vodHeader]
         else:
             vodHeader = ['道长在线']
@@ -548,6 +601,27 @@ class CMS:
             'list': videos
         }
         return result
+
+    def playContent(self, play_url):
+        if self.lazy:
+            print(f'{play_url}->开始执行免嗅代码->{self.lazy}')
+            pycode = runPy(self.lazy)
+            if pycode:
+                # print(pycode)
+                pos = pycode.find('def lazyParse')
+                if pos < 0:
+                    return play_url
+                pyenv = safePython(self.lazy,pycode[pos:])
+                # print(pyenv)
+                jsp = jsoup(self.url)
+                lazy_url = pyenv.action_task_exec('lazyParse',[play_url,jsp,self.getParse,self.saveParse,self.headers,self.encoding])
+                logger.info(f'播放免嗅结果:{lazy_url}')
+                if isinstance(lazy_url,str) and lazy_url.startswith('http'):
+                    play_url = lazy_url
+            return play_url
+        else:
+            logger.info(f'播放重定向到:{play_url}')
+            return play_url
 
 if __name__ == '__main__':
     from utils import parser

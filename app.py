@@ -39,6 +39,7 @@ from gevent.pywsgi import WSGIServer
 # from geventwebsocket.handler import WebSocketHandler
 
 RuleClass = rule_classes.init(db)
+PlayParse = play_parse.init(db)
 
 def getParmas(key=None,value=''):
     """
@@ -68,11 +69,6 @@ def index():  # put application's code here
 
 @app.route('/vod')
 def vod():
-    play_url = getParmas('play_url')
-    if play_url:  # 播放
-        logger.info(f'播放重定向到:{play_url}')
-        return redirect(play_url)
-
     rule = getParmas('rule')
     ext = getParmas('ext')
     if not ext.startswith('http') and not rule:
@@ -85,8 +81,9 @@ def vod():
     ctx,js_code = parser.runJs(js_path)
     if not js_code:
         return jsonify(error.failed('爬虫规则加载失败'))
+
     rule = ctx.eval('rule')
-    cms = CMS(rule,db,RuleClass,app.config)
+    cms = CMS(rule,db,RuleClass,PlayParse,app.config)
     wd = getParmas('wd')
     ac = getParmas('ac')
     quick = getParmas('quick')
@@ -98,6 +95,11 @@ def vod():
     pg = int(pg)
     ids = getParmas('ids')
     q = getParmas('q')
+    play_url = getParmas('play_url')
+
+    if play_url:  # 播放
+        play_url = cms.playContent(play_url)
+        return redirect(play_url)
 
     if ac and t: # 一级
         data = cms.categoryContent(t,pg)
@@ -204,7 +206,7 @@ def rules_raw():
 
 @app.route('/config/<int:mode>')
 def config_render(mode):
-    print(dict(app.config))
+    # print(dict(app.config))
     html = render_template('config.txt',rules=getRules('js'),host=getHost(mode),mode=mode,jxs=getJxs(),config=dict(app.config))
     response = make_response(html)
     response.headers['Content-Type'] = 'application/json; charset=utf-8'

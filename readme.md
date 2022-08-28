@@ -4,6 +4,7 @@
 - [X] 1.增加linux进程启动,命令 supervisord -c manager.conf
 - [X] 2.转移文本文件到txt目录
 - [X] 3.增加服务器解析播放(全局配置和js分别配置.后期可以针对性运行解析)
+- [X] 4.增加自定义免嗅(基于道长任务仓库核心逻辑实现云函数)
 ###### 2022/08/27
 - [X] 1.增加PC_UA变量
 - [X] 2.首页增加更多功能按钮  
@@ -76,6 +77,8 @@ var rule = {
     class_parse:'#side-menu:lt(1) li;a&&Text;a&&href;com/(.*?)/',
     // 服务器解析播放
     play_parse:true,
+    // 自定义免嗅
+    lazy:'',
     // 首页推荐显示数量
     limit:6,
     double:true,//是否双层列表定位,默认false

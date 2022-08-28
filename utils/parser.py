@@ -66,3 +66,37 @@ def toHtml(jsPath):
     response = make_response(js)
     response.headers['Content-Type'] = 'text/html; charset=utf-8'
     return response
+
+def runPy(pyPath):
+    # base_path = os.path.dirname(os.path.abspath(__file__)) # 当前文件所在目录
+    # base_path = os.path.dirname(os.getcwd()) # 当前主程序所在工作目录
+    # base_path = os.path.dirname(os.path.abspath('.')) # 上级目录
+    # js_code = 'var rule={}'
+    if pyPath and not str(pyPath).endswith('.py'):
+        pyPath += '.py'
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    if str(pyPath).startswith('http'):
+        py_name = pyPath.split('/')[-1]
+        cache_path = os.path.join(base_path, f'cache/{py_name}')
+        print('远程免嗅:',py_name)
+        if not os.path.exists(cache_path):
+            try:
+                py_code = requests.get(pyPath,timeout=2).text
+                with open(cache_path,mode='w+',encoding='utf-8') as f:
+                    f.write(py_code)
+            except Exception as e:
+                print('发生了错误:',e)
+                return None, ''
+        else:
+            with open(cache_path, 'r', encoding='UTF-8') as fp:
+                py_code = fp.read()
+    else:
+        py_root = os.path.join(base_path, 'py/')
+        os.makedirs(py_root,exist_ok=True)
+        py_path = os.path.join(py_root, pyPath)
+        if not os.path.exists(py_path):
+            return ''
+        with open(py_path, 'r', encoding='UTF-8') as fp:
+            py_code = fp.read()
+    # print(js_code)
+    return py_code

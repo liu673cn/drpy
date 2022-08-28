@@ -5,3 +5,4 @@
 # Date  : 2022/8/25
 
 from . import rule_classes
+from . import play_parse

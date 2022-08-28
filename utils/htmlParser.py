@@ -12,6 +12,8 @@ class jsoup:
         self.MY_URL = MY_URL
 
     def pdfh(self,html,parse,pd=False):
+        if not parse:
+            return ''
         doc = pq(html)
         option = None
         if parse.find('&&') > -1:
@@ -39,6 +41,8 @@ class jsoup:
         return ret
 
     def pdfa(self,html,parse):
+        if not parse:
+            return []
         doc = pq(html)
         # return [item.html() for item in doc(parse).items()]
         return [str(item) for item in doc(parse).items()]

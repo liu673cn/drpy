@@ -10,6 +10,7 @@ var rule = {
     timeout:5000,
     class_parse:'.bm-item-list a:gt(0):lt(7);a&&Text;a&&href;/(\\d+).html',
     play_parse:true,
+    lazy:'',
     limit:5,
     推荐:'.movie-list-body;.movie-list-item;.movie-title&&Text;.movie-post-lazyload&&data-original;.movie-rating&&Text;a&&href',
     double:true, // 推荐内容是否双层定位
