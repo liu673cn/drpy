@@ -1,12 +1,12 @@
 {
-    "dr_count": 6,
-    "mode": 0,
+    "dr_count": 9,
+    "mode": 1,
     "sites": [
         {
             "key": "dr_555影视",
             "name": "555影视(道长)",
             "type": 1,
-            "api": "http://localhost:5705/vod?rule=555影视",
+            "api": "http://192.168.3.224:5705/vod?rule=555影视",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 1
@@ -15,7 +15,7 @@
             "key": "dr_cokemv",
             "name": "cokemv(道长)",
             "type": 1,
-            "api": "http://localhost:5705/vod?rule=cokemv",
+            "api": "http://192.168.3.224:5705/vod?rule=cokemv",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 1
@@ -24,7 +24,16 @@
             "key": "dr_喵喵",
             "name": "喵喵(道长)",
             "type": 1,
-            "api": "http://localhost:5705/vod?rule=喵喵",
+            "api": "http://192.168.3.224:5705/vod?rule=喵喵",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 1
+        },
+        {
+            "key": "dr_夜空",
+            "name": "夜空(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=夜空",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 1
@@ -33,7 +42,25 @@
             "key": "dr_玩偶姐姐",
             "name": "玩偶姐姐(道长)",
             "type": 1,
-            "api": "http://localhost:5705/vod?rule=玩偶姐姐",
+            "api": "http://192.168.3.224:5705/vod?rule=玩偶姐姐",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 1
+        },
+        {
+            "key": "dr_瓜皮TV",
+            "name": "瓜皮TV(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=瓜皮TV",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 1
+        },
+        {
+            "key": "dr_莫扎兔",
+            "name": "莫扎兔(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=莫扎兔",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 1
@@ -42,7 +69,7 @@
             "key": "dr_蓝莓影视",
             "name": "蓝莓影视(道长)",
             "type": 1,
-            "api": "http://localhost:5705/vod?rule=蓝莓影视",
+            "api": "http://192.168.3.224:5705/vod?rule=蓝莓影视",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 1
@@ -51,7 +78,7 @@
             "key": "dr_鸭奈飞",
             "name": "鸭奈飞(道长)",
             "type": 1,
-            "api": "http://localhost:5705/vod?rule=鸭奈飞",
+            "api": "http://192.168.3.224:5705/vod?rule=鸭奈飞",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 1

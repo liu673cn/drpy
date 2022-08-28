@@ -3,5 +3,6 @@ pyquery
 flask
 requests
 flask-sqlalchemy
-gevent
 netifaces
+gevent ; python_version < '3.9'
+supervisor ; sys_platform != 'win32' and python_version < '3.9'

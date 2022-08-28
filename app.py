@@ -194,20 +194,21 @@ def config_render(mode):
 @app.route('/configs')
 def config_gen():
     # 生成文件
+    os.makedirs('txt',exist_ok=True)
     set_local = render_template('config.txt',rules=getRules('js'),mode=0,host=getHost(0))
     set_area = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(1))
     set_online = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(2))
-    with open('pycms0.json','w+',encoding='utf-8') as f:
+    with open('txt/pycms0.json','w+',encoding='utf-8') as f:
         set_dict = json.loads(set_local)
         f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
-    with open('pycms1.json','w+',encoding='utf-8') as f:
+    with open('txt/pycms1.json','w+',encoding='utf-8') as f:
         set_dict = json.loads(set_area)
         f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
 
-    with open('pycms2.json','w+',encoding='utf-8') as f:
+    with open('txt/pycms2.json','w+',encoding='utf-8') as f:
         set_dict = json.loads(set_online)
         f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
-    files = [os.path.abspath(f'pycms{i}.json') for i in range(3)]
+    files = [os.path.abspath(rf'txt\pycms{i}.json') for i in range(3)]
     # print(files)
     return jsonify(error.success('猫配置生成完毕，文件位置在:\n'+'\n'.join(files)))
 
