@@ -132,6 +132,15 @@ def getRules(path='cache'):
     rules = {'list': rule_list, 'count': len(rule_list)}
     return rules
 
+def getJxs(path='js'):
+    with open(f'{path}/解析.txt',encoding='utf-8') as f:
+        data = f.read().strip()
+    jxs = [{'name':dt.split(',')[0],'url':dt.split(',')[1]} for dt in data.split('\n')]
+    # print(jxs)
+    print(f'共计{len(jxs)}条解析')
+    return jxs
+
+
 def getClasses():
     if not db:
         msg = '未提供数据库连接'
@@ -186,7 +195,7 @@ def rules_raw():
 
 @app.route('/config/<int:mode>')
 def config_render(mode):
-    html = render_template('config.txt',rules=getRules('js'),host=getHost(mode),mode=mode)
+    html = render_template('config.txt',rules=getRules('js'),host=getHost(mode),mode=mode,jxs=getJxs())
     response = make_response(html)
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     return response
@@ -195,9 +204,10 @@ def config_render(mode):
 def config_gen():
     # 生成文件
     os.makedirs('txt',exist_ok=True)
-    set_local = render_template('config.txt',rules=getRules('js'),mode=0,host=getHost(0))
-    set_area = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(1))
-    set_online = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(2))
+    jxs=getJxs()
+    set_local = render_template('config.txt',rules=getRules('js'),mode=0,host=getHost(0),jxs=jxs)
+    set_area = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(1),jxs=jxs)
+    set_online = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(2),jxs=jxs)
     with open('txt/pycms0.json','w+',encoding='utf-8') as f:
         set_dict = json.loads(set_local)
         f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))

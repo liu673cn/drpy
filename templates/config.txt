@@ -32,28 +32,21 @@
 		"name": "Json轮询",
 		"type": 2,
 		"url": "Sequence"
-	}, {
-		"name": "油果",
-		"type": 1,
-		"url": "http://json.youguo520.top/fufeng/?url=",
-		"ext": {
-			"flag": ["qiyi", "爱奇艺", "奇艺", "qq", "腾讯", "youku", "优酷", "pptv", "PPTV", "letv", "乐视", "bilibili", "哔哩哔哩", "哔哩", "mgtv", "芒果"],
-			"header": {
-				"User-Agent": "Dart/2.14 (dart:io)"
-			}
-		}
-	}, {
-		"name": "江湖",
-		"type": 1,
-		"url": "http://jx.vipmv.co/?url=",
-		"ext": {
-			"flag": ["qq", "qiyi", "mgtv", "youku", "letv", "sohu", "xigua", "cntv", "1905"],
-			"header": {
-				"User-Agent": "Dart/2.14 (dart:io)"
-			}
-		}
-	}],
-"flags": ["youku", "qq", "iqiyi", "qiyi", "letv", "sohu", "tudou", "pptv", "mgtv", "wasu", "bilibili", "renrenmi"],
+	},
+	 {% for jx in jxs %}
+{
+    "name": "{{ jx.name }}",
+    "url": "{{ jx.url }}",
+    "type": 1,
+    "ext": {
+    "flag": ["qiyi", "爱奇艺", "奇艺", "qq", "腾讯", "youku", "优酷", "pptv", "PPTV", "letv", "乐视", "bilibili", "哔哩哔哩", "哔哩", "mgtv", "芒果","sohu", "xigua"],
+    "header": {
+        "User-Agent": "Dart/2.14 (dart:io)"
+    }
+    }
+}{% if loop.last==False %},{% endif %}{% endfor %}
+	 ],
+"flags": ["youku", "qq", "iqiyi", "qiyi", "letv", "sohu", "tudou","xigua","cntv","1905", "pptv", "mgtv", "wasu", "bilibili", "renrenmi"],
 "ijk": [{
 "group": "软解码",
 "options": [{
