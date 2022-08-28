@@ -19,8 +19,8 @@ def lazyParse(input,d):
     r.encoding = d.encoding
     html = r.text
     # print(html)
-    js = d.jsp.pdfh(html,'.stui-player__video script:eq(0)&&Html')
-    print(js)
+    # js = d.jsp.pdfh(html,'.stui-player__video script:eq(0)&&Html')
+    # print(js)
     try:
         ret = re.search('var player_(.*?)=(.*?)<', html, re.M | re.I).groups()[1]
         ret = json.loads(ret)
