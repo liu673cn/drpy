@@ -13,18 +13,28 @@
 <style>
     .btn{
         margin-bottom: 2rem;
-        border:1px solid #F00;
+        border: 1px solid #615e5e;
         width: 180px;
         height: 30px;
         text-align: center;
         background-color: #1379cb;
         color: #ffffff;
-    }
+        border-radius: 20px;
+        line-height: 30px;
+          }
+
     .btn a{
         color: #ffffff;
     }
+
+a {
+    text-decoration: none;
+    text-align: center;
+    line-height: 30px;
+}
 </style>
-<body>
+<body style="background: #FFFFFF url(https://cdn.seovx.com/d/?mom=302) no-repeat fixed center;max-hright;">
+
 <script>
     $(document).ready(function(){
         $("#gen_config").click(function(){
@@ -39,6 +49,7 @@
 </script>
 <h1>欢迎使用dr_py项目</h1>
 <p>可以简单的自定义爬虫实现cms数据接口</p>
+
 <div class="btn" style="display: none">
     <a href="/clear?rule=">缓存清理接口</a>
 </div>
@@ -59,6 +70,9 @@
 {% if '192.168' in getHost(1) %}
 <div class="btn">
     <a href="http://{{ getHost(1) }}/config/1">局域网配置地址</a>
+</div>
+<div class="btn">
+    <a href="http://{{ manager }}">局域网在线进程管理</a>
 </div>
 {% endif %}
 <div class="btn">

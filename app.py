@@ -63,9 +63,8 @@ def forbidden():  # put application's code here
 @app.route('/index')
 def index():  # put application's code here
     # logger.info("进入了首页")
-    a = redirect(url_for('vod')).headers['Location']
-    print(a)
-    return render_template('index.html',getHost=getHost)
+    manager = getHost(1).split(':')[0] + ':9001'
+    return render_template('index.html',getHost=getHost,manager=manager)
 
 @app.route('/vod')
 def vod():
