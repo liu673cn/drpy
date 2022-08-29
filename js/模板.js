@@ -1,3 +1,15 @@
+Object.assign = function () {
+	var target = arguments[0];
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];
+        for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+                target[key] = source[key];
+            }
+        }
+    }
+    return target;
+};
 var muban = {
  mxpro:{
     title:'',

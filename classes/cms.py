@@ -12,7 +12,7 @@ from models import *
 from utils.config import config
 from utils.log import logger
 from utils.safePython import safePython
-from utils.parser import runPy
+from utils.parser import runPy,runJScode
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
@@ -24,6 +24,7 @@ class CMS:
         if new_conf is None:
             new_conf = {}
         self.title = rule.get('title', '')
+        self.id = rule.get('id', self.title)
         self.lazy = rule.get('lazy', False)
         self.play_disable = new_conf.get('PLAY_DISABLE',False)
         self.vod = redirect(url_for('vod')).headers['Location']
@@ -35,7 +36,7 @@ class CMS:
                 play_url = 'http://'+play_url
             if self.play_parse:
                 # self.play_url = play_url + self.vod + '?play_url='
-                self.play_url = f'{play_url}{self.vod}?rule={self.title}&play_url='
+                self.play_url = f'{play_url}{self.vod}?rule={self.id}&play_url='
                 # logger.info(f'cms重定向链接:{self.play_url}')
             else:
                 self.play_url = ''
@@ -615,17 +616,32 @@ class CMS:
     def playContent(self, play_url):
         if self.lazy:
             print(f'{play_url}->开始执行免嗅代码->{self.lazy}')
-            pycode = runPy(self.lazy)
-            if pycode:
-                # print(pycode)
-                pos = pycode.find('def lazyParse')
-                if pos < 0:
-                    return play_url
-                pyenv = safePython(self.lazy,pycode[pos:])
-                lazy_url = pyenv.action_task_exec('lazyParse',[play_url,self.d])
-                logger.info(f'播放免嗅结果:{lazy_url}')
-                if isinstance(lazy_url,str) and lazy_url.startswith('http'):
-                    play_url = lazy_url
+            if not str(self.lazy).startswith('js:'):
+                pycode = runPy(self.lazy)
+                if pycode:
+                    # print(pycode)
+                    pos = pycode.find('def lazyParse')
+                    if pos < 0:
+                        return play_url
+                    pyenv = safePython(self.lazy,pycode[pos:])
+                    lazy_url = pyenv.action_task_exec('lazyParse',[play_url,self.d])
+                    logger.info(f'播放免嗅结果:{lazy_url}')
+                    if isinstance(lazy_url,str) and lazy_url.startswith('http'):
+                        play_url = lazy_url
+            else:
+                jscode = str(self.lazy).split('js:')[1]
+                # jscode = f'var input={play_url};{jscode}'
+                # print(jscode)
+                loader,_ = runJScode(jscode,ctx={'input':play_url,
+                                                 'requests':requests,'print':print,'d':self.d,
+                                                 'log':logger.info,'pdfh':self.d.jsp.pdfh,
+                                                 'pdfa': self.d.jsp.pdfa,'pd':self.d.jsp.pd,
+                                                 })
+                # print(loader.toString())
+                play_url = loader.eval('input')
+                print('play_url:',play_url)
+
+
             return play_url
         else:
             logger.info(f'播放重定向到:{play_url}')

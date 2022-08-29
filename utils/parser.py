@@ -18,6 +18,14 @@ import js2py
 # os.environ["EXECJS_RUNTIME"] = "JScript"
 # print(execjs.get().name)
 
+def runJScode(jscode,loader=None,ctx=None):
+    if loader is None:
+        if ctx is None:
+            ctx = {}
+        loader = js2py.EvalJs(ctx)
+    loader.execute(jscode)
+    return loader, jscode
+
 def runJs(jsPath, before='', after='', ctx=None):
     # base_path = os.path.dirname(os.path.abspath(__file__)) # 当前文件所在目录
     # base_path = os.path.dirname(os.getcwd()) # 当前主程序所在工作目录
@@ -52,9 +60,11 @@ def runJs(jsPath, before='', after='', ctx=None):
     if after:
         jscode_to_run += after
     loader = js2py.EvalJs(ctx)
+    return runJScode(jscode_to_run,loader)
     # loader = execjs.compile(jscode_to_run)
-    loader.execute(jscode_to_run)
-    return loader,js_code
+    # print(jscode_to_run)
+    # loader.execute(jscode_to_run)
+    # return loader,js_code
 
 def toJs(jsPath):
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__))) # 上级目录
@@ -96,7 +106,7 @@ def runPy(pyPath):
                     f.write(py_code)
             except Exception as e:
                 print('发生了错误:',e)
-                return None, ''
+                return None
         else:
             with open(cache_path, 'r', encoding='UTF-8') as fp:
                 py_code = fp.read()
@@ -119,6 +129,7 @@ def covert_demo():
     loader.execute('function f(x) {return x*x};var a=py_sum([2,3]);var b=[a,5];var c={"a":a};')
     f = loader.f
     print(f(8))
+    print(f.toString())
     print(loader.eval('py_sum(new Array(1, 2, 3))'))
     print(loader.eval('py_sum([1, 2])'))
     a = loader.a
@@ -141,7 +152,10 @@ def covert_demo():
     print(r[0].a)
     print(loader.eval('r = requests.get("https://www.baidu.com/");r.encoding = "utf-8";r.text'))
     # 下面是错误用法,没有loader环境没法正确eval_js,有loader用eval不需要eval_js
-    print(js2py.eval_js('r = requests.get("https://www.baidu.com/");r.encoding = "utf-8";r.text'))
+    # print(js2py.eval_js('r = requests.get("https://www.baidu.com/");r.encoding = "utf-8";r.text'))
+    with open('../js/夜空.js',encoding='utf-8') as f:
+        yk = f.read()
+    print(yk)
 
 
 if __name__ == '__main__':

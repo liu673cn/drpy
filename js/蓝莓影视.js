@@ -10,7 +10,7 @@ var rule = {
     // class_name:'电影&网剧&剧集&动漫&综艺&记录',
     // class_url:'20&1&2&3&4&23',
     class_parse:'.navbar-items li:gt(1):lt(8);a&&Text;a&&href;/(\\d+).html',
-    play_parse:true,
+    play_parse:true,//一般有免嗅才开,没免嗅还开只能服务器打印日志进行监听并重定向
     // lazy:'通用免嗅',
     limit:30,
     推荐:'.tab-list.active;a.module-poster-item.module-item;.module-poster-item-title&&Text;.lazyload&&data-original;.module-item-note&&Text;a&&href',

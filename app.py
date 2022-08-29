@@ -88,13 +88,14 @@ def vod():
         return jsonify(error.failed('爬虫规则加载失败'))
 
     # rule = ctx.eval('rule')
-    rule = ctx.rule.to_dict()
+    ruleDict = ctx.rule.to_dict()
+    ruleDict['id'] = rule  # 把路由请求的id装到字典里,后面播放嗅探才能用
     # print(rule)
     # print(type(rule))
 
     logger.info(f'js装载耗时:{get_interval(t2)}毫秒')
     # print(rule)
-    cms = CMS(rule,db,RuleClass,PlayParse,app.config)
+    cms = CMS(ruleDict,db,RuleClass,PlayParse,app.config)
     wd = getParmas('wd')
     ac = getParmas('ac')
     quick = getParmas('quick')
