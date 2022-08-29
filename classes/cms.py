@@ -11,6 +11,7 @@ from utils.web import *
 from models import *
 from utils.config import config
 from utils.log import logger
+from utils.encode import base64Encode,baseDecode,fetch,post
 from utils.safePython import safePython
 from utils.parser import runPy,runJScode
 from utils.htmlParser import jsoup
@@ -18,6 +19,11 @@ from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
 from flask import url_for,redirect
 from easydict import EasyDict as edict
+
+py_ctx = {
+'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
+'log':logger.info,'fetch':fetch,'post':post
+}
 
 class CMS:
     def __init__(self, rule, db=None, RuleClass=None, PlayParse=None,new_conf=None):
@@ -223,7 +229,7 @@ class CMS:
             logger.info(f"{name}使用缓存播放地址:{real_url}")
             return real_url
         else:
-            return []
+            return ''
 
     def saveParse(self, play_url,real_url):
         if not self.db:
@@ -632,11 +638,14 @@ class CMS:
                 jscode = str(self.lazy).split('js:')[1]
                 # jscode = f'var input={play_url};{jscode}'
                 # print(jscode)
-                loader,_ = runJScode(jscode,ctx={'input':play_url,
-                                                 'requests':requests,'print':print,'d':self.d,
-                                                 'log':logger.info,'pdfh':self.d.jsp.pdfh,
-                                                 'pdfa': self.d.jsp.pdfa,'pd':self.d.jsp.pd,
-                                                 })
+                py_ctx.update({
+                    'input': play_url,
+                    'd': self.d,
+                    'pdfh': self.d.jsp.pdfh,
+                    'pdfa': self.d.jsp.pdfa, 'pd': self.d.jsp.pd,
+                })
+                ctx = py_ctx
+                loader,_ = runJScode(jscode,ctx=ctx)
                 # print(loader.toString())
                 play_url = loader.eval('input')
                 print('play_url:',play_url)

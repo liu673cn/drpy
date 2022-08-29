@@ -1,28 +1,22 @@
 js:
 cacheUrl = d.getParse(input);
-print(cacheUrl);
+// print(cacheUrl);
 if(cacheUrl){
     input=cacheUrl;
 }else{
     try {
-        r = requests.get(input, headers=d.headers,timeout=d.timeout);
-        r.encoding = d.encoding;
-        html = r.text;
+        // let html = fetch([input, {headers:d.headers,timeout:d.timeout,encoding:d.encoding}]);
+        let html = fetch(input, {headers:d.headers,timeout:d.timeout,encoding:d.encoding});
+        // js = pdfh(html,'.stui-player__video script:eq(0)&&Html');
+        // print(js);
         let ret = html.match(/var player_(.*?)=(.*?)</)[2];
         let url = JSON.parse(ret).url;
-        if(/\.m3u8|\.mp4/.test(url)){
-            input = url
-        }else if(!/http/.test(url)&&!/\//.test(url)){
-            try {
-                url = unescape(base64Decode(url));
-                if(/http/.test(url)){
-                    input = url
-                }
-            }catch (e) {
-                print('解码url发生错误:'+e.message);
-            }
+        if(url.length > 10){
+            real_url = 'https://player.buyaotou.xyz/?url='+url;
+            d.saveParse(input,real_url);
+            input =  real_url;
         }
     }catch (e) {
-        print('发生错误:'+e.message);
+        print('网络请求发生错误:'+e.message);
     }
 }
