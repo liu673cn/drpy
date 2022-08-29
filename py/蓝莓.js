@@ -14,23 +14,25 @@ if (player.encrypt == '1') {
 } else {
     jsurl
 }
-eval(getCryptoJS());
 if (/ddzy|duoduo/.test(from)) {
-    let html = request(MY_HOME + '/pzwj.js');
-    // print(html);
-    eval(html);
-    // print('好了');
-    var jx = MacPlayerConfig.player_list[from].parse;
-    print('第1次多多解析:',jx);
-    eval(fetch(jx + jsurl, fetch_params).match(/var config = {[\s\S]*?}/)[0]);
-    jx = jx.replace('?url=', '');
-    eval(fetch(jx + 'js/decode.js',fetch_params));
-    jxk = fetch(jx + 'js/setting.js',fetch_params).split(',');
-    jx += '555tZ4pvzHE3BpiO838.php'; //eval(jxk[32])
-    print('第2次多多解析:',jx);
-    config.tm = new Date().getTime();
-    config.sign = 'F4penExTGogdt6U8'; //eval(jxk[36])
-    input =  getVideoInfo(JSON.parse(fetch(buildUrl(jx, config),fetch_params)).url);
+    let mx = false;
+    if(mx) {
+        let html = request(MY_HOME + '/pzwj.js');
+        // print(html);
+        eval(html);
+        // print('好了');
+        var jx = MacPlayerConfig.player_list[from].parse;
+        print('第1次多多解析:', jx);
+        eval(fetch(jx + jsurl, fetch_params).match(/var config = {[\s\S]*?}/)[0]);
+        jx = jx.replace('?url=', '');
+        eval(fetch(jx + 'js/decode.js', fetch_params));
+        jxk = fetch(jx + 'js/setting.js', fetch_params).split(',');
+        jx += '555tZ4pvzHE3BpiO838.php'; //eval(jxk[32])
+        print('第2次多多解析:', jx);
+        config.tm = new Date().getTime();
+        config.sign = 'F4penExTGogdt6U8'; //eval(jxk[36])
+        input = getVideoInfo(JSON.parse(fetch(buildUrl(jx, config), fetch_params)).url);
+    }
 } else {
     let jxurl = "https://lanmeiguojiang.com/dd/?url="+jsurl;
     input =  maoss(jxurl, jxurl, "A42EAC0C2B408472");
