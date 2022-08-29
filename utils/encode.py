@@ -7,7 +7,7 @@
 import base64
 import requests
 import os
-from utils.web import UC_UA
+from utils.web import UC_UA,PC_UA
 
 def getPreJs():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目
@@ -33,7 +33,9 @@ def base64Encode(text):
 def baseDecode(text):
     return base64.b64decode(text).decode("utf-8") #base64解码
 
-def dealObj(obj):
+def dealObj(obj=None):
+    if not obj:
+        obj = {}
     encoding = obj.get('encoding') or 'utf-8'
     encoding = str(encoding).replace("'", "")
     # print(type(url),url)
@@ -64,6 +66,7 @@ def base_request(url,obj,method=None):
     if not method:
         method = 'get'
     # print(obj)
+    print(f'{method}:{url}')
     try:
         # r = requests.get(url, headers=headers, params=body, timeout=timeout)
         if method.lower() == 'get':
@@ -84,7 +87,9 @@ def fetch(url,obj,method=None):
     if not method:
         method = 'get'
     obj = dealObj(obj)
-    print(method)
+    # print(f'{method}:{url}')
+    if not obj.get('headers') or not obj['headers'].get('User-Agent'):
+        obj['headers']['User-Agent'] = PC_UA
     return base_request(url,obj,method)
 
 def post(url,obj):
@@ -95,7 +100,22 @@ def request(url,obj,method=None):
     if not method:
         method = 'get'
     obj = dealObj(obj)
+    # print(f'{method}:{url}')
     if not obj.get('headers') or not obj['headers'].get('User-Agent'):
         obj['headers']['User-Agent'] = UC_UA
 
     return base_request(url, obj, method)
+
+def buildUrl(url,obj=None):
+    url = str(url).replace("'", "")
+    if not obj:
+        obj = {}
+    new_obj = {}
+    for i in obj:
+        new_obj[str(i).replace("'", "")] = str(obj[i]).replace("'", "")
+    if not str(url).endswith('?'):
+        url = str(url) + '?'
+    prs = '&'.join([f'{i}={obj[i]}' for i in obj])
+    url = (url + prs).replace('"','').replace("'",'')
+    # print(url)
+    return url

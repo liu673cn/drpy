@@ -11,7 +11,7 @@ from utils.web import *
 from models import *
 from utils.config import config
 from utils.log import logger
-from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs
+from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl
 from utils.safePython import safePython
 from utils.parser import runPy,runJScode
 from utils.htmlParser import jsoup
@@ -22,7 +22,8 @@ from easydict import EasyDict as edict
 
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
-'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS
+'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS,
+'buildUrl':buildUrl
 }
 # print(getCryptoJS())
 
