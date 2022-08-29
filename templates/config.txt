@@ -1,5 +1,5 @@
 {
-"wallpaper":"http://{{ host }}/pics",
+{% if config.WALL_PAPER_ENABLE %}"wallpaper":"http://{{ host }}/pics",{% endif %}
 "dr_count": {{rules.list|length}},
 "mode": {{ mode }},
 "sites": [{% for rule in rules.list %}{% if mode == 0 %}

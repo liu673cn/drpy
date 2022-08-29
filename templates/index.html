@@ -66,13 +66,16 @@ a {
     <a href="http://{{ getHost(0) }}/config/0">本地配置地址</a>
 </div>
 <!--<a href="{{ getHost(1) }}">局域网:{{ getHost(1) }}</a>-->
-<p>局域网:{{ getHost(1) }}</p>
+<a href="https://picsum.photos/1280/720/?blur=10">局域网:{{ getHost(1) }}</a>
 {% if '192.168' in getHost(1) %}
 <div class="btn">
     <a href="http://{{ getHost(1) }}/config/1">局域网配置地址</a>
 </div>
 <div class="btn">
     <a href="http://{{ manager }}" target="_blank">局域网在线进程管理</a>
+</div>
+<div class="btn">
+    <a href="http://{{ getHost(1) }}/pics" target="_blank">局域网随机图片</a>
 </div>
 {% endif %}
 <div class="btn">

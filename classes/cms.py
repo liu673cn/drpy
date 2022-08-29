@@ -619,7 +619,9 @@ class CMS:
         }
         return result
 
-    def playContent(self, play_url):
+    def playContent(self, play_url,jxs=None):
+        if not jxs:
+            jxs = []
         if self.lazy:
             print(f'{play_url}->开始执行免嗅代码->{self.lazy}')
             if not str(self.lazy).startswith('js:'):
@@ -641,10 +643,12 @@ class CMS:
                 py_ctx.update({
                     'input': play_url,
                     'd': self.d,
+                    'jxs':jxs,
                     'pdfh': self.d.jsp.pdfh,
                     'pdfa': self.d.jsp.pdfa, 'pd': self.d.jsp.pd,
                 })
                 ctx = py_ctx
+                # print(ctx)
                 loader,_ = runJScode(jscode,ctx=ctx)
                 # print(loader.toString())
                 play_url = loader.eval('input')

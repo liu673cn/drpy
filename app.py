@@ -111,7 +111,8 @@ def vod():
     play_url = getParmas('play_url')
 
     if play_url:  # 播放
-        play_url = cms.playContent(play_url)
+        jxs = getJxs()
+        play_url = cms.playContent(play_url,jxs)
         return redirect(play_url)
 
     if ac and t: # 一级
@@ -230,9 +231,14 @@ def rules_raw():
 
 @app.route('/pics')
 def random_pics():
+    id = getParmas('id')
+    # print(f'id:{id}')
     pics = getPics()
     if len(pics) > 0:
-        pic = random.choice(pics)
+        if id and f'images/{id}.jpg' in pics:
+            pic = f'images/{id}.jpg'
+        else:
+            pic = random.choice(pics)
         file = open(pic, "rb").read()
         response = make_response(file)
         response.headers['Content-Type'] = 'image/jpeg'
