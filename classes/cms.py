@@ -626,6 +626,7 @@ class CMS:
         if self.lazy:
             print(f'{play_url}->开始执行免嗅代码->{self.lazy}')
             if not str(self.lazy).startswith('js:'):
+                t1 = time()
                 pycode = runPy(self.lazy)
                 if pycode:
                     # print(pycode)
@@ -634,7 +635,7 @@ class CMS:
                         return play_url
                     pyenv = safePython(self.lazy,pycode[pos:])
                     lazy_url = pyenv.action_task_exec('lazyParse',[play_url,self.d])
-                    logger.info(f'播放免嗅结果:{lazy_url}')
+                    logger.info(f'py免嗅耗时:{get_interval(t1)}毫秒,播放地址:{lazy_url}')
                     if isinstance(lazy_url,str) and lazy_url.startswith('http'):
                         play_url = lazy_url
             else:
@@ -650,13 +651,13 @@ class CMS:
                 })
                 ctx = py_ctx
                 # print(ctx)
+                t1 = time()
                 jscode = getPreJs() + jscode
                 # print(jscode)
                 loader,_ = runJScode(jscode,ctx=ctx)
                 # print(loader.toString())
                 play_url = loader.eval('input')
-                logger.info(f'免嗅播放地址:{play_url}')
-
+                logger.info(f'js免嗅耗时:{get_interval(t1)}毫秒,播放地址:{play_url}')
 
             return play_url
         else:
