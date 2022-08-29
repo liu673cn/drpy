@@ -6,7 +6,26 @@
 
 import base64
 import requests
+import os
 from utils.web import UC_UA
+
+def getPreJs():
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目
+    lib_path = os.path.join(base_path, f'libs/pre.js')
+    with open(lib_path,encoding='utf-8') as f:
+        code = f.read()
+    return code
+
+def getCryptoJS():
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目
+    os.makedirs(os.path.join(base_path, f'libs'), exist_ok=True)
+    lib_path = os.path.join(base_path, f'libs/crypto-hiker.js')
+    # print('加密库地址:', lib_path)
+    if not os.path.exists(lib_path):
+        return 'undefiend'
+    with open(lib_path,encoding='utf-8') as f:
+        code = f.read()
+    return code
 
 def base64Encode(text):
     return base64.b64encode(text.encode("utf8")).decode("utf-8") #base64编码

@@ -6,7 +6,7 @@
 
 import os
 
-def getRules():
+def getRuleLists():
     base_path = os.path.dirname(os.path.abspath(__file__)) # 当前文件所在目录
     # print(base_path)
     file_name = os.listdir(base_path)
@@ -17,4 +17,4 @@ def getRules():
     return rule_list
 
 if __name__ == '__main__':
-    print(getRules())
+    print(getRuleLists())

@@ -35,23 +35,22 @@ def get_host_ip(): # 获取局域网ip
         addresses = ''.join([i['addr'] for i in ifaddresses(ifaceName).setdefault(AF_INET, [{'addr': ''}])])
         ips.append(addresses)
     real_ips = list(filter(lambda x:x and x!='127.0.0.1',ips))
-    logger.info(real_ips)
+    # logger.info(real_ips)
     jyw = list(filter(lambda x:str(x).startswith('192.168'),real_ips))
     return real_ips[-1] if len(jyw) < 1 else jyw[0]
-
-REAL_IP = get_host_ip()
 
 def getHost(mode=0,port=None):
     port = port or request.environ.get('SERVER_PORT')
     # hostname = socket.gethostname()
     # ip = socket.gethostbyname(hostname)
-    ip = REAL_IP
     # ip = request.remote_addr
     # print(ip)
     # mode 为0是本地,1是局域网 2是线上
     if mode == 0:
         host = f'localhost:{port}'
     elif mode == 1:
+        REAL_IP = get_host_ip()
+        ip = REAL_IP
         host = f'{ip}:{port}'
     else:
         host = 'cms.nokia.press'

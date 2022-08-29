@@ -11,7 +11,7 @@ from utils.web import *
 from models import *
 from utils.config import config
 from utils.log import logger
-from utils.encode import base64Encode,baseDecode,fetch,post,request
+from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs
 from utils.safePython import safePython
 from utils.parser import runPy,runJScode
 from utils.htmlParser import jsoup
@@ -22,8 +22,9 @@ from easydict import EasyDict as edict
 
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
-'log':logger.info,'fetch':fetch,'post':post,'request':request
+'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS
 }
+# print(getCryptoJS())
 
 class CMS:
     def __init__(self, rule, db=None, RuleClass=None, PlayParse=None,new_conf=None):
@@ -649,6 +650,8 @@ class CMS:
                 })
                 ctx = py_ctx
                 # print(ctx)
+                jscode = getPreJs() + jscode
+                # print(jscode)
                 loader,_ = runJScode(jscode,ctx=ctx)
                 # print(loader.toString())
                 play_url = loader.eval('input')

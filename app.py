@@ -13,7 +13,7 @@ warnings.filterwarnings('ignore')
 
 import os
 from flask import Flask, jsonify, abort,request,redirect,make_response,render_template,send_from_directory,url_for
-from js.rules import getRules
+from js.rules import getRuleLists
 from utils import error,parser
 from utils.web import *
 import sys
@@ -28,10 +28,11 @@ app.config.from_object(config) # 单独的配置文件里写了，这里就不�
 # new_conf = get_conf(settings)
 # print(new_conf)
 print('自定义播放解析地址:',app.config.get('PLAY_URL'))
+print('当前操作系统',sys.platform)
 app.logger.name="drLogger"
 db = SQLAlchemy(app)
 
-rule_list = getRules()
+rule_list = getRuleLists()
 logger.info(rule_list)
 logger.info(f'http://{getHost(1, 5705)}/index\nhttp://localhost:5705/index')
 
@@ -41,6 +42,9 @@ from gevent.pywsgi import WSGIServer
 
 RuleClass = rule_classes.init(db)
 PlayParse = play_parse.init(db)
+
+def is_linux():
+    return not 'win' in sys.platform
 
 def getParmas(key=None,value=''):
     """
@@ -66,23 +70,27 @@ def forbidden():  # put application's code here
 def index():  # put application's code here
     # logger.info("进入了首页")
     manager = getHost(1).split(':')[0] + ':9001'
-    return render_template('index.html',getHost=getHost,manager=manager)
+    manager2 = getHost(0).split(':')[0] + ':9001'
+    return render_template('index.html',getHost=getHost,manager=manager,manager2=manager2,is_linux=is_linux())
 
 @app.route('/vod')
 def vod():
+    t0 = time()
     rule = getParmas('rule')
     ext = getParmas('ext')
     if not ext.startswith('http') and not rule:
         return jsonify(error.failed('规则字段必填'))
+    rule_list = getRuleLists()
     if not ext.startswith('http') and not rule in rule_list:
         msg = f'服务端本地仅支持以下规则:{",".join(rule_list)}'
         return jsonify(error.failed(msg))
-
+    # logger.info(f'检验耗时:{get_interval(t0)}毫秒')
     t1 = time()
     js_path = f'js/{rule}.js' if not ext.startswith('http') else ext
     with open('js/模板.js', encoding='utf-8') as f:
         before = f.read()
-    logger.info(f'js读取耗时:{get_interval(t1)}毫秒')
+    # logger.info(f'js读取耗时:{get_interval(t1)}毫秒')
+    logger.info(f'参数检验js读取共计耗时:{get_interval(t0)}毫秒')
     t2 = time()
     ctx, js_code = parser.runJs(js_path,before=before)
     if not js_code:
@@ -93,7 +101,7 @@ def vod():
     ruleDict['id'] = rule  # 把路由请求的id装到字典里,后面播放嗅探才能用
     # print(rule)
     # print(type(rule))
-
+    # print(ruleDict)
     logger.info(f'js装载耗时:{get_interval(t2)}毫秒')
     # print(rule)
     cms = CMS(ruleDict,db,RuleClass,PlayParse,app.config)
@@ -249,6 +257,9 @@ def random_pics():
 @app.route('/config/<int:mode>')
 def config_render(mode):
     # print(dict(app.config))
+    if mode == 1:
+        jyw_ip = getHost(mode)
+        logger.info(jyw_ip)
     html = render_template('config.txt',rules=getRules('js'),host=getHost(mode),mode=mode,jxs=getJxs(),config=dict(app.config))
     response = make_response(html)
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
