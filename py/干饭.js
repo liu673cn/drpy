@@ -13,6 +13,7 @@ if(cacheUrl){
         let url = JSON.parse(ret).url;
         if(url.length > 10){
             real_url = 'https://player.buyaotou.xyz/?url='+url;
+            log('免嗅地址:'+real_url);
             d.saveParse(input,real_url);
             input =  real_url;
         }

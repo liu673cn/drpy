@@ -648,7 +648,7 @@ class CMS:
                 loader,_ = runJScode(jscode,ctx=ctx)
                 # print(loader.toString())
                 play_url = loader.eval('input')
-                print('play_url:',play_url)
+                logger.info('免嗅播放地址:',play_url)
 
 
             return play_url
