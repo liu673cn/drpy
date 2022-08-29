@@ -3,6 +3,7 @@
 # File  : app.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
+import random
 
 from flask_sqlalchemy import SQLAlchemy
 import config
@@ -155,6 +156,17 @@ def getRules(path='cache'):
     rules = {'list': rule_list, 'count': len(rule_list)}
     return rules
 
+def getPics(path='images'):
+    base_path = path+'/'  # 当前文件所在目录
+    os.makedirs(base_path,exist_ok=True)
+    file_name = os.listdir(base_path)
+    # file_name = list(filter(lambda x: str(x).endswith('.js') and str(x).find('模板') < 0, file_name))
+    # print(file_name)
+    pic_list = [base_path+file for file in file_name]
+    # pic_list = file_name
+    # print(type(pic_list))
+    return pic_list
+
 def getJxs(path='js'):
     with open(f'{path}/解析.txt',encoding='utf-8') as f:
         data = f.read().strip()
@@ -215,6 +227,18 @@ def rules():
 @app.route('/raw')
 def rules_raw():
     return render_template('raw.html',rules=getRules(),classes=getClasses())
+
+@app.route('/pics')
+def random_pics():
+    pics = getPics()
+    if len(pics) > 0:
+        pic = random.choice(pics)
+        file = open(pic, "rb").read()
+        response = make_response(file)
+        response.headers['Content-Type'] = 'image/jpeg'
+        return response
+    else:
+        return redirect(config.WALL_PAPER)
 
 @app.route('/config/<int:mode>')
 def config_render(mode):

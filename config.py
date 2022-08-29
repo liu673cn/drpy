@@ -21,3 +21,4 @@ JSON_AS_ASCII = False # jsonify返回的中文正常显示
 # PLAY_URL = PLAY_URL.rstrip('/')
 PLAY_DISABLE = False  # 全局禁用播放解析
 WALL_PAPER = "https://picsum.photos/1280/720/?blur=10"  # 自定义壁纸,可注释
+# {% if config.WALL_PAPER %}"wallpaper":"{{ config.WALL_PAPER }}",{% endif %}

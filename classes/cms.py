@@ -11,7 +11,7 @@ from utils.web import *
 from models import *
 from utils.config import config
 from utils.log import logger
-from utils.encode import base64Encode,baseDecode,fetch,post
+from utils.encode import base64Encode,baseDecode,fetch,post,request
 from utils.safePython import safePython
 from utils.parser import runPy,runJScode
 from utils.htmlParser import jsoup
@@ -22,7 +22,7 @@ from easydict import EasyDict as edict
 
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
-'log':logger.info,'fetch':fetch,'post':post
+'log':logger.info,'fetch':fetch,'post':post,'request':request
 }
 
 class CMS:
@@ -648,7 +648,7 @@ class CMS:
                 loader,_ = runJScode(jscode,ctx=ctx)
                 # print(loader.toString())
                 play_url = loader.eval('input')
-                logger.info('免嗅播放地址:',play_url)
+                logger.info(f'免嗅播放地址:{play_url}')
 
 
             return play_url

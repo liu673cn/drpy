@@ -14,7 +14,7 @@ var rule = {
     // lazy:'干饭',
     // lazy:'@js:cacheUrl = d.getParse(input);print(cacheUrl);input=cacheUrl',
     // lazy:'js:cacheUrl = d.getParse(input);print(cacheUrl);input=cacheUrl',
-    lazy:'js:cacheUrl=d.getParse(input);if(cacheUrl){input=cacheUrl}else{try{let html=fetch(input,{headers:d.headers,timeout:d.timeout,encoding:d.encoding});let ret=html.match(/var player_(.*?)=(.*?)</)[2];let url=JSON.parse(ret).url;if(url.length>10){real_url="https://player.buyaotou.xyz/?url="+url;log("免嗅地址:"+real_url);d.saveParse(input,real_url);input=real_url}}catch(e){print("网络请求发生错误:"+e.message)}}',
+    lazy:'js:cacheUrl=d.getParse(input);if(cacheUrl){input=cacheUrl}else{try{let html=fetch(input,{headers:d.headers,timeout:d.timeout,encoding:d.encoding});let ret=html.match(/var player_(.*?)=(.*?)</)[2];let url=JSON.parse(ret).url;if(url.length>10){real_url="https://player.buyaotou.xyz/?url="+url;d.saveParse(input,real_url);input=real_url}}catch(e){print("网络请求发生错误:"+e.message)}}',
     limit:5,
     推荐:'ul.stui-vodlist.clearfix;li;a&&title;.lazyload&&data-original;;a&&href',
     double:true, // 推荐内容是否双层定位

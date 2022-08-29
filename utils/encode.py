@@ -6,6 +6,7 @@
 
 import base64
 import requests
+from utils.web import UC_UA
 
 def base64Encode(text):
     return base64.b64encode(text.encode("utf8")).decode("utf-8") #base64编码
@@ -13,8 +14,7 @@ def base64Encode(text):
 def baseDecode(text):
     return base64.b64decode(text).decode("utf-8") #base64解码
 
-def base_request(url,obj,method='get'):
-    url = str(url).replace("'", "")
+def dealObj(obj):
     encoding = obj.get('encoding') or 'utf-8'
     encoding = str(encoding).replace("'", "")
     # print(type(url),url)
@@ -33,25 +33,50 @@ def base_request(url,obj,method='get'):
     new_body = {}
     for i in body:
         new_body[str(i).replace("'", "")] = str(body[i]).replace("'", "")
-    # print(type(new_body), new_body)
+    return {
+        'encoding':encoding,
+        'headers':new_headers,
+        'timeout':timeout,
+        'body': new_body,
+    }
+
+def base_request(url,obj,method=None):
+    url = str(url).replace("'", "")
+    if not method:
+        method = 'get'
+    # print(obj)
     try:
         # r = requests.get(url, headers=headers, params=body, timeout=timeout)
         if method.lower() == 'get':
-            r = requests.get(url, headers=new_headers, params=new_body, timeout=timeout)
+            r = requests.get(url, headers=obj['headers'], params=obj['body'], timeout=obj['timeout'])
         else:
-            r = requests.post(url, headers=new_headers, data=new_body, timeout=timeout)
+            r = requests.post(url, headers=obj['headers'], data=obj['body'], timeout=obj['timeout'])
         # r = requests.get(url, timeout=timeout)
         # r = requests.get(url)
         # print(encoding)
-        r.encoding = encoding
+        r.encoding = obj['encoding']
         # print(f'源码:{r.text}')
         return r.text
     except Exception as e:
         print(f'{method}请求发生错误:{e}')
         return ''
 
-def fetch(url,obj):
-    return base_request(url,obj)
+def fetch(url,obj,method=None):
+    if not method:
+        method = 'get'
+    obj = dealObj(obj)
+    print(method)
+    return base_request(url,obj,method)
 
 def post(url,obj):
+    obj = dealObj(obj)
     return base_request(url,obj,'post')
+
+def request(url,obj,method=None):
+    if not method:
+        method = 'get'
+    obj = dealObj(obj)
+    if not obj.get('headers') or not obj['headers'].get('User-Agent'):
+        obj['headers']['User-Agent'] = UC_UA
+
+    return base_request(url, obj, method)
