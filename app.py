@@ -3,7 +3,6 @@
 # File  : app.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
-import time
 
 from flask_sqlalchemy import SQLAlchemy
 import config
@@ -78,19 +77,22 @@ def vod():
         msg = f'服务端本地仅支持以下规则:{",".join(rule_list)}'
         return jsonify(error.failed(msg))
 
-    t1 = time.time()
+    t1 = time()
     js_path = f'js/{rule}.js' if not ext.startswith('http') else ext
-    # before = ''
     with open('js/模板.js', encoding='utf-8') as f:
         before = f.read()
-    # print(before)
-    ctx,js_code = parser.runJs(js_path,before=before)
+    logger.info(f'js读取耗时:{get_interval(t1)}毫秒')
+    t2 = time()
+    ctx, js_code = parser.runJs(js_path,before=before)
     if not js_code:
         return jsonify(error.failed('爬虫规则加载失败'))
 
-    rule = ctx.eval('rule')
-    t2 = time.time()
-    logger.info(f'js装载耗时:{round((t2-t1)*1000,2)}毫秒')
+    # rule = ctx.eval('rule')
+    rule = ctx.rule.to_dict()
+    # print(rule)
+    # print(type(rule))
+
+    logger.info(f'js装载耗时:{get_interval(t2)}毫秒')
     # print(rule)
     cms = CMS(rule,db,RuleClass,PlayParse,app.config)
     wd = getParmas('wd')

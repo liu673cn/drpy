@@ -17,6 +17,8 @@ headers = {
         'Referer': 'https://www.baidu.com',
         'user-agent': UA,
 }
+from time import time
+
 def get_host_ip2(): # 获取局域网ip
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -64,3 +66,8 @@ def get_conf(obj):
             new_conf[key] = getattr(obj, key)
     # print(new_conf)
     return new_conf
+
+def get_interval(t):
+    interval = time() - t
+    interval = round(interval*1000,2)
+    return interval

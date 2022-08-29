@@ -3,7 +3,7 @@
 # File  : cms.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
-import execjs
+
 import requests
 import re
 import math
@@ -16,7 +16,6 @@ from utils.parser import runPy
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
-from time import time
 from flask import url_for,redirect
 from easydict import EasyDict as edict
 
@@ -277,10 +276,9 @@ class CMS:
             # print(self.class_parse)
             try:
                 if self.class_parse:
-                    t3 = time()
+                    t2 = time()
                     cache_classes = self.getClasses()
-                    t4 = time()
-                    logger.info(f'{self.getName()}读取缓存耗时:{round((t4-t3)*1000,2)}毫秒')
+                    logger.info(f'{self.getName()}读取缓存耗时:{get_interval(t2)}毫秒')
                     if len(cache_classes) > 0:
                         classes = cache_classes
                         # print(cache_classes)
@@ -325,8 +323,7 @@ class CMS:
         if self.filter:
             result['filters'] = config['filter']
         result.update(video_result)
-        t2 = time()
-        logger.info(f'{self.getName()}获取首页耗时:{round((t2-t1)*1000,2)}毫秒')
+        logger.info(f'{self.getName()}获取首页总耗时(包含读取缓存):{get_interval(t1)}毫秒')
         return result
 
     def homeVideoContent(self,html,fypage=1):
@@ -569,8 +566,7 @@ class CMS:
         result = {
             'list': vod_list
         }
-        t2 = time()
-        logger.info(f'{self.getName()}获取详情页耗时:{round((t2-t1)*1000,2)}毫秒,共计{round(len(str(result))/1000,2)} kb')
+        logger.info(f'{self.getName()}获取详情页耗时:{get_interval(t1)}毫秒,共计{round(len(str(result))/1000,2)} kb')
         # print(result)
         return result
 

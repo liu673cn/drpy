@@ -1,5 +1,8 @@
 #### dr模板的python实现
 ###### 更新日志
+###### 2022/08/29
+- [X] 1.更换js引擎,速度更快性能更好
+- [X] 2.新版js支持与python互动,后期可能支持js免嗅(lazy:'@js:xxx')
 ###### 2022/08/28
 - [X] 1.增加linux进程启动,命令 supervisord -c manager.conf
 - [X] 2.转移文本文件到txt目录

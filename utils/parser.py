@@ -7,21 +7,24 @@
 import os
 
 import requests
-from flask import make_response,jsonify
+from flask import make_response, jsonify
 from functools import partial  # 这玩意儿能锁定一个函数的参数
 import subprocess
 subprocess.Popen = partial(subprocess.Popen, encoding="utf-8")  # 固定写法
 # 解决execjs执行js时产生的乱码报错，需要在导入该模块之前，让Popen的encoding参数锁定为utf-8
-import execjs
+# import execjs
+import js2py
 
 # os.environ["EXECJS_RUNTIME"] = "JScript"
 # print(execjs.get().name)
 
-def runJs(jsPath,before='',after=''):
+def runJs(jsPath, before='', after='', ctx=None):
     # base_path = os.path.dirname(os.path.abspath(__file__)) # 当前文件所在目录
     # base_path = os.path.dirname(os.getcwd()) # 当前主程序所在工作目录
     # base_path = os.path.dirname(os.path.abspath('.')) # 上级目录
     # js_code = 'var rule={}'
+    if ctx is None:
+        ctx = {}
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
     if str(jsPath).startswith('http'):
         js_name = jsPath.split('/')[-1]
@@ -48,7 +51,9 @@ def runJs(jsPath,before='',after=''):
         jscode_to_run = before + jscode_to_run
     if after:
         jscode_to_run += after
-    loader = execjs.compile(jscode_to_run)
+    loader = js2py.EvalJs(ctx)
+    # loader = execjs.compile(jscode_to_run)
+    loader.execute(jscode_to_run)
     return loader,js_code
 
 def toJs(jsPath):
@@ -105,3 +110,39 @@ def runPy(pyPath):
             py_code = fp.read()
     # print(js_code)
     return py_code
+
+def covert_demo():
+    ctx = {'py_sum':sum,'requests':requests}
+    loader = js2py.EvalJs(ctx)
+    # loader.execute('var a=py_sum(2,3);function f(x) {return x*x} var b=[a,"5"];var c={"a":a};')
+    # loader.execute('var a=py_sum(2,3);function f(x) {return x*x}')
+    loader.execute('function f(x) {return x*x};var a=py_sum([2,3]);var b=[a,5];var c={"a":a};')
+    f = loader.f
+    print(f(8))
+    print(loader.eval('py_sum(new Array(1, 2, 3))'))
+    print(loader.eval('py_sum([1, 2])'))
+    a = loader.a
+    print(type(a),a)
+    b = loader.b
+    b.push(6)
+    print(type(b),b)
+    b = b.to_list()
+    print(type(b),b)
+    c = loader.c
+    print(type(c),c)
+    c = c.to_dict()
+    print(type(c), c)
+    # CryptoJS = js2py.require('crypto-js')
+    # print(type(CryptoJS))
+    # print(js2py.require('underscore'))
+    JSON = js2py.eval_js('JSON')
+    r = JSON.parse('[{"a":1}]')
+    print(type(r),r)
+    print(r[0].a)
+    print(loader.eval('r = requests.get("https://www.baidu.com/");r.encoding = "utf-8";r.text'))
+    # 下面是错误用法,没有loader环境没法正确eval_js,有loader用eval不需要eval_js
+    print(js2py.eval_js('r = requests.get("https://www.baidu.com/");r.encoding = "utf-8";r.text'))
+
+
+if __name__ == '__main__':
+    covert_demo()

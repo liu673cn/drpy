@@ -1,0 +1,15 @@
+错误:Could not link required node_modules
+解决:在Python包安装路径下的js2py/node_import.py的17行有以下代码
+assert subprocess.call(
+        'cd %s;npm install babel-core babel-cli babel-preset-es2015 babel-polyfill babelify browserify browserify-shim'
+        % repr(DIRNAME),
+        shell=True,
+        cwd=DIRNAME) == 0, 'Could not link required node_modules'
+
+修改为
+
+assert subprocess.call(
+        'npm install babel-core babel-cli babel-preset-es2015 babel-polyfill babelify browserify browserify-shim',
+        shell=True,
+        cwd=DIRNAME) == 0, 'Could not link required node_modules'
+

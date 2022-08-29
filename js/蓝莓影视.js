@@ -1,5 +1,5 @@
 var rule = {
-    title:'蓝莓影视',
+    title:'蓝莓影视1',
     host:'https://lanmeiguojiang.com',
     // homeUrl:'/',
     url:'/show/fyclass--------fypage---.html',

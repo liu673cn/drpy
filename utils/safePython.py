@@ -19,7 +19,7 @@ import datetime
 import base64
 from utils.log import logger
 
-time_out_sec = 8
+time_out_sec = 8  # 安全执行python代码超时
 class my_exception(Exception):
     def __init__(self, message):
         self.message = message
