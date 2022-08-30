@@ -53,6 +53,7 @@ class CMS:
         else:
             self.play_parse = False
             self.play_url = ''
+        # logger.info('播放免嗅地址: '+self.play_url)
 
         self.db = db
         self.RuleClass = RuleClass
@@ -424,7 +425,8 @@ class CMS:
         #     urlParams[int(key)] = self.extend[key]
         # params = '-'.join(urlParams)
         # print(params)
-        # url = self.url + '/{0}.html'.format(params)
+        # url = self.url + '/{0}.html'.format
+        t1 = time()
         pg = str(fypage)
         url = self.url.replace('fyclass',fyclass).replace('fypage',pg)
         if fypage == 1 and self.test('[\[\]]',url):
@@ -474,6 +476,7 @@ class CMS:
         result['pagecount'] = 9999
         result['limit'] = 9999
         result['total'] = 999999
+        logger.info(f'{self.getName()}获取分类{fyclass}第{fypage}页耗时:{get_interval(t1)}毫秒,共计{round(len(str(result)) / 1000, 2)} kb')
         
         return result
 
@@ -574,7 +577,7 @@ class CMS:
             vod['vod_play_url'] = vod_play_url
         except Exception as e:
             logger.info(f'{self.getName()}获取单个详情页出错{e}')
-        print(vod)
+        # print(vod)
         return vod
 
     def detailContent(self, fypage, array):
@@ -656,6 +659,7 @@ class CMS:
         return result
 
     def playContent(self, play_url,jxs=None):
+        # logger.info('播放免嗅地址: ' + self.play_url)
         if not jxs:
             jxs = []
         if self.lazy:
