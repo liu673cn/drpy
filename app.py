@@ -186,7 +186,8 @@ def getRules(path='cache'):
         new_rule_list.append({
             'name':rule_list[i],
             'searchable':rule_codes[i].searchable or 0,
-            'quickSearch':rule_codes[i].quickSearch or 0
+            'quickSearch':rule_codes[i].quickSearch or 0,
+            'filterable':rule_codes[i].filterable or 0,
         })
     # print(new_rule_list)
     rules = {'list': new_rule_list, 'count': len(rule_list)}

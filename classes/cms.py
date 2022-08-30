@@ -35,11 +35,13 @@ class CMS:
         self.id = rule.get('id', self.title)
         self.lazy = rule.get('lazy', False)
         self.play_disable = new_conf.get('PLAY_DISABLE',False)
+        self.lazy_mode = new_conf.get('LAZYPARSE_MODE')
         self.vod = redirect(url_for('vod')).headers['Location']
         # if not self.play_disable and self.lazy:
         if not self.play_disable:
             self.play_parse = rule.get('play_parse', False)
-            play_url = new_conf.get('PLAY_URL',getHost(2))
+            play_url = getHost(self.lazy_mode)
+            # play_url = new_conf.get('PLAY_URL',getHost(2))
             if not play_url.startswith('http'):
                 play_url = 'http://'+play_url
             if self.play_parse:
@@ -356,11 +358,32 @@ class CMS:
                 for item in items:
                     items2 = pdfa(item,p[1])
                     for item2 in items2:
-                        title = pdfh(item2, p[2])
-                        img = pd(item2, p[3])
-                        desc = pdfh(item2, p[4])
-                        link = pd(item2, p[5])
-                        content = '' if len(p) < 7 else pdfh(item2, p[6])
+                        try:
+                            title = pdfh(item2, p[2])
+                            img = pd(item2, p[3])
+                            desc = pdfh(item2, p[4])
+                            link = pd(item2, p[5])
+                            content = '' if len(p) < 7 else pdfh(item2, p[6])
+                            videos.append({
+                                "vod_id": link,
+                                "vod_name": title,
+                                "vod_pic": img,
+                                "vod_remarks": desc,
+                                "vod_content": content,
+                                "type_id": 1,
+                                "type_name": "首页推荐",
+                            })
+                        except:
+                            pass
+            else:
+                items = pdfa(html, p[0])
+                for item in items:
+                    try:
+                        title = pdfh(item, p[1])
+                        img = pd(item, p[2])
+                        desc = pdfh(item, p[3])
+                        link = pd(item, p[4])
+                        content = '' if len(p) < 6 else pdfh(item, p[5])
                         videos.append({
                             "vod_id": link,
                             "vod_name": title,
@@ -370,23 +393,8 @@ class CMS:
                             "type_id": 1,
                             "type_name": "首页推荐",
                         })
-            else:
-                items = pdfa(html, p[0])
-                for item in items:
-                    title = pdfh(item, p[1])
-                    img = pd(item, p[2])
-                    desc = pdfh(item, p[3])
-                    link = pd(item, p[4])
-                    content = '' if len(p) < 6 else pdfh(item, p[5])
-                    videos.append({
-                        "vod_id": link,
-                        "vod_name": title,
-                        "vod_pic": img,
-                        "vod_remarks": desc,
-                        "vod_content": content,
-                        "type_id": 1,
-                        "type_name": "首页推荐",
-                    })
+                    except:
+                        pass
             result['list'] = videos
             result['code'] = 1
             result['msg'] = '数据列表'
@@ -421,9 +429,6 @@ class CMS:
         url = self.url.replace('fyclass',fyclass).replace('fypage',pg)
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
-        r = requests.get(url, headers=self.headers,timeout=self.timeout)
-        r.encoding = self.encoding
-        print(r.url)
         p = self.一级.split(';')  # 解析
         if len(p) < 5:
             return self.blank()
@@ -435,23 +440,35 @@ class CMS:
         # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(1)&&Text'))
         # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(0)'))
         # print(pdfh(r.text,'body a.module-poster-item.module-item:first'))
-        items = pdfa(r.text, p[0])
+
         videos = []
+        items = []
+        try:
+            r = requests.get(url, headers=self.headers, timeout=self.timeout)
+            r.encoding = self.encoding
+            print(r.url)
+            html = r.text
+            items = pdfa(html, p[0])
+        except:
+            pass
         for item in items:
             # print(item)
-            title = pdfh(item, p[1])
-            img = pd(item, p[2])
-            desc = pdfh(item, p[3])
-            link = pd(item, p[4])
-            content = '' if len(p) < 6 else pdfh(item, p[5])
-            # sid = self.regStr(sid, "/video/(\\S+).html")
-            videos.append({
-                "vod_id": link,
-                "vod_name": title,
-                "vod_pic": img,
-                "vod_remarks": desc,
-                "vod_content": content,
-            })
+            try:
+                title = pdfh(item, p[1])
+                img = pd(item, p[2])
+                desc = pdfh(item, p[3])
+                link = pd(item, p[4])
+                content = '' if len(p) < 6 else pdfh(item, p[5])
+                # sid = self.regStr(sid, "/video/(\\S+).html")
+                videos.append({
+                    "vod_id": link,
+                    "vod_name": title,
+                    "vod_pic": img,
+                    "vod_remarks": desc,
+                    "vod_content": content,
+                })
+            except:
+                pass
         result['list'] = videos
         result['page'] = fypage
         result['pagecount'] = 9999
@@ -469,10 +486,6 @@ class CMS:
             url = detailUrl
         # print(url)
         try:
-            r = requests.get(url, headers=self.headers,timeout=self.timeout)
-            r.encoding = self.encoding
-            html = r.text
-            # print(html)
             p = self.二级  # 解析
             if p == '*':
                 vod = self.blank_vod()
@@ -493,6 +506,10 @@ class CMS:
             pq = jsp.pq
             obj = {}
             vod_name = ''
+            r = requests.get(url, headers=self.headers, timeout=self.timeout)
+            r.encoding = self.encoding
+            html = r.text
+            # print(html)
             if p.get('title'):
                 p1 = p['title'].split(';')
                 vod_name = pdfh(html,p1[0]).replace('\n',' ')
@@ -557,7 +574,7 @@ class CMS:
             vod['vod_play_url'] = vod_play_url
         except Exception as e:
             logger.info(f'{self.getName()}获取单个详情页出错{e}')
-
+        print(vod)
         return vod
 
     def detailContent(self, fypage, array):
@@ -610,22 +627,27 @@ class CMS:
             r.encoding = self.encoding
             html = r.text
             items = pdfa(html, p[0])
+            # print(items)
             videos = []
             for item in items:
                 # print(item)
-                title = pdfh(item, p[1])
-                img = pd(item, p[2])
-                desc = pdfh(item, p[3])
-                link = pd(item, p[4])
-                content = '' if len(p) < 6 else pdfh(item, p[5])
-                # sid = self.regStr(sid, "/video/(\\S+).html")
-                videos.append({
-                    "vod_id": link,
-                    "vod_name": title,
-                    "vod_pic": img,
-                    "vod_remarks": desc,
-                    "vod_content": content,
-                })
+                try:
+                    title = pdfh(item, p[1])
+                    img = pd(item, p[2])
+                    desc = pdfh(item, p[3])
+                    link = pd(item, p[4])
+                    content = '' if len(p) < 6 else pdfh(item, p[5])
+                    # sid = self.regStr(sid, "/video/(\\S+).html")
+                    videos.append({
+                        "vod_id": link,
+                        "vod_name": title,
+                        "vod_pic": img,
+                        "vod_remarks": desc,
+                        "vod_content": content,
+                    })
+                except:
+                    pass
+            # print(videos)
         except Exception as e:
             logger.info(f'搜索{self.getName()}发生错误:{e}')
         result = {

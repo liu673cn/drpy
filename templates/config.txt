@@ -10,7 +10,7 @@
     "api":"{{ host }}/vod?rule={{ rule.name }}",
     "searchable": {{ rule.searchable }},
     "quickSearch": {{ rule.quickSearch }},
-    "filterable": 1
+    "filterable": {{ rule.filterable }}
 }{% else %}
 {
     "key":"dr_{{ rule.name }}",

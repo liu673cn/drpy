@@ -4,8 +4,8 @@ var rule = {
     // homeUrl:'/',
     url:'/vodshow/fyclass--------fypage---.html',
     searchUrl:'/vodsearch/**----------fypage---.html',
-    searchable:0,
-    quickSearch:0,
+    searchable:1,
+    quickSearch:1,
     headers:{//网站的请求头,完整支持所有的,常带ua和cookies
         'User-Agent':'MOBILE_UA',
         "Cookie": "searchneed=ok"
