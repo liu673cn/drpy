@@ -110,6 +110,7 @@ def vod():
     # print(type(rule))
     # print(ruleDict)
     logger.info(f'js装载耗时:{get_interval(t2)}毫秒')
+    # print(ruleDict)
     # print(rule)
     cms = CMS(ruleDict,db,RuleClass,PlayParse,app.config)
     wd = getParmas('wd')

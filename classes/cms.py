@@ -350,6 +350,7 @@ class CMS:
                     r = requests.get(self.homeUrl, headers=self.headers, timeout=self.timeout)
                     r.encoding = self.encoding
                     html = r.text
+                    print(html)
                     if self.class_parse and not has_cache:
                         p = self.class_parse.split(';')
                         # print(p)
