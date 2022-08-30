@@ -4,7 +4,7 @@
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
 import random
-
+from utils.encode import base64Encode
 import js2py
 from flask_sqlalchemy import SQLAlchemy
 import config
@@ -289,7 +289,7 @@ def config_render(mode):
     if mode == 1:
         jyw_ip = getHost(mode)
         logger.info(jyw_ip)
-    html = render_template('config.txt',rules=getRules('js'),host=getHost(mode),mode=mode,jxs=getJxs(),config=dict(app.config))
+    html = render_template('config.txt',rules=getRules('js'),host=getHost(mode),mode=mode,jxs=getJxs(),base64Encode=base64Encode,config=dict(app.config))
     response = make_response(html)
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     return response
@@ -312,9 +312,9 @@ def config_gen():
     # 生成文件
     os.makedirs('txt',exist_ok=True)
     jxs=getJxs()
-    set_local = render_template('config.txt',rules=getRules('js'),mode=0,host=getHost(0),jxs=jxs)
-    set_area = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(1),jxs=jxs)
-    set_online = render_template('config.txt',rules=getRules('js'),mode=1,host=getHost(2),jxs=jxs)
+    set_local = render_template('config.txt',rules=getRules('js'),base64Encode=base64Encode,mode=0,host=getHost(0),jxs=jxs)
+    set_area = render_template('config.txt',rules=getRules('js'),base64Encode=base64Encode,mode=1,host=getHost(1),jxs=jxs)
+    set_online = render_template('config.txt',rules=getRules('js'),base64Encode=base64Encode,mode=1,host=getHost(2),jxs=jxs)
     with open('txt/pycms0.json','w+',encoding='utf-8') as f:
         set_dict = json.loads(set_local)
         f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
