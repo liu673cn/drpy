@@ -294,6 +294,19 @@ def config_render(mode):
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     return response
 
+@app.route('/lives')
+def get_lives():
+    live_path = 'js/直播.txt'
+    if not os.path.exists(live_path):
+        with open(live_path,mode='w+',encoding='utf-8') as f:
+            f.write('')
+
+    with open(live_path,encoding='utf-8') as f:
+        live_text = f.read()
+    response = make_response(live_text)
+    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    return response
+
 @app.route('/configs')
 def config_gen():
     # 生成文件
