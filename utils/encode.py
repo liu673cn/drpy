@@ -49,7 +49,8 @@ class OcrApi:
 
 def verifyCode(url,headers,timeout=5,total_cnt=3,api=None):
     if not api:
-        api = 'http://192.168.3.224:9000/api/ocr_img'
+        # api = 'http://192.168.3.224:9000/api/ocr_img'
+        api = 'http://dm.mudery.com:10000'
     lower_keys = list(map(lambda x: x.lower(), headers.keys()))
     host = getHome(url)
     if not 'referer' in lower_keys:

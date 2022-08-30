@@ -3,6 +3,9 @@ flask db migrate
 flask db upgrade
 supervisord -c manager.conf
 
+pip install -i https://mirrors.cloud.tencent.com/pypi/simple --upgrade pip
+pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple
+
 可能会用到:
 ddddocr==1.1.0 ; sys_platform == 'win32'
 ddddocr==1.0.8 ; sys_platform != 'win32'
