@@ -48,6 +48,7 @@
 }{% if loop.last==False %},{% endif %}{% endfor %}
 	 ],
 "flags": ["youku", "qq", "iqiyi", "qiyi", "letv", "sohu", "tudou","xigua","cntv","1905", "pptv", "mgtv", "wasu", "bilibili", "renrenmi"],
+"lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext=aHR0cHM6Ly9hZ2l0LmFpL2xjeC8xMS9yYXcvYnJhbmNoL21hc3Rlci9saXZl"]}]}],
 "ijk": [{
 "group": "软解码",
 "options": [{
