@@ -6,6 +6,9 @@
 - [X] 3.增加视界的加密库
 - [X] 4.增加蓝莓影视免嗅探
 - [X] 5.增加免嗅耗时毫秒数统计
+- [X] 6.增加自动装载配置
+- [X] 7.增加js里单独设置某个源是否可搜索
+- [X] 8.增加外网免嗅(自定义config.py里面改)
 ###### 2022/08/29
 - [X] 1.更换js引擎,速度更快性能更好
 - [X] 2.新版js支持与python互动,后期可能支持js免嗅(lazy:'js:xxx')
@@ -60,6 +63,7 @@
 [远程服务配置地址](http://cms.nokia.press/config/2)  
 
 ### 配置相关
+直接复制对应的三种地址就行了，不需要生成本地文件(下面教程不要了)  
 本地地址  clan://localhost/pycms_local.json  
 推荐把文件放到  /storage/emulated/0/PlutoPlayer/pycms_local.json  
 并且pluto要自己切换路径为PlutoPlayer
@@ -78,6 +82,10 @@ var rule = {
     url:'/fyclass/fypage.html[/fyclass/]',//网站的分类页面链接
     detailUrl:'https://yanetflix.com/voddetail/fyid.html',//非必填,二级详情拼接链接,感觉没啥卵用
     searchUrl:'',//搜索链接 可以是完整路径或者相对路径,用于分类获取和推荐获取 **代表搜索词 fypage代表页数
+    searchable:0,//是否启用全局搜索,
+    quickSearch:0,//是否启用快速搜索,
+    // 注意,由于猫有配置缓存,搜索配置没法热加载，修改了js不需要重启服务器
+    // 但是需要tv_box进设置里换源使配置重新装载
     headers:{//网站的请求头,完整支持所有的,常带ua和cookies
         'User-Agent':'MOBILE_UA',
         "Cookie": "searchneed=ok"

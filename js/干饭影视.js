@@ -7,6 +7,8 @@ var rule = {
         'User-Agent':'MOBILE_UA'
     },
     searchUrl:'/search/**-fypage.html',
+    searchable:1,
+    quickSearch:1,
     // class_name:'电影&网剧&剧集&动漫&综艺&记录',
     // class_url:'20&1&2&3&4&23',
     class_parse:'.stui-header__menu li:gt(0):lt(5);a&&Text;a&&href;/(\\d+).html',

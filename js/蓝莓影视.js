@@ -1,5 +1,5 @@
 var rule = {
-    title:'蓝莓影视1',
+    title:'蓝莓影视',
     host:'https://lanmeiguojiang.com',
     // homeUrl:'/',
     url:'/show/fyclass--------fypage---.html',
@@ -7,6 +7,8 @@ var rule = {
         'User-Agent':'MOBILE_UA'
     },
     searchUrl:'/search/**-fypage.html',
+    searchable:1,
+    quickSearch:1,
     // class_name:'电影&网剧&剧集&动漫&综艺&记录',
     // class_url:'20&1&2&3&4&23',
     class_parse:'.navbar-items li:gt(1):lt(8);a&&Text;a&&href;/(\\d+).html',

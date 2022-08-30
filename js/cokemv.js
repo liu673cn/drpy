@@ -4,6 +4,8 @@ var rule = {
     // homeUrl:'/',
     url:'/vodshow/fyclass--------fypage---.html',
     searchUrl:'/vodsearch/**----------fypage---.html',
+    searchable:0,
+    quickSearch:0,
     headers:{
         'User-Agent':'MOBILE_UA',
         "Cookie": "showBtn=true;PHPSESSID=58nhbq5r54jivukrk4o27dn7m6"

@@ -5,6 +5,8 @@ var rule = {
     url:'/vodshow/fyclass--------fypage---.html',
     detailUrl:'https://yanetflix.com/voddetail/fyid.html',//非必填
     searchUrl:'/vodsearch/**----------fypage---.html',
+    searchable:0,
+    quickSearch:0,
     // class_name:'电影&连续剧&综艺&动漫',
     // class_url:'dianying&lianxuju&zongyi&dongman',
     class_parse:'.navbar-items li:gt(1):lt(6);a&&Text;a&&href;.*/(.*?).html',

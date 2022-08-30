@@ -18,6 +18,7 @@ headers = {
         'user-agent': UA,
 }
 from time import time
+import config as settings
 
 def get_host_ip2(): # 获取局域网ip
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -47,13 +48,13 @@ def getHost(mode=0,port=None):
     # print(ip)
     # mode 为0是本地,1是局域网 2是线上
     if mode == 0:
-        host = f'localhost:{port}'
+        host = f'http://localhost:{port}'
     elif mode == 1:
         REAL_IP = get_host_ip()
         ip = REAL_IP
-        host = f'{ip}:{port}'
+        host = f'http://{ip}:{port}'
     else:
-        host = 'cms.nokia.press'
+        host = get_conf(settings).get('PLAY_URL','http://cms.nokia.press')
     return host
 
 def get_conf(obj):

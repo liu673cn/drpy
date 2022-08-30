@@ -17,9 +17,11 @@ SQLALCHEMY_DATABASE_URI = DB_URI
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False # 打印sql语句
 JSON_AS_ASCII = False # jsonify返回的中文正常显示
-# PLAY_URL = 'http://localhost:5705' # 匹配远程解析服务器链接
-# PLAY_URL = PLAY_URL.rstrip('/')
+PLAY_URL = 'http://cms.nokia.press' # 匹配远程解析服务器链接 远程接口主页地址，后面不能有/
+PLAY_URL = PLAY_URL.rstrip('/')
 PLAY_DISABLE = False  # 全局禁用播放解析
+LAZYPARSE_MODE = 1  # 播放解析模式(0 本地 1 局域网 2远程 仅在全局禁用为False的时候生效)
 WALL_PAPER_ENABLE = True  # 启用自定义壁纸
 WALL_PAPER = "https://picsum.photos/1280/720/?blur=10"  # 自定义壁纸,可注释
+SUP_PORT = 9001  # supervisord 服务端口
 # {% if config.WALL_PAPER %}"wallpaper":"{{ config.WALL_PAPER }}",{% endif %}

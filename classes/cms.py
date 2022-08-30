@@ -39,7 +39,7 @@ class CMS:
         # if not self.play_disable and self.lazy:
         if not self.play_disable:
             self.play_parse = rule.get('play_parse', False)
-            play_url = new_conf.get('PLAY_URL',getHost(1))
+            play_url = new_conf.get('PLAY_URL',getHost(2))
             if not play_url.startswith('http'):
                 play_url = 'http://'+play_url
             if self.play_parse:

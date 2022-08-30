@@ -5,6 +5,7 @@
 # Date  : 2022/8/25
 import random
 
+import js2py
 from flask_sqlalchemy import SQLAlchemy
 import config
 # import settings
@@ -34,7 +35,7 @@ db = SQLAlchemy(app)
 
 rule_list = getRuleLists()
 logger.info(rule_list)
-logger.info(f'http://{getHost(1, 5705)}/index\nhttp://localhost:5705/index')
+logger.info(f'局域网: {getHost(1, 5705)}/index\n本地: {getHost(0, 5705)}/index')
 
 from models import *
 from gevent.pywsgi import WSGIServer
@@ -69,9 +70,13 @@ def forbidden():  # put application's code here
 @app.route('/index')
 def index():  # put application's code here
     # logger.info("进入了首页")
-    manager = getHost(1).split(':')[0] + ':9001'
-    manager2 = getHost(0).split(':')[0] + ':9001'
-    return render_template('index.html',getHost=getHost,manager=manager,manager2=manager2,is_linux=is_linux())
+    sup_port = app.config.get('SUP_PORT',9001)
+    manager0 = ':'.join(getHost(0).split(':')[0:2]) + f':{sup_port}'
+    manager1 = ':'.join(getHost(1).split(':')[0:2]) + f':{sup_port}'
+    manager2 = ':'.join(getHost(2).split(':')[0:2]) + f':{sup_port}'
+    # print(manager2)
+    # print(manager2)
+    return render_template('index.html',getHost=getHost,manager0=manager0,manager1=manager1,manager2=manager2,is_linux=is_linux())
 
 @app.route('/vod')
 def vod():
@@ -155,6 +160,7 @@ def clear():
     return jsonify(error.success('成功删除文件:'+cache_path))
 
 def getRules(path='cache'):
+    t1 = time()
     base_path = path+'/'  # 当前文件所在目录
     # print(base_path)
     os.makedirs(base_path,exist_ok=True)
@@ -162,7 +168,29 @@ def getRules(path='cache'):
     file_name = list(filter(lambda x: str(x).endswith('.js') and str(x).find('模板') < 0, file_name))
     # print(file_name)
     rule_list = [file.replace('.js', '') for file in file_name]
-    rules = {'list': rule_list, 'count': len(rule_list)}
+    js_path = [f'{path}/{rule}.js' for rule in rule_list]
+    with open('js/模板.js', encoding='utf-8') as f:
+        before = f.read()
+    rule_codes = []
+    for js in js_path:
+        with open(js,encoding='utf-8') as f:
+            rule_codes.append(js2py.eval_js(before+f.read()))
+
+    # print(rule_codes)
+    # print(type(rule_codes[0]),rule_codes[0])
+    # print(rule_codes[0].title)
+    # print(rule_codes[0].searchable)
+    # print(rule_codes[0].quickSearch)
+    new_rule_list = []
+    for i in range(len(rule_list)):
+        new_rule_list.append({
+            'name':rule_list[i],
+            'searchable':rule_codes[i].searchable or 0,
+            'quickSearch':rule_codes[i].quickSearch or 0
+        })
+    # print(new_rule_list)
+    rules = {'list': new_rule_list, 'count': len(rule_list)}
+    logger.info(f'自动配置装载耗时:{get_interval(t1)}毫秒')
     return rules
 
 def getPics(path='images'):

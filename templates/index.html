@@ -66,32 +66,36 @@ a {
     <a href="/raw">缓存文件列表-查看</a>
 </div>
 <div class="btn">
-    <a href="http://{{ getHost(0) }}/config/0">本地配置地址</a>
+    <a href="{{ getHost(0) }}/config/0">本地配置地址</a>
 </div>
 {% if is_linux %}
 <div class="btn">
-    <a href="http://{{ manager2 }}" target="_blank">本地在线进程管理[linux]</a>
+    <a href="{{ manager0 }}" target="_blank">本地在线进程管理[linux]</a>
 </div>
 {% endif %}
 <!--<a href="{{ getHost(1) }}">局域网:{{ getHost(1) }}</a>-->
 <a class="jyw" href="https://picsum.photos/1280/720/?blur=10">局域网:{{ getHost(1) }}</a>
 {% if '192.168' in getHost(1) %}
 <div class="btn">
-    <a href="http://{{ getHost(1) }}/config/1">局域网配置地址</a>
+    <a href="{{ getHost(1) }}/config/1">局域网配置地址</a>
 </div>
 {% if is_linux %}
 <div class="btn">
-    <a href="http://{{ manager }}" target="_blank">局域网在线进程管理[linux]</a>
+    <a href="{{ manager1 }}" target="_blank">局域网在线进程管理[linux]</a>
 </div>
 {% endif %}
 <div class="btn">
-    <a href="http://{{ getHost(1) }}/pics" target="_blank">局域网随机图片</a>
+    <a href="{{ getHost(1) }}/pics" target="_blank">局域网随机图片</a>
 </div>
 {% endif %}
 <div class="btn">
-    <a href="http://{{ getHost(2) }}/config/2">远程配置地址</a>
+    <a href="{{ getHost(2) }}/config/2">远程配置地址</a>
 </div>
-
+{% if is_linux %}
+<div class="btn">
+    <a href="{{ manager2 }}" target="_blank">远程在线进程管理[linux]</a>
+</div>
+{% endif %}
 <div class="btn">
     <a href="javascript:void(0);" id="gen_config">生成配置文件</a>
 </div>
