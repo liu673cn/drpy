@@ -468,92 +468,95 @@ class CMS:
         else:
             url = detailUrl
         # print(url)
-        r = requests.get(url, headers=self.headers,timeout=self.timeout)
-        r.encoding = self.encoding
-        html = r.text
-        # print(html)
-        p = self.二级  # 解析
-        if p == '*':
-            vod = self.blank_vod()
-            vod['vod_play_from'] = '道长在线'
-            vod['desc'] = self.play_url+detailUrl
-            vod['vod_actor'] = '没有二级,只有一级链接直接嗅探播放'
-            vod['content'] = detailUrl
-            vod['vod_play_url'] = '嗅探播放$'+detailUrl
-            return vod
+        try:
+            r = requests.get(url, headers=self.headers,timeout=self.timeout)
+            r.encoding = self.encoding
+            html = r.text
+            # print(html)
+            p = self.二级  # 解析
+            if p == '*':
+                vod = self.blank_vod()
+                vod['vod_play_from'] = '道长在线'
+                vod['desc'] = self.play_url+detailUrl
+                vod['vod_actor'] = '没有二级,只有一级链接直接嗅探播放'
+                vod['content'] = detailUrl
+                vod['vod_play_url'] = '嗅探播放$'+detailUrl
+                return vod
 
-        if not isinstance(p,dict):
-            return vod
+            if not isinstance(p,dict):
+                return vod
 
-        jsp = jsoup(self.url)
-        pdfh = jsp.pdfh
-        pdfa = jsp.pdfa
-        pd = jsp.pd
-        pq = jsp.pq
-        obj = {}
-        vod_name = ''
-        if p.get('title'):
-            p1 = p['title'].split(';')
-            vod_name = pdfh(html,p1[0]).replace('\n',' ')
-            title = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-            # print(title)
-            obj['title'] = title
-        if p.get('desc'):
-            p1 = p['desc'].split(';')
-            desc = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-            obj['desc'] = desc
+            jsp = jsoup(self.url)
+            pdfh = jsp.pdfh
+            pdfa = jsp.pdfa
+            pd = jsp.pd
+            pq = jsp.pq
+            obj = {}
+            vod_name = ''
+            if p.get('title'):
+                p1 = p['title'].split(';')
+                vod_name = pdfh(html,p1[0]).replace('\n',' ')
+                title = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                # print(title)
+                obj['title'] = title
+            if p.get('desc'):
+                p1 = p['desc'].split(';')
+                desc = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                obj['desc'] = desc
 
-        if p.get('content'):
-            p1 = p['content'].split(';')
-            content = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-            obj['content'] = content
+            if p.get('content'):
+                p1 = p['content'].split(';')
+                content = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                obj['content'] = content
 
-        if p.get('img'):
-            p1 = p['img'].split(';')
-            img = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-            obj['img'] = img
+            if p.get('img'):
+                p1 = p['img'].split(';')
+                img = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                obj['img'] = img
 
-        vod = {
-            "vod_id": detailUrl,
-            "vod_name": vod_name,
-            "vod_pic": obj.get('img',''),
-            "type_name": obj.get('title',''),
-            "vod_year": "",
-            "vod_area": "",
-            "vod_remarks": obj.get('desc',''),
-            "vod_actor": "",
-            "vod_director": "",
-            "vod_content": obj.get('content','')
-        }
+            vod = {
+                "vod_id": detailUrl,
+                "vod_name": vod_name,
+                "vod_pic": obj.get('img',''),
+                "type_name": obj.get('title',''),
+                "vod_year": "",
+                "vod_area": "",
+                "vod_remarks": obj.get('desc',''),
+                "vod_actor": "",
+                "vod_director": "",
+                "vod_content": obj.get('content','')
+            }
 
-        vod_play_from = '$$$'
-        playFrom = []
-        if p.get('tabs'):
-            vodHeader = pdfa(html,p['tabs'])
-            # print(f'线路列表数:{len((vodHeader))}')
-            # print(vodHeader)
-            vodHeader = [pq(v).text() for v in vodHeader]
-        else:
-            vodHeader = ['道长在线']
+            vod_play_from = '$$$'
+            playFrom = []
+            if p.get('tabs'):
+                vodHeader = pdfa(html,p['tabs'])
+                # print(f'线路列表数:{len((vodHeader))}')
+                # print(vodHeader)
+                vodHeader = [pq(v).text() for v in vodHeader]
+            else:
+                vodHeader = ['道长在线']
 
-        for v in vodHeader:
-            playFrom.append(v)
-        vod_play_from = vod_play_from.join(playFrom)
+            for v in vodHeader:
+                playFrom.append(v)
+            vod_play_from = vod_play_from.join(playFrom)
 
-        vod_play_url = '$$$'
-        vod_tab_list = []
-        if p.get('lists'):
-            for i in range(len(vodHeader)):
-               p1 = p['lists'].replace('#id',str(i))
-               vodList = pdfa(html,p1) # 1条线路的选集列表
-               # vodList = [pq(i).text()+'$'+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
-               vodList = [pq(i).text()+'$'+self.play_url+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
-               vlist = '#'.join(vodList) # 拼多个选集
-               vod_tab_list.append(vlist)
-            vod_play_url = vod_play_url.join(vod_tab_list)
-        # print(vod_play_url)
-        vod['vod_play_from'] = vod_play_from
-        vod['vod_play_url'] = vod_play_url
+            vod_play_url = '$$$'
+            vod_tab_list = []
+            if p.get('lists'):
+                for i in range(len(vodHeader)):
+                   p1 = p['lists'].replace('#id',str(i))
+                   vodList = pdfa(html,p1) # 1条线路的选集列表
+                   # vodList = [pq(i).text()+'$'+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
+                   vodList = [pq(i).text()+'$'+self.play_url+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
+                   vlist = '#'.join(vodList) # 拼多个选集
+                   vod_tab_list.append(vlist)
+                vod_play_url = vod_play_url.join(vod_tab_list)
+            # print(vod_play_url)
+            vod['vod_play_from'] = vod_play_from
+            vod['vod_play_url'] = vod_play_url
+        except Exception as e:
+            logger.info(f'{self.getName()}获取单个详情页出错{e}')
 
         return vod
 
@@ -567,15 +570,21 @@ class CMS:
         array = array[(fypage-1)*self.limit:min(self.limit*fypage,len(array))]
         thread_pool = ThreadPoolExecutor(min(self.limit,len(array)))  # 定义线程池来启动多线程执行此任务
         obj_list = []
-        for vod_url in array:
-            obj = thread_pool.submit(self.detailOneVod, vod_url)
-            obj_list.append(obj)
-        thread_pool.shutdown(wait=True)  # 等待所有子线程并行完毕
-        vod_list = [obj.result() for obj in obj_list]
-        result = {
-            'list': vod_list
-        }
-        logger.info(f'{self.getName()}获取详情页耗时:{get_interval(t1)}毫秒,共计{round(len(str(result))/1000,2)} kb')
+        try:
+            for vod_url in array:
+                obj = thread_pool.submit(self.detailOneVod, vod_url)
+                obj_list.append(obj)
+            thread_pool.shutdown(wait=True)  # 等待所有子线程并行完毕
+            vod_list = [obj.result() for obj in obj_list]
+            result = {
+                'list': vod_list
+            }
+            logger.info(f'{self.getName()}获取详情页耗时:{get_interval(t1)}毫秒,共计{round(len(str(result)) / 1000, 2)} kb')
+        except Exception as e:
+            result = {
+                'list': []
+            }
+            logger.info(f'{self.getName()}获取详情页耗时:{get_interval(t1)}毫秒,发生错误:{e}')
         # print(result)
         return result
 
@@ -585,37 +594,40 @@ class CMS:
             return self.blank()
         url = self.searchUrl.replace('**', key).replace('fypage',pg)
         logger.info(f'{self.getName()}搜索链接:{url}')
-        r = requests.get(url, headers=self.headers)
-        r.encoding = self.encoding
-        html = r.text
         if not self.搜索:
             return self.blank()
         p = self.一级.split(';') if self.搜索 == '*' and self.一级 else self.搜索.split(';')  # 解析
         if len(p) < 5:
             return self.blank()
-
         jsp = jsoup(self.url)
         pdfh = jsp.pdfh
         pdfa = jsp.pdfa
         pd = jsp.pd
         pq = jsp.pq
-        items = pdfa(html, p[0])
         videos = []
-        for item in items:
-            # print(item)
-            title = pdfh(item, p[1])
-            img = pd(item, p[2])
-            desc = pdfh(item, p[3])
-            link = pd(item, p[4])
-            content = '' if len(p) < 6 else pdfh(item, p[5])
-            # sid = self.regStr(sid, "/video/(\\S+).html")
-            videos.append({
-                "vod_id": link,
-                "vod_name": title,
-                "vod_pic": img,
-                "vod_remarks": desc,
-                "vod_content": content,
-            })
+        try:
+            r = requests.get(url, headers=self.headers)
+            r.encoding = self.encoding
+            html = r.text
+            items = pdfa(html, p[0])
+            videos = []
+            for item in items:
+                # print(item)
+                title = pdfh(item, p[1])
+                img = pd(item, p[2])
+                desc = pdfh(item, p[3])
+                link = pd(item, p[4])
+                content = '' if len(p) < 6 else pdfh(item, p[5])
+                # sid = self.regStr(sid, "/video/(\\S+).html")
+                videos.append({
+                    "vod_id": link,
+                    "vod_name": title,
+                    "vod_pic": img,
+                    "vod_remarks": desc,
+                    "vod_content": content,
+                })
+        except Exception as e:
+            logger.info(f'搜索{self.getName()}发生错误:{e}')
         result = {
             'list': videos
         }
@@ -626,40 +638,42 @@ class CMS:
             jxs = []
         if self.lazy:
             print(f'{play_url}->开始执行免嗅代码->{self.lazy}')
-            if not str(self.lazy).startswith('js:'):
-                t1 = time()
-                pycode = runPy(self.lazy)
-                if pycode:
-                    # print(pycode)
-                    pos = pycode.find('def lazyParse')
-                    if pos < 0:
-                        return play_url
-                    pyenv = safePython(self.lazy,pycode[pos:])
-                    lazy_url = pyenv.action_task_exec('lazyParse',[play_url,self.d])
-                    logger.info(f'py免嗅耗时:{get_interval(t1)}毫秒,播放地址:{lazy_url}')
-                    if isinstance(lazy_url,str) and lazy_url.startswith('http'):
-                        play_url = lazy_url
-            else:
-                jscode = str(self.lazy).split('js:')[1]
-                # jscode = f'var input={play_url};{jscode}'
-                # print(jscode)
-                py_ctx.update({
-                    'input': play_url,
-                    'd': self.d,
-                    'jxs':jxs,
-                    'pdfh': self.d.jsp.pdfh,
-                    'pdfa': self.d.jsp.pdfa, 'pd': self.d.jsp.pd,
-                })
-                ctx = py_ctx
-                # print(ctx)
-                t1 = time()
-                jscode = getPreJs() + jscode
-                # print(jscode)
-                loader,_ = runJScode(jscode,ctx=ctx)
-                # print(loader.toString())
-                play_url = loader.eval('input')
-                logger.info(f'js免嗅耗时:{get_interval(t1)}毫秒,播放地址:{play_url}')
-
+            t1 = time()
+            try:
+                if not str(self.lazy).startswith('js:'):
+                    pycode = runPy(self.lazy)
+                    if pycode:
+                        # print(pycode)
+                        pos = pycode.find('def lazyParse')
+                        if pos < 0:
+                            return play_url
+                        pyenv = safePython(self.lazy,pycode[pos:])
+                        lazy_url = pyenv.action_task_exec('lazyParse',[play_url,self.d])
+                        logger.info(f'py免嗅耗时:{get_interval(t1)}毫秒,播放地址:{lazy_url}')
+                        if isinstance(lazy_url,str) and lazy_url.startswith('http'):
+                            play_url = lazy_url
+                else:
+                    jscode = str(self.lazy).split('js:')[1]
+                    # jscode = f'var input={play_url};{jscode}'
+                    # print(jscode)
+                    py_ctx.update({
+                        'input': play_url,
+                        'd': self.d,
+                        'jxs':jxs,
+                        'pdfh': self.d.jsp.pdfh,
+                        'pdfa': self.d.jsp.pdfa, 'pd': self.d.jsp.pd,
+                    })
+                    ctx = py_ctx
+                    # print(ctx)
+                    t1 = time()
+                    jscode = getPreJs() + jscode
+                    # print(jscode)
+                    loader,_ = runJScode(jscode,ctx=ctx)
+                    # print(loader.toString())
+                    play_url = loader.eval('input')
+                    logger.info(f'js免嗅耗时:{get_interval(t1)}毫秒,播放地址:{play_url}')
+            except Exception as e:
+                logger.info(f'免嗅耗时:{get_interval(t1)}毫秒,并发生错误:{e}')
             return play_url
         else:
             logger.info(f'播放重定向到:{play_url}')
