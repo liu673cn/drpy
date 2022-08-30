@@ -10,7 +10,7 @@ import requests.utils
 from time import sleep
 import os
 from utils.web import UC_UA,PC_UA
-import ddddocr
+# import ddddocr
 
 def getPreJs():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目
@@ -43,6 +43,7 @@ def verifyCode(url,headers,timeout=5,total_cnt=3):
         headers['Referer'] = host
     print(f'开始自动过验证,请求头:{headers}')
     cnt = 0
+    import ddddocr
     ocr = ddddocr.DdddOcr()
     while cnt < total_cnt:
         s = requests.session()
