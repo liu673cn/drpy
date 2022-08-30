@@ -51,10 +51,12 @@ def runJs(jsPath, before='', after='', ctx=None):
                 js_code = fp.read()
     else:
         js_path = os.path.join(base_path, jsPath)
+        # print(js_path)
         with open(js_path, 'r', encoding='UTF-8') as fp:
             js_code = fp.read()
     # print(js_code)
     jscode_to_run = js_code
+    # print(jscode_to_run)
     if before:
         jscode_to_run = before + jscode_to_run
     if after:

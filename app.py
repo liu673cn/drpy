@@ -7,6 +7,7 @@ import random
 from utils.encode import base64Encode
 import js2py
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import config
 # import settings
 import warnings
@@ -32,7 +33,7 @@ print('自定义播放解析地址:',app.config.get('PLAY_URL'))
 print('当前操作系统',sys.platform)
 app.logger.name="drLogger"
 db = SQLAlchemy(app)
-
+migrate = Migrate(app, db)
 rule_list = getRuleLists()
 logger.info(rule_list)
 logger.info(f'局域网: {getHost(1, 5705)}/index\n本地: {getHost(0, 5705)}/index')
@@ -104,6 +105,7 @@ def vod():
     # rule = ctx.eval('rule')
     ruleDict = ctx.rule.to_dict()
     ruleDict['id'] = rule  # 把路由请求的id装到字典里,后面播放嗅探才能用
+    # print(ruleDict)
     # print(rule)
     # print(type(rule))
     # print(ruleDict)

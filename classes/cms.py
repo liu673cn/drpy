@@ -11,7 +11,7 @@ from utils.web import *
 from models import *
 from utils.config import config
 from utils.log import logger
-from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl
+from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl,getHome,verifyCode
 from utils.safePython import safePython
 from utils.parser import runPy,runJScode
 from utils.htmlParser import jsoup
@@ -23,7 +23,7 @@ from easydict import EasyDict as edict
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
 'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS,
-'buildUrl':buildUrl
+'buildUrl':buildUrl,'getHome':getHome,'verifyCode':verifyCode
 }
 # print(getCryptoJS())
 
@@ -35,12 +35,19 @@ class CMS:
         self.id = rule.get('id', self.title)
         self.lazy = rule.get('lazy', False)
         self.play_disable = new_conf.get('PLAY_DISABLE',False)
+        self.retry_count = new_conf.get('RETRY_CNT',3)
         self.lazy_mode = new_conf.get('LAZYPARSE_MODE')
-        self.vod = redirect(url_for('vod')).headers['Location']
+        try:
+            self.vod = redirect(url_for('vod')).headers['Location']
+        except:
+            self.vod = '/vod'
         # if not self.play_disable and self.lazy:
         if not self.play_disable:
             self.play_parse = rule.get('play_parse', False)
-            play_url = getHost(self.lazy_mode)
+            try:
+                play_url = getHost(self.lazy_mode)
+            except:
+                play_url = getHost(1,5705)
             # play_url = new_conf.get('PLAY_URL',getHost(2))
             if not play_url.startswith('http'):
                 play_url = 'http://'+play_url
@@ -65,6 +72,10 @@ class CMS:
         detailUrl = rule.get('detailUrl','')
         searchUrl = rule.get('searchUrl','')
         headers = rule.get('headers',{})
+        cookie = self.getCookie()
+        # print(f'{self.title}cookie:{cookie}')
+        if cookie:
+            headers['cookie'] = cookie
         limit = rule.get('limit',6)
         encoding = rule.get('编码', 'utf-8')
         self.limit = min(limit,30)
@@ -81,6 +92,8 @@ class CMS:
         lower_keys = list(map(lambda x:x.lower(),keys))
         if not 'user-agent' in lower_keys:
             headers['User-Agent'] = UA
+        if not 'referer' in lower_keys:
+            headers['Referer'] = host
         self.headers = headers
         self.host = host
         self.homeUrl = urljoin(host,homeUrl) if host and homeUrl else homeUrl
@@ -180,6 +193,8 @@ class CMS:
         res = self.db.session.query(self.RuleClass).filter(self.RuleClass.name == name).first()
         # _logger.info('xxxxxx')
         if res:
+            if not all([res.class_name,res.class_url]):
+                return []
             cls = res.class_name.split('&')
             cls2 = res.class_url.split('&')
             classes = [{'type_name':cls[i],'type_id':cls2[i]} for i in range(len(cls))]
@@ -188,6 +203,37 @@ class CMS:
             return classes
         else:
             return []
+
+    def getCookie(self):
+        name = self.getName()
+        if not self.db:
+            msg = f'{name}未提供数据库连接'
+            print(msg)
+            return False
+        res = self.db.session.query(self.RuleClass).filter(self.RuleClass.name == name).first()
+        if res:
+            return res.cookie or None
+        else:
+            return None
+
+    def saveCookie(self,cookie):
+        name = self.getName()
+        if not self.db:
+            msg = f'{name}未提供数据库连接'
+            print(msg)
+            return False
+        res = self.db.session.query(self.RuleClass).filter(self.RuleClass.name == name).first()
+        if res:
+            res.cookie = cookie
+            self.db.session.add(res)
+        else:
+            res = self.RuleClass(name=name, cookie=cookie)
+            self.db.session.add(res)
+        try:
+            self.db.session.commit()
+            logger.info(f'{name}已保存cookie:{cookie}')
+        except Exception as e:
+            return f'保存cookie发生了错误:{e}'
 
     def saveClass(self, classes):
         if not self.db:
@@ -305,18 +351,18 @@ class CMS:
                     html = r.text
                     if self.class_parse and not has_cache:
                         p = self.class_parse.split(';')
-                        print(p)
+                        # print(p)
                         jsp = jsoup(self.url)
                         pdfh = jsp.pdfh
                         pdfa = jsp.pdfa
                         pd = jsp.pd
                         items = pdfa(html,p[0])
-                        print(len(items))
-                        print(items)
+                        # print(len(items))
+                        # print(items)
                         for item in items:
                             title = pdfh(item, p[1])
                             url = pd(item, p[2])
-                            print(url)
+                            # print(url)
                             tag = url
                             if len(p) > 3 and p[3].strip():
                                 tag = self.regexp(p[3].strip(),url,0)
@@ -626,9 +672,22 @@ class CMS:
         pq = jsp.pq
         videos = []
         try:
-            r = requests.get(url, headers=self.headers)
+            r = requests.get(url, headers=self.headers,timeout=self.timeout)
             r.encoding = self.encoding
             html = r.text
+            # print(html)
+            if html.find('输入验证码') > -1:
+                cookie = verifyCode(url,self.headers,self.timeout,self.retry_count)
+                if not cookie:
+                    return {
+                        'list': videos
+                    }
+                self.saveCookie(cookie)
+                self.headers['cookie'] = cookie
+                r = requests.get(url, headers=self.headers, timeout=self.timeout)
+                r.encoding = self.encoding
+                html = r.text
+
             items = pdfa(html, p[0])
             # print(items)
             videos = []
@@ -709,10 +768,14 @@ if __name__ == '__main__':
     from utils import parser
     # js_path = f'js/玩偶姐姐.js'
     # js_path = f'js/555影视.js'
+    with open('../js/模板.js', encoding='utf-8') as f:
+        before = f.read()
     js_path = f'js/cokemv.js'
-    ctx, js_code = parser.runJs(js_path)
-    rule = ctx.eval('rule')
-    cms = CMS(rule)
+    ctx, js_code = parser.runJs(js_path,before=before)
+    ruleDict = ctx.rule.to_dict()
+    # ruleDict['id'] = rule  # 把路由请求的id装到字典里,后面播放嗅探才能用
+
+    cms = CMS(ruleDict)
     print(cms.title)
     print(cms.homeContent())
     # print(cms.categoryContent('5',1))
@@ -721,4 +784,4 @@ if __name__ == '__main__':
     # print(cms.detailContent(1,['https://cokemv.me/voddetail/40573.html']))
     # cms.categoryContent('dianying',1)
     # print(cms.detailContent(['67391']))
-    # print(cms.searchContent('斗罗大陆'))
+    print(cms.searchContent('斗罗大陆'))

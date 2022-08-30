@@ -24,4 +24,5 @@ LAZYPARSE_MODE = 1  # 播放解析模式(0 本地 1 局域网 2远程 仅在全�
 WALL_PAPER_ENABLE = True  # 启用自定义壁纸
 WALL_PAPER = "https://picsum.photos/1280/720/?blur=10"  # 自定义壁纸,可注释
 SUP_PORT = 9001  # supervisord 服务端口
+RETRY_CNT = 3 # 验证码重试次数
 # {% if config.WALL_PAPER %}"wallpaper":"{{ config.WALL_PAPER }}",{% endif %}

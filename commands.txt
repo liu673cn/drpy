@@ -1,0 +1,15 @@
+flask db init
+flask db migrate
+flask db upgrade
+
+
+废弃操作仅限 flask-migrate==2.7.0:
+# # 导入数据迁移核心类
+# from flask_migrate import Migrate
+# from flask_script import Manager
+# manager = Manager(app)
+# 初始化数据迁移
+# migrate = Migrate(app, db)
+# manager.add_command('sql', MigrateCommand)
+# python app.py sql migrate -m “init”
+# python app.py sql upgrade

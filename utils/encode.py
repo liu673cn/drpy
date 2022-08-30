@@ -6,8 +6,11 @@
 
 import base64
 import requests
+import requests.utils
+from time import sleep
 import os
 from utils.web import UC_UA,PC_UA
+import ddddocr
 
 def getPreJs():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目
@@ -26,6 +29,41 @@ def getCryptoJS():
     with open(lib_path,encoding='utf-8') as f:
         code = f.read()
     return code
+
+def getHome(url):
+    # http://www.baidu.com:9000/323
+    urls = url.split('//')
+    homeUrl = urls[0] + '//' + urls[1].split('/')[0]
+    return homeUrl
+
+def verifyCode(url,headers,timeout=5,total_cnt=3):
+    lower_keys = list(map(lambda x: x.lower(), headers.keys()))
+    host = getHome(url)
+    if not 'referer' in lower_keys:
+        headers['Referer'] = host
+    print(f'开始自动过验证,请求头:{headers}')
+    cnt = 0
+    ocr = ddddocr.DdddOcr()
+    while cnt < total_cnt:
+        s = requests.session()
+        try:
+            img = s.get(url=f"{host}/index.php/verify/index.html", headers=headers,timeout=timeout).content
+            code = ocr.classification(img)
+            print(f'第{cnt+1}次验证码识别结果:{code}')
+            res = s.post(
+                url=f"{host}/index.php/ajax/verify_check?type=search&verify={code}",
+                headers=headers).json()
+            if res["msg"] == "ok":
+                cookies_dict = requests.utils.dict_from_cookiejar(s.cookies)
+                cookie_str = ';'.join([f'{k}={cookies_dict[k]}' for k in cookies_dict])
+                # return cookies_dict
+                return cookie_str
+        except:
+            print(f'第{cnt+1}次验证码提交失败')
+            pass
+        cnt += 1
+        sleep(1)
+    return ''
 
 def base64Encode(text):
     return base64.b64encode(text.encode("utf8")).decode("utf-8") #base64编码
