@@ -576,7 +576,7 @@ class CMS:
             vod['vod_play_from'] = vod_play_from
             vod['vod_play_url'] = vod_play_url
         except Exception as e:
-            logger.info(f'{self.getName()}获取单个详情页出错{e}')
+            logger.info(f'{self.getName()}获取单个详情页{detailUrl}出错{e}')
         # print(vod)
         return vod
 
