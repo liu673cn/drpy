@@ -25,4 +25,5 @@ WALL_PAPER_ENABLE = True  # 启用自定义壁纸
 WALL_PAPER = "https://picsum.photos/1280/720/?blur=10"  # 自定义壁纸,可注释
 SUP_PORT = 9001  # supervisord 服务端口
 RETRY_CNT = 3 # 验证码重试次数
+OCR_API = 'http://192.168.3.224:9000/api/ocr_img' # 验证码识别接口,传参数data
 # {% if config.WALL_PAPER %}"wallpaper":"{{ config.WALL_PAPER }}",{% endif %}

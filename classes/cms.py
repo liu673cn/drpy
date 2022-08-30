@@ -38,6 +38,7 @@ class CMS:
         self.play_disable = new_conf.get('PLAY_DISABLE',False)
         self.retry_count = new_conf.get('RETRY_CNT',3)
         self.lazy_mode = new_conf.get('LAZYPARSE_MODE')
+        self.ocr_api = new_conf.get('OCR_API')
         try:
             self.vod = redirect(url_for('vod')).headers['Location']
         except:
@@ -679,7 +680,7 @@ class CMS:
             html = r.text
             # print(html)
             if html.find('输入验证码') > -1:
-                cookie = verifyCode(url,self.headers,self.timeout,self.retry_count)
+                cookie = verifyCode(url,self.headers,self.timeout,self.retry_count,self.ocr_api)
                 # cookie = ''
                 if not cookie:
                     return {

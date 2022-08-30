@@ -10,7 +10,6 @@ import requests.utils
 from time import sleep
 import os
 from utils.web import UC_UA,PC_UA
-# import ddddocr
 
 def getPreJs():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目
@@ -36,15 +35,28 @@ def getHome(url):
     homeUrl = urls[0] + '//' + urls[1].split('/')[0]
     return homeUrl
 
-def verifyCode(url,headers,timeout=5,total_cnt=3):
+class OcrApi:
+    def __init__(self,api):
+        self.api = api
+
+    def classification(self,img):
+        try:
+            code = requests.post(self.api,data=img,headers={'user-agent':PC_UA}).text
+        except Exception as e:
+            print(f'ocr识别发生错误:{e}')
+            code = ''
+        return code
+
+def verifyCode(url,headers,timeout=5,total_cnt=3,api=None):
+    if not api:
+        api = 'http://192.168.3.224:9000/api/ocr_img'
     lower_keys = list(map(lambda x: x.lower(), headers.keys()))
     host = getHome(url)
     if not 'referer' in lower_keys:
         headers['Referer'] = host
     print(f'开始自动过验证,请求头:{headers}')
     cnt = 0
-    import ddddocr
-    ocr = ddddocr.DdddOcr()
+    ocr = OcrApi(api)
     while cnt < total_cnt:
         s = requests.session()
         try:
