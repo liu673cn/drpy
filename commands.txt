@@ -1,7 +1,11 @@
 flask db init
 flask db migrate
 flask db upgrade
+supervisord -c manager.conf
 
+可能会用到:
+ddddocr==1.1.0 ; sys_platform == 'win32'
+ddddocr==1.0.8 ; sys_platform != 'win32'
 
 废弃操作仅限 flask-migrate==2.7.0:
 # # 导入数据迁移核心类
