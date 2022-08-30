@@ -74,7 +74,7 @@ def index():  # put application's code here
     manager0 = ':'.join(getHost(0).split(':')[0:2]) + f':{sup_port}'
     manager1 = ':'.join(getHost(1).split(':')[0:2]) + f':{sup_port}'
     manager2 = ':'.join(getHost(2).split(':')[0:2]) + f':{sup_port}'
-    # print(manager2)
+    # print(manager1)
     # print(manager2)
     return render_template('index.html',getHost=getHost,manager0=manager0,manager1=manager1,manager2=manager2,is_linux=is_linux())
 
