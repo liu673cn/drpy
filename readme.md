@@ -50,8 +50,8 @@
 2. 在termux里安装tome 虚拟机
 3. tome 虚拟机 里安装ubuntu1804容器
 4. ubuntu1804容器里安装python3-pip,nodejs
-5. pip3换源并安装requirements.txt
-6. python3 app.py运行项目(也可以其他方式)
+5. pip3换源并安装requirements.txt(pip3 install -r requirements.txt)
+6. python3 app.py运行项目(也可以其他方式nohup或者 supervisord -c manager.conf)
 7. 访问地址加/index查看dr_py主页
 
 #### 测试地址
