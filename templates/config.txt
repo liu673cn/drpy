@@ -19,7 +19,7 @@
     "api":"{{ host }}/vod?rule={{ rule.name }}",
     "searchable": {{ rule.searchable }},
     "quickSearch": {{ rule.quickSearch }},
-    "filterable": 1
+    "filterable": {{ rule.filterable }}
 }{% endif %}{% if loop.last==False %},{% endif %}{% endfor %}],
 	"parses": [{
 		"name": "解析聚合",
