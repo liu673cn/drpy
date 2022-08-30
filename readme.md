@@ -12,6 +12,7 @@
 - [X] 9.增加错误处理和首页单个详情获取
 - [X] 10.增加本地直播地址自定义
 - [X] 11.增加数据库迁移,[新版教程](https://www.cjavapy.com/article/1977/)  [旧版教程](https://www.cnblogs.com/LoveMoney-MrLi/articles/15765985.html)
+- [X] 12.自动ocr识别过搜索验证码
 ###### 2022/08/29
 - [X] 1.更换js引擎,速度更快性能更好
 - [X] 2.新版js支持与python互动,后期可能支持js免嗅(lazy:'js:xxx')
