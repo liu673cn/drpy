@@ -5,7 +5,7 @@
 # Date  : 2022/8/30
 
 import requests
-import ddddocr
+# import ddddocr
 from time import sleep,time
 from urllib.parse import urljoin,quote,unquote
 import requests.utils
