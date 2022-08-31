@@ -48,7 +48,7 @@
 }{% if loop.last==False %},{% endif %}{% endfor %}
 	 ],
 "flags": ["youku", "qq", "iqiyi", "qiyi", "letv", "sohu", "tudou","xigua","cntv","1905", "pptv", "mgtv", "wasu", "bilibili", "renrenmi"],
-"lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext={{ base64Encode(host+'/lives') }}"]}]}],
+"lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext={% if config.LIVE_MODE==0 %}{{base64Encode(host+'/lives')}}{% else %}{{ base64Encode('https://gitcode.net/qq_26898231/TVBox/-/raw/main/live/0830zb.txt')}}{% endif %}"]}]}],
 "ijk": [{
 "group": "软解码",
 "options": [{
