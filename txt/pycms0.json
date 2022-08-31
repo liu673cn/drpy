@@ -579,7 +579,7 @@
                 {
                     "name": "直播",
                     "urls": [
-                        "proxy://do=live&type=txt&ext=aHR0cDovL2xvY2FsaG9zdDo1NzA1L2xpdmVz"
+                        "proxy://do=live&type=txt&ext=aHR0cHM6Ly9naXRjb2RlLm5ldC9xcV8yNjg5ODIzMS9UVkJveC8tL3Jhdy9tYWluL2xpdmUvMDgzMHpiLnR4dA=="
                     ]
                 }
             ]
