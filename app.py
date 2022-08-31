@@ -54,9 +54,17 @@ def getParmas(key=None,value=''):
     :param key:
     :return:
     """
+    content_type = request.headers.get('Content-Type')
     args = {}
     if request.method == 'POST':
-        args = request.json
+        if 'application/x-www-form-urlencoded' in content_type or 'multipart/form-data' in content_type:
+            args = request.form
+        elif 'application/json' in content_type:
+            args = request.json
+        elif 'text/plain' in content_type:
+            args = request.data
+        else:
+            args = request.args
     elif request.method == 'GET':
         args = request.args
     if key:
@@ -78,6 +86,36 @@ def index():  # put application's code here
     # print(manager1)
     # print(manager2)
     return render_template('index.html',getHost=getHost,manager0=manager0,manager1=manager1,manager2=manager2,is_linux=is_linux())
+
+@app.route('/admin')
+def admin_home():  # 管理员界面
+    # headers  = request.headers
+    # print(headers)
+    cookies = request.cookies
+    # print(cookies)
+    token = cookies.get('token','')
+    # print(f'mytoken:{token}')
+    if not verfy_token(token):
+        return render_template('login.html')
+    # return jsonify(error.success('登录成功'))
+    return render_template('admin.html')
+
+@app.route('/api/login',methods=['GET','POST'])
+def login_api():
+    username = getParmas('username')
+    password = getParmas('password')
+    autologin = getParmas('autologin')
+    if not all([username,password]):
+        return jsonify(error.failed('账号密码字段必填'))
+    token = md5(f'{username};{password}')
+    check = verfy_token(token)
+    if check:
+        # response = make_response(redirect('/admin'))
+        response = make_response(jsonify(error.success('登录成功')))
+        response.set_cookie('token', token)
+        return response
+    else:
+        return jsonify(error.failed('登录失败,用户名或密码错误'))
 
 @app.route('/vod')
 def vod():

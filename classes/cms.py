@@ -9,7 +9,7 @@ import re
 import math
 from utils.web import *
 from models import *
-from utils.config import config
+from utils.config import playerConfig
 from utils.log import logger
 from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl,getHome
 from utils.encode import verifyCode
@@ -382,7 +382,7 @@ class CMS:
 
         result['class'] = classes
         if self.filter:
-            result['filters'] = config['filter']
+            result['filters'] = playerConfig['filter']
         result.update(video_result)
         logger.info(f'{self.getName()}获取首页总耗时(包含读取缓存):{get_interval(t1)}毫秒')
         return result

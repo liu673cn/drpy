@@ -5,6 +5,7 @@
 # Date  : 2022/8/25
 
 import socket
+import hashlib
 from werkzeug.utils import import_string
 from netifaces import interfaces, ifaddresses, AF_INET
 from flask import request
@@ -71,3 +72,18 @@ def get_interval(t):
     interval = time() - t
     interval = round(interval*1000,2)
     return interval
+
+def md5(str):
+    return hashlib.md5(str.encode(encoding='UTF-8')).hexdigest()
+
+def verfy_token(token=''):
+    if not token or len(str(token))!=32:
+        return False
+    cfg = get_conf(settings)
+    username = cfg.get('UNAME','')
+    pwd = cfg.get('PWD','')
+    ctoken = md5(f'{username};{pwd}')
+    # print(f'username:{username},pwd:{pwd},current_token:{ctoken},input_token:{ctoken}')
+    if token != ctoken:
+        return False
+    return True
