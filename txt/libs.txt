@@ -1,2 +1,3 @@
 gevent-websocket
 PyExecJS
+ddddocr

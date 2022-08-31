@@ -15,4 +15,7 @@ assert subprocess.call(
 
 远程直播地址:
 "lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext=aHR0cHM6Ly9hZ2l0LmFpL2xjeC8xMS9yYXcvYnJhbmNoL21hc3Rlci9saXZl"]}]}],
+下面格式原版tv_box才能用?
+"live","urls":["proxy://do=live&type=txt&ext=aHR0cHM6Ly9naXRjb2RlLm5ldC9xcV8yNjg5ODIzMS9UVkJveC8tL3Jhdy9tYWluL2xpdmUvMDgzMHpiLnR4dA=="]}]}],
+
 
