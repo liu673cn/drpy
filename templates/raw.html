@@ -47,17 +47,17 @@
 
 {% for rule in rules.list %}
 
-    	{% if rule|length > 2 %}
+    	{% if rule.name|length > 2 %}
         <!-- | 为过滤条件 -->
         	<li class="red">
 <!--                <a class="refresh" href="/clear?rule={{rule}}" target="_blank">{{ rule }}</a>-->
-                <a class="refresh" href="javascript:void(0);">{{ rule }}</a>
+                <a class="refresh" href="javascript:void(0);">{{ rule.name }}</a>
             </li>
 
         {% else %}
          <!-- 如果是if条件，最后必须要有else，否则就会报错 -->
             <li class="yellow">
-                <a class="refresh" href="javascript:void(0);">{{ rule }}</a>
+                <a class="refresh" href="javascript:void(0);">{{ rule.name }}</a>
             </li>
 
         {% endif %}

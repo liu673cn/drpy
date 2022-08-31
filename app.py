@@ -99,7 +99,7 @@ def admin_home():  # 管理员界面
     if not verfy_token(token):
         return render_template('login.html')
     # return jsonify(error.success('登录成功'))
-    return render_template('admin.html')
+    return render_template('admin.html',rules=getRules('js'))
 
 @app.route('/api/login',methods=['GET','POST'])
 def login_api():
@@ -118,6 +118,26 @@ def login_api():
     else:
         return jsonify(error.failed('登录失败,用户名或密码错误'))
 
+@app.route("/admin/view/<name>",methods=['GET'])
+def admin_view_rule(name):
+    if not name or not name.split('.')[-1] in ['js','txt','py','json']:
+        return jsonify(error.failed(f'非法猥亵,未指定文件名。必须包含js|txt|json|py'))
+    try:
+        return parser.toJs(name,'js')
+    except Exception as e:
+        return jsonify(error.failed(f'非法猥亵\n{e}'))
+
+@app.route('/admin/clear/<name>')
+def admin_clear_rule(name):
+    if not name or not name.split('.')[-1] in ['js','txt','py','json']:
+        return jsonify(error.failed(f'非法猥亵,未指定文件名。必须包含js|txt|json|py'))
+
+    file_path = os.path.abspath(f'js/{name}')
+    if not os.path.exists(file_path):
+        return jsonify(error.failed('服务端没有此文件!'+file_path))
+    os.remove(file_path)
+    return jsonify(error.success('成功删除文件:'+file_path))
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     cookies = request.cookies
@@ -127,13 +147,18 @@ def upload_file():
     if not verfy_token(token):
         return render_template('login.html')
     if request.method == 'POST':
-        f = request.files['file']
-        # print(request.files)
-        filename = secure_filename(f.filename)
-        savePath = f'js/{filename}'
-        # print(savePath)
-        f.save(savePath)
-        return jsonify(error.success('文件上传成功'))
+        try:
+            f = request.files['file']
+            # print(request.files)
+            filename = secure_filename(f.filename)
+            savePath = f'js/{filename}'
+            if os.path.exists(savePath):
+                return jsonify(error.failed(f'上传失败,文件已存在,请先查看删除再试'))
+            # print(savePath)
+            f.save(savePath)
+            return jsonify(error.success('文件上传成功'))
+        except Exception as e:
+            return jsonify(error.failed(f'文件上传失败!{e}'))
     else:
         # return render_template('upload.html')
         return jsonify(error.failed('文件上传失败'))
@@ -409,7 +434,7 @@ def config_gen():
 def plugin(name):
     # name=道长影视模板.js
     if not name or not name.split('.')[-1] in ['js','txt','py','json']:
-        return jsonify(error.failed(f'非法威胁,未指定文件名。必须包含js|txt|json|py'))
+        return jsonify(error.failed(f'非法猥亵,未指定文件名。必须包含js|txt|json|py'))
     try:
         return parser.toJs(name)
     except Exception as e:

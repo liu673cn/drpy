@@ -2,19 +2,157 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-  <title>管理员操作中心</title>
+  <title>管理员操作中心-{{rules.count}}条规则</title>
   <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
   <meta name="author" content="道长"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" media="screen" href="/static/css/admin.css">
   <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+    <script src="/static/js/jquery.min.js"></script>
 </head>
+<style>
+    .red {
+        color:red;
+        font-weight: bold;
+        padding-left:10px;
+        /*padding-top:10px;*/
+        margin-left:10px;
+        width: 240px;
+        height: 30px;
+    }
+    .green {
+        color:forestgreen;
+        font-weight: bold;
+        padding-left:10px;
+        /*padding-top:10px;*/
+        margin-left:10px;
+        width: 240px;
+        height: 30px;
+    }
+    .btn{
+        color:#FFFFFF;
+        background-color: #1379cb;
+    }
+    .clear{
+        /*word-spacing:2px;*/
+        letter-spacing:5px;
+        margin-left:20px;
+        width: 120px;
+        height: 30px;
+        text-align: center;
+        border-style: solid;
+        /*border-color: #8CD4F5;*/
+        border-color: #1379cb;
+        text-decoration:none;
+        color:#FFFFFF;
+        background-color: #1379cb;
+    }
+    /*li a {*/
+    /*    display: block !important;*/
+    /*}*/
+</style>
 <body>
-<h2 class="title">欢迎使用py_dr管理员界面</h2>
+<script>
+    $(document).ready(function(){
+        $(".view").click(function(){
+            // location.reload();
+            let rule = this.innerText.trim();
+            location.href = '/admin/view/'+rule+'.js';
+        });
+
+        $(".clear").click(function(){
+            // location.reload();
+            // let rule = this.innerText.trim();
+            let rule = this.getAttribute('value').trim();
+            if(confirm('确认删除内置规则:'+rule+'?')){
+            let code = $.ajax({url:'/admin/clear/'+rule+'.js',async:false}).responseText;
+            code = typeof(code) === "object"?code:JSON.parse(code);
+            if(code.code === 200){
+                alert('操作成功!\n'+code.msg);
+                location.reload()
+            }else{
+                alert('操作失败!\n'+code.msg);
+            }
+            }
+            // location.href = '/admin/clear/'+rule;
+        });
+
+        $('#upload').click(function(){
+            var file_data = $("input[name='file']").prop("files")[0];
+            console.log(file_data);
+            if(!file_data){
+                alert('文件必选');
+                return
+            }
+            var form_data = new FormData();
+            // 把所有表单信息
+            form_data.append("id", "001");
+            form_data.append("name", file_data.name);
+            form_data.append("file", file_data);
+            $.ajax({
+                type: "POST",
+                url: "/upload",
+                dataType : "json",
+                processData: false,  // 注意：让jQuery不要处理数据
+                contentType: false,  // 注意：让jQuery不要设置contentType
+                data: form_data
+            }).success(function(ret) {
+                console.log(ret);
+                alert(ret.msg);
+                location.reload();
+            }).fail(function(ret) {
+                console.log(ret);
+                alert(ret.msg);
+            });
+
+        });
+
+});
+ function getFileSize(fileObj)
+       {
+           $('#file_size').text('文件大小为:'+fileObj.files[0].size/1024+'kb');
+       }
+</script>
+
+<h2 class="title">欢迎使用py_dr管理员界面</h2><h4><a href="/index">返回首页</a></h4>
 <p>你可以在此页面在线上传规则文件到js目录或者删除js目录的文件</p>
  <form action = "/upload" method = "POST" enctype = "multipart/form-data">
-     <input type = "file" name = "file" />
-     <input type = "submit" value="提交"/>
+     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>
+<!--     <input type = "submit" value="上传" class="btn"/>-->
+     <input type="button" id="upload" value="上传" class="btn"/>
 </form>
+<p id="file_size"></p>
+
+<h1>内置规则列表</h1>
+{% if rules.count < 1 %}
+<h3>暂无内置的规则</h3>
+{% endif %}
+{% for rule in rules.list %}
+    	{% if rule.name|length > 2 %}
+        	<li class="red">
+                <a class="view" href="javascript:void(0);">{{ rule.name }}</a>
+                <a class="clear" href="javascript:void(0);" value="{{ rule.name }}">删除</a>
+            </li>
+        {% else %}
+            <li class="green">
+                <a class="view" href="javascript:void(0);">{{ rule.name }}</a>
+                <a class="clear" href="javascript:void(0);" value="{{ rule.name }}">删除</a>
+            </li>
+        {% endif %}
+ {% endfor %}
+<!--{% if rules.count > 0 %}-->
+<!--<h1>删除内置规则</h1>-->
+<!--{% for rule in rules.list %}-->
+<!--{% if rule|length > 2 %}-->
+<!--    <li class="red">-->
+<!--        <a class="clear" href="javascript:void(0);">{{ rule.name }}</a>-->
+<!--    </li>-->
+<!--{% else %}-->
+<!--    <li class="yellow">-->
+<!--        <a class="clear" href="javascript:void(0);">{{ rule.name }}</a>-->
+<!--    </li>-->
+<!--{% endif %}-->
+<!-- {% endfor %}-->
+<!--{% endif %}-->
 </body>
 </html>

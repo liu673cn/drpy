@@ -2,7 +2,8 @@
 ##### python3.6-3.8完美运行(3.9以上不支持linux进程启动)
 ###### 更新日志
 ###### 2022/08/30
-- [X] 1.增加管理员登录功能(用户上传和删除规则)
+- [X] 1.增加管理员登录功能
+- [X] 2.增加管理员上传和删除内置规则功能
 ###### 2022/08/30
 - [X] 1.增加动态局域网ip获取
 - [X] 2.增加js规则热加载(增删改不用重启)
@@ -121,4 +122,13 @@ var rule = {
     // 搜索可以是*,集成一级，或者跟一级一样的写法 列表;标题;图片;描述;链接;详情
     搜索:'*',
 }
+```
+模板继承写法
+```javascript
+var rule = Object.assign(muban.mxpro,{
+title:'鸭奈飞',
+host:'https://yanetflix.com',
+url:'/index.php/vod/show/id/fyclass/page/fypage.html',
+class_parse:'.navbar-items li:gt(1):lt(6);a&&Text;a&&href;.*/(.*?).html',
+});
 ```

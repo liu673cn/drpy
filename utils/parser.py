@@ -68,9 +68,9 @@ def runJs(jsPath, before='', after='', ctx=None):
     # loader.execute(jscode_to_run)
     # return loader,js_code
 
-def toJs(jsPath):
+def toJs(jsPath,jsRoot='cache'):
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__))) # 上级目录
-    js_path = os.path.join(base_path, f'cache/{jsPath}')
+    js_path = os.path.join(base_path, f'{jsRoot}/{jsPath}')
     print(js_path)
     if not os.path.exists(js_path):
         return jsonify({'code': -2, 'msg': f'非法猥亵,文件不存在'})
