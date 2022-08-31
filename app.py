@@ -155,6 +155,7 @@ def upload_file():
     if request.method == 'POST':
         try:
             f = request.files['file']
+            # print(f.size)
             # print(f)
             # print(request.files)
             filename = secure_filename(f.filename)
