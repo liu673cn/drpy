@@ -1,6 +1,6 @@
 {
     "wallpaper": "http://192.168.10.99:5705/pics",
-    "dr_count": 11,
+    "dr_count": 16,
     "mode": 1,
     "sites": [
         {
@@ -17,8 +17,26 @@
             "name": "cokemv(道长)",
             "type": 1,
             "api": "http://192.168.10.99:5705/vod?rule=cokemv",
-            "searchable": 0,
-            "quickSearch": 0,
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "dr_LIBVIO",
+            "name": "LIBVIO(道长)",
+            "type": 1,
+            "api": "http://192.168.10.99:5705/vod?rule=LIBVIO",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "dr_万能影视",
+            "name": "万能影视(道长)",
+            "type": 1,
+            "api": "http://192.168.10.99:5705/vod?rule=万能影视",
+            "searchable": 1,
+            "quickSearch": 1,
             "filterable": 0
         },
         {
@@ -31,12 +49,21 @@
             "filterable": 0
         },
         {
+            "key": "dr_在线之家",
+            "name": "在线之家(道长)",
+            "type": 1,
+            "api": "http://192.168.10.99:5705/vod?rule=在线之家",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
             "key": "dr_夜空",
             "name": "夜空(道长)",
             "type": 1,
             "api": "http://192.168.10.99:5705/vod?rule=夜空",
-            "searchable": 0,
-            "quickSearch": 0,
+            "searchable": 1,
+            "quickSearch": 1,
             "filterable": 0
         },
         {
@@ -46,6 +73,15 @@
             "api": "http://192.168.10.99:5705/vod?rule=干饭影视",
             "searchable": 0,
             "quickSearch": 0,
+            "filterable": 0
+        },
+        {
+            "key": "dr_影视工厂",
+            "name": "影视工厂(道长)",
+            "type": 1,
+            "api": "http://192.168.10.99:5705/vod?rule=影视工厂",
+            "searchable": 1,
+            "quickSearch": 1,
             "filterable": 0
         },
         {
@@ -71,8 +107,8 @@
             "name": "看视界(道长)",
             "type": 1,
             "api": "http://192.168.10.99:5705/vod?rule=看视界",
-            "searchable": 0,
-            "quickSearch": 0,
+            "searchable": 1,
+            "quickSearch": 1,
             "filterable": 0
         },
         {
@@ -80,8 +116,17 @@
             "name": "莫扎兔(道长)",
             "type": 1,
             "api": "http://192.168.10.99:5705/vod?rule=莫扎兔",
-            "searchable": 0,
-            "quickSearch": 0,
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "dr_蓝光影院",
+            "name": "蓝光影院(道长)",
+            "type": 1,
+            "api": "http://192.168.10.99:5705/vod?rule=蓝光影院",
+            "searchable": 1,
+            "quickSearch": 1,
             "filterable": 0
         },
         {
@@ -98,8 +143,8 @@
             "name": "鸭奈飞(道长)",
             "type": 1,
             "api": "http://192.168.10.99:5705/vod?rule=鸭奈飞",
-            "searchable": 0,
-            "quickSearch": 0,
+            "searchable": 1,
+            "quickSearch": 1,
             "filterable": 0
         }
     ],

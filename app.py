@@ -234,9 +234,23 @@ def getRules(path='cache'):
     with open('js/模板.js', encoding='utf-8') as f:
         before = f.read()
     rule_codes = []
-    for js in js_path:
+    # for js in js_path:
+    #     with open(js,encoding='utf-8') as f:
+    #         code = f.read()
+    #         rule_codes.append(js2py.eval_js(before+code))
+
+    ctx = js2py.EvalJs()
+    codes = []
+    for i in range(len(js_path)):
+        js = js_path[i]
         with open(js,encoding='utf-8') as f:
-            rule_codes.append(js2py.eval_js(before+f.read()))
+            code = f.read()
+            codes.append(code.replace('rule',f'rule{i}',1))
+    newCodes = before + '\n'+ '\n'.join(codes)
+    # print(newCodes)
+    ctx.execute(newCodes)
+    for i in range(len(js_path)):
+        rule_codes.append(ctx.eval(f'rule{i}'))
 
     # print(rule_codes)
     # print(type(rule_codes[0]),rule_codes[0])
