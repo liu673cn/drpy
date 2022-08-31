@@ -131,6 +131,12 @@ def admin_view_rule(name):
 def admin_clear_rule(name):
     if not name or not name.split('.')[-1] in ['js','txt','py','json']:
         return jsonify(error.failed(f'非法猥亵,未指定文件名。必须包含js|txt|json|py'))
+    cookies = request.cookies
+    # print(cookies)
+    token = cookies.get('token', '')
+    # print(f'mytoken:{token}')
+    if not verfy_token(token):
+        return render_template('login.html')
 
     file_path = os.path.abspath(f'js/{name}')
     if not os.path.exists(file_path):
