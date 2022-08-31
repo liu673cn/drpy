@@ -72,9 +72,9 @@
 
 ### 配置相关
 直接复制对应的三种地址就行了，不需要生成本地文件(下面教程不要了)  
-本地地址  clan://localhost/pycms_local.json  
+~~本地地址  clan://localhost/pycms_local.json  
 推荐把文件放到  /storage/emulated/0/PlutoPlayer/pycms_local.json  
-并且pluto要自己切换路径为PlutoPlayer
+并且pluto要自己切换路径为PlutoPlayer~~
 
 ### 相关教程
 [pyquery定位](https://blog.csdn.net/Arise007/article/details/79513094)
