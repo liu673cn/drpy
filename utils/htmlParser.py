@@ -22,6 +22,7 @@ class jsoup:
 
         if option:
             ret = doc(parse)
+            # FIXME 解析出来有多个的情况应该自动取第一个
             if option == 'Text':
                 ret = ret.text()
             elif option == 'Html':
