@@ -82,12 +82,17 @@
             console.log(file_data);
             if(!file_data){
                 alert('文件必选');
-                return
+                return false
+            }
+            var name = file_data.name;
+            if(!name.endsWith('.js')){
+                alert('仅支持上传js文件');
+                return false
             }
             var form_data = new FormData();
             // 把所有表单信息
             form_data.append("id", "001");
-            form_data.append("name", file_data.name);
+            form_data.append("name", name);
             form_data.append("file", file_data);
             $.ajax({
                 type: "POST",
@@ -117,7 +122,8 @@
 <h2 class="title">欢迎使用py_dr管理员界面</h2><h4><a href="/index">返回首页</a></h4>
 <p>你可以在此页面在线上传规则文件到js目录或者删除js目录的文件</p>
  <form action = "/upload" method = "POST" enctype = "multipart/form-data">
-     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>
+<!--     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>-->
+     <input type = "file" name = "file" class="btn" onchange="getFileSize(this)"/>
 <!--     <input type = "submit" value="上传" class="btn"/>-->
      <input type="button" id="upload" value="上传" class="btn"/>
 </form>
