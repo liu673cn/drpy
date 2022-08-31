@@ -1,7 +1,8 @@
+. <(cat app.sh)
+# supervisord -c manager.conf
 flask db init
 flask db migrate
 flask db upgrade
-supervisord -c manager.conf
 
 pip install -i https://mirrors.cloud.tencent.com/pypi/simple --upgrade pip
 pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple
