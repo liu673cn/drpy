@@ -15,6 +15,7 @@ warnings.filterwarnings('ignore')
 
 import os
 from flask import Flask, jsonify, abort,request,redirect,make_response,render_template,send_from_directory,url_for
+from werkzeug.utils import secure_filename
 from js.rules import getRuleLists
 from utils import error,parser
 from utils.web import *
@@ -116,6 +117,26 @@ def login_api():
         return response
     else:
         return jsonify(error.failed('登录失败,用户名或密码错误'))
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    cookies = request.cookies
+    # print(cookies)
+    token = cookies.get('token', '')
+    # print(f'mytoken:{token}')
+    if not verfy_token(token):
+        return render_template('login.html')
+    if request.method == 'POST':
+        f = request.files['file']
+        # print(request.files)
+        filename = secure_filename(f.filename)
+        savePath = f'js/{filename}'
+        # print(savePath)
+        f.save(savePath)
+        return jsonify(error.success('文件上传成功'))
+    else:
+        # return render_template('upload.html')
+        return jsonify(error.failed('文件上传失败'))
 
 @app.route('/vod')
 def vod():

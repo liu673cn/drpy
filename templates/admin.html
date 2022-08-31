@@ -12,5 +12,9 @@
 <body>
 <h2 class="title">欢迎使用py_dr管理员界面</h2>
 <p>你可以在此页面在线上传规则文件到js目录或者删除js目录的文件</p>
+ <form action = "/upload" method = "POST" enctype = "multipart/form-data">
+     <input type = "file" name = "file" />
+     <input type = "submit" value="提交"/>
+</form>
 </body>
 </html>
