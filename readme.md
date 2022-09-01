@@ -3,6 +3,10 @@
 [搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  
 [dr项目QQ官群](https://qm.qq.com/cgi-bin/qm/qr?k=H2KwcXrMdiR5M2blHR5gjZzPfN_S3N_C&jump_from=webapi)
 ###### 更新日志
+###### 2022/09/01
+- [X] 1.增加动态分类排除配置
+- [X] 2.优化pdfh,pdfa,pd等函数,支持多个&&写法,自动取第一个
+- [X] 3.增加vfed规则模板
 ###### 2022/08/31
 - [X] 1.增加管理员登录功能
 - [X] 2.增加管理员上传和删除内置规则功能

@@ -17,7 +17,7 @@
         padding-left:10px;
         /*padding-top:10px;*/
         margin-left:10px;
-        width: 240px;
+        width: 360px;
         height: 30px;
     }
     .green {
@@ -26,7 +26,7 @@
         padding-left:10px;
         /*padding-top:10px;*/
         margin-left:10px;
-        width: 240px;
+        width: 360px;
         height: 30px;
     }
     .btn{
@@ -47,6 +47,19 @@
         color:#FFFFFF;
         background-color: #1379cb;
     }
+    .view_home{
+        letter-spacing:5px;
+        margin-left:20px;
+        width: 150px;
+        height: 30px;
+        text-align: center;
+        border-style: solid;
+        /*border-color: #8CD4F5;*/
+        border-color: #17af30;
+        text-decoration:none;
+        color:#FFFFFF;
+        background-color: #17af30;
+    }
     /*li a {*/
     /*    display: block !important;*/
     /*}*/
@@ -58,6 +71,12 @@
             // location.reload();
             let rule = this.innerText.trim();
             location.href = '/admin/view/'+rule+'.js';
+        });
+
+        $(".view_home").click(function(){
+            // location.reload();
+            let rule = this.getAttribute('value').trim();
+            location.href = '/vod?rule='+rule;
         });
 
         $(".clear").click(function(){
@@ -137,11 +156,13 @@
     	{% if rule.name|length > 2 %}
         	<li class="red">
                 <a class="view" href="javascript:void(0);">{{ rule.name }}</a>
+                <a class="view_home" href="javascript:void(0);" value="{{ rule.name }}">主页数据预览</a>
                 <a class="clear" href="javascript:void(0);" value="{{ rule.name }}">删除</a>
             </li>
         {% else %}
             <li class="green">
                 <a class="view" href="javascript:void(0);">{{ rule.name }}</a>
+                <a class="view_home" href="javascript:void(0);" value="{{ rule.name }}">主页数据预览</a>
                 <a class="clear" href="javascript:void(0);" value="{{ rule.name }}">删除</a>
             </li>
         {% endif %}

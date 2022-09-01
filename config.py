@@ -31,4 +31,5 @@ UNAME = 'admin'  # 管理员账号
 PWD = 'drpy' # 管理员密码
 MAX_CONTENT_LENGTH = 1 * 1024 * 1024/100  # 100 kB
 LIVE_MODE = 1  # 0 本地 1外网
+CATE_EXCLUDE = '首页|留言'  # 动态分类过滤
 # {% if config.WALL_PAPER %}"wallpaper":"{{ config.WALL_PAPER }}",{% endif %}

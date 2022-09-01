@@ -39,6 +39,7 @@ class CMS:
         self.retry_count = new_conf.get('RETRY_CNT',3)
         self.lazy_mode = new_conf.get('LAZYPARSE_MODE')
         self.ocr_api = new_conf.get('OCR_API')
+        self.cate_exclude = new_conf.get('CATE_EXCLUDE','')
         try:
             self.vod = redirect(url_for('vod')).headers['Location']
         except:
@@ -352,6 +353,7 @@ class CMS:
                     r.encoding = self.encoding
                     html = r.text
                     # print(html)
+                    # print(self.headers)
                     if self.class_parse and not has_cache:
                         p = self.class_parse.split(';')
                         # print(p)
@@ -364,6 +366,9 @@ class CMS:
                         # print(items)
                         for item in items:
                             title = pdfh(item, p[1])
+                            # 过滤排除掉标题名称
+                            if self.cate_exclude and jsp.test(self.cate_exclude, title):
+                                continue
                             url = pd(item, p[2])
                             # print(url)
                             tag = url
