@@ -24,7 +24,7 @@
 
 ##### python3.6-3.8完美运行(3.9以上不支持linux进程启动)
 <a href="./安卓本地搭建说明.md" alt="install">
-<img src="https://img.shields.io/badge/install-support:termux|python3.6~python3.8-yellowgreen" />
+<img src="https://img.shields.io/badge/install support-termux|windows|ubuntu|python3.6~python3.8-yellowgreen" />
 </a>
 
 [搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  
