@@ -779,7 +779,7 @@ if __name__ == '__main__':
     # js_path = f'js/555影视.js'
     with open('../js/模板.js', encoding='utf-8') as f:
         before = f.read()
-    js_path = f'js/cokemv.js'
+    js_path = f'js/vip影院.js'
     ctx, js_code = parser.runJs(js_path,before=before)
     ruleDict = ctx.rule.to_dict()
     # ruleDict['id'] = rule  # 把路由请求的id装到字典里,后面播放嗅探才能用
