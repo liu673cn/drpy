@@ -1,19 +1,24 @@
 #### 🚀dr模板的python实现🚀
 <div align="center">
+    
   <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://gitcode.net/qq_32394351/dr_py/-/raw/1fe0e082b1ceacc4469d7f175a605cc2edf0bab0/static/img/icon.png"/></a>
   <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
-    <img src="https://img.shields.io/github/release/Xhofe/alist" alt="latest version" />
+    <img src="https://img.shields.io/badge/version-3.0.3-blue" alt="latest version" />
   </a>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/issues">
-    <img src="https://img.shields.io/github/discussions/Xhofe/alist?color=%23ED8936" alt="discussions" />
+    <img src="https://img.shields.io/badge/discussions-2-orange" alt="discussions" />
   </a>
 
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
-    <img src="https://img.shields.io/github/downloads/Xhofe/alist/total?color=%239F7AEA" alt="Downloads" />
+    <img src="https://img.shields.io/badge/downloads-268-blue" alt="Downloads" />
   </a>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/Xhofe/alist" alt="License" />
+    <img src="https://img.shields.io/badge/license-AGPL3.0-orange" alt="License" />
+  </a>
+
+<a href="https://gitcode.net/qq_32394351/dr_py">
+    <img src="https://img.shields.io/badge/coverage-80%25-yellowgreen" alt="License" />
   </a>
 </div>  
 
