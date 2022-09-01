@@ -100,7 +100,8 @@
 [sqlite3使用教程](https://m.yisu.com/zixun/375448.html)  
 [远程网站](http://cms.nokia.press/index)  
 [本地网站](http://192.168.10.99:5705/index)  
-[需要安装nodejs](https://registry.npmmirror.com/binary.html?path=node/latest-v14.x/)  
+
+[comment]: <> ([需要安装nodejs]&#40;https://registry.npmmirror.com/binary.html?path=node/latest-v14.x/&#41;)
 [本地服务配置地址](http://localhost:5705/config/0)  
 [远程服务配置地址](http://cms.nokia.press/config/2)  
 
