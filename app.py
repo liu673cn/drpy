@@ -23,7 +23,7 @@ import codecs
 from classes.cms import CMS,logger
 from models import *
 import json
-# sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 def create_flask_app(config):
     app = Flask(__name__, static_folder='static', static_url_path='/static')
@@ -523,4 +523,4 @@ if __name__ == '__main__':
         server = WSGIServer((http_host, http_port), app,log=logger)
         server.serve_forever()
     else:
-        app.run(debug=True, host=http_host, port=http_port)
+        app.run(debug=False, host=http_host, port=http_port)
