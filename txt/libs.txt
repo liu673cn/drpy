@@ -1,4 +1,5 @@
 gevent-websocket
 PyExecJS
 ddddocr
+asgiref  ; python_version >= '3.6'
 parsel # 不知道对比pyquery性能如何,也是css选择器,不好封装成pdfa

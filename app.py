@@ -23,7 +23,7 @@ import codecs
 from classes.cms import CMS,logger
 from models import *
 import json
-sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+# sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 def create_flask_app(config):
     app = Flask(__name__, static_folder='static', static_url_path='/static')
@@ -52,7 +52,6 @@ else:
     print(f'当前python版本{now_python_ver}为3.9.0及以上,不支持gevent')
 
 # from geventwebsocket.handler import WebSocketHandler
-
 RuleClass = rule_classes.init(db)
 PlayParse = play_parse.init(db)
 

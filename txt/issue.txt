@@ -13,6 +13,12 @@ assert subprocess.call(
         shell=True,
         cwd=DIRNAME) == 0, 'Could not link required node_modules'
 
+
+from asgiref.wsgi import WsgiToAsgi
+import uvicorn
+asgi_app = WsgiToAsgi(app)
+uvicorn.run('app:asgi_app', host=http_host, port=http_host, debug=False, workers=1)
+
 另外一个很强的css解析库,性能待验证parsel
 https://cuiqingcai.com/202232.html
 
