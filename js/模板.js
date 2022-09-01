@@ -26,7 +26,7 @@ var muban = {
     class_parse:'.navbar-items li:gt(2):lt(8);a&&Text;a&&href;/(\\d+).html',
     play_parse:true,
     lazy:'',
-    limit:10,
+    limit:6,
     推荐:'.tab-list.active;a.module-poster-item.module-item;.module-poster-item-title&&Text;.lazyload&&data-original;.module-item-note&&Text;a&&href',
     double:true, // 推荐内容是否双层定位
     一级:'body a.module-poster-item.module-item;a&&title;.lazyload&&data-original;.module-item-note&&Text;a&&href',
@@ -47,7 +47,7 @@ var muban = {
     class_parse:'.myui-header__menu li.hidden-sm:gt(0):lt(5);a&&Text;a&&href;/(\\d+).html',
     play_parse:true,
     lazy:'',
-    limit:10,
+    limit:6,
     推荐:'ul.myui-vodlist.clearfix;li;a&&title;a&&data-original;.pic-text&&Text;a&&href',
     double:true, // 推荐内容是否双层定位
     一级:'.myui-vodlist li;a&&title;a&&data-original;.pic-text&&Text;a&&href',
@@ -68,7 +68,7 @@ var muban = {
     class_parse:'.stui-header__menu li:gt(0):lt(7);a&&Text;a&&href;/(\\d+).html',
     play_parse:true,
     lazy:'',
-    limit:10,
+    limit:6,
     推荐:'ul.stui-vodlist.clearfix;li;a&&title;.lazyload&&data-original;.pic-text&&Text;a&&href',
     double:true, // 推荐内容是否双层定位
     一级:'.stui-vodlist li;a&&title;a&&data-original;.pic-text&&Text;a&&href',

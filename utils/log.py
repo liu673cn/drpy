@@ -11,7 +11,7 @@ import sys
 
 dirname, filename = os.path.split(os.path.abspath(sys.argv[0]))
 LOG_ROOT = dirname
-# print(LOG_ROOT)
+print(LOG_ROOT)
 
 # logging.basicConfig(
 #                     # level=logging.INFO,  # 控制台打印的日志级别
@@ -43,7 +43,10 @@ def get_logger(log_filename, level=logging.DEBUG, when='D', back_count=0):
     # 设置日志输出的最低等级,低于当前等级则会被忽略
     logger.setLevel(level)
     # 创建日志输出路径
-    log_path = os.path.join(LOG_ROOT, "logs")
+    # log_path = os.path.join(LOG_ROOT, "logs")
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    log_path = os.path.join(base_path, f'logs')
+
     if not os.path.exists(log_path):
         os.mkdir(log_path)
     log_file_path = os.path.join(log_path, log_filename)

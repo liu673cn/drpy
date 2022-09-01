@@ -1,3 +1,5 @@
+. ./app.sh
+source ./app.sh
 . <(cat app.sh)
 # supervisord -c manager.conf
 flask db init

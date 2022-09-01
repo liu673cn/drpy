@@ -9,7 +9,6 @@ import js2py
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import config
-# import settings
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -22,25 +21,36 @@ from utils.web import *
 import sys
 import codecs
 from classes.cms import CMS,logger
+from models import *
 import json
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
-app = Flask(__name__,static_folder='static',static_url_path='/static')
 
-# app.config["JSON_AS_ASCII"] = False # jsonify返回的中文正常显示
-app.config.from_object(config) # 单独的配置文件里写了，这里就不用弄json中文显示了
-# new_conf = get_conf(settings)
-# print(new_conf)
-print('自定义播放解析地址:',app.config.get('PLAY_URL'))
-print('当前操作系统',sys.platform)
-app.logger.name="drLogger"
+def create_flask_app(config):
+    app = Flask(__name__, static_folder='static', static_url_path='/static')
+    # app.config["JSON_AS_ASCII"] = False # jsonify返回的中文正常显示
+    app.config.from_object(config)  # 单独的配置文件里写了，这里就不用弄json中文显示了
+    # new_conf = get_conf(settings)
+    # print(new_conf)
+    print('自定义播放解析地址:', app.config.get('PLAY_URL'))
+    print('当前操作系统', sys.platform)
+    app.logger.name = "drLogger"
+    rule_list = getRuleLists()
+    logger.info(rule_list)
+    logger.info(f'局域网: {getHost(1, 5705)}/index\n本地: {getHost(0, 5705)}/index')
+    return app
+
+app = create_flask_app(config)
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-rule_list = getRuleLists()
-logger.info(rule_list)
-logger.info(f'局域网: {getHost(1, 5705)}/index\n本地: {getHost(0, 5705)}/index')
 
-from models import *
-from gevent.pywsgi import WSGIServer
+now_python_ver = ".".join([str(i) for i in sys.version_info[:3]])
+if sys.version_info < (3,9):
+    from gevent.pywsgi import WSGIServer
+    print(f'当前python版本{now_python_ver}为3.9.0及以下,支持gevent')
+else:
+    print(f'当前python版本{now_python_ver}为3.9.0及以上,不支持gevent')
+
 # from geventwebsocket.handler import WebSocketHandler
 
 RuleClass = rule_classes.init(db)
@@ -80,7 +90,7 @@ def forbidden():  # put application's code here
 @app.route('/index')
 def index():  # put application's code here
     # logger.info("进入了首页")
-    sup_port = app.config.get('SUP_PORT',9001)
+    sup_port = app.config.get('SUP_PORT', 9001)
     manager0 = ':'.join(getHost(0).split(':')[0:2]) + f':{sup_port}'
     manager1 = ':'.join(getHost(1).split(':')[0:2]) + f':{sup_port}'
     manager2 = ':'.join(getHost(2).split(':')[0:2]) + f':{sup_port}'
@@ -506,8 +516,12 @@ def database():
 if __name__ == '__main__':
     # app.run(host="0.0.0.0", port=5705)
     # app.run(debug=True, host='0.0.0.0', port=5705)
-    # server = WSGIServer(('0.0.0.0', 5705), app, handler_class=WebSocketHandler,log=app.logger)
-    server = WSGIServer(('0.0.0.0', 5705), app,log=logger)
-    # server = WSGIServer(('0.0.0.0', 5705), app, handler_class=WebSocketHandler,log=None)
-    server.serve_forever()
-    # WSGIServer(('0.0.0.0', 5705), app,log=None).serve_forever()
+    http_port = int(app.config.get('HTTP_PORT', 5705))
+    http_host = app.config.get('HTTP_HOST', '0.0.0.0')
+    if sys.version_info < (3, 9):
+        # server = WSGIServer(('0.0.0.0', 5705), app, handler_class=WebSocketHandler,log=app.logger)
+        # server = WSGIServer(('0.0.0.0', 5705), app, handler_class=WebSocketHandler,log=None)
+        server = WSGIServer((http_host, http_port), app,log=logger)
+        server.serve_forever()
+    else:
+        app.run(debug=True, host=http_host, port=http_port)
