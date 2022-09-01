@@ -13,6 +13,9 @@ assert subprocess.call(
         shell=True,
         cwd=DIRNAME) == 0, 'Could not link required node_modules'
 
+另外一个很强的css解析库,性能待验证parsel
+https://cuiqingcai.com/202232.html
+
 远程直播地址:
 "lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext=aHR0cHM6Ly9hZ2l0LmFpL2xjeC8xMS9yYXcvYnJhbmNoL21hc3Rlci9saXZl"]}]}],
 下面格式原版tv_box才能用?

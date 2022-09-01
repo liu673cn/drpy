@@ -69,3 +69,28 @@ class jsoup:
 
     def pq(self,html):
         return pq(html)
+
+if __name__ == '__main__':
+    import requests
+    from parsel import Selector
+    url = 'http://360yy.cn'
+    jsp = jsoup(url)
+    def pdfa2(html,parse):
+        if not parse:
+            return []
+        if parse.find('&&') > -1:
+            parse = parse.split('&&')  # 带&&的重新拼接
+            # print(f"{parse[0]},{self.test(':eq|:lt|:gt', parse[0])}")
+            # parse = ' '.join([parse[i] if self.test(':eq|:lt|:gt', parse[i]) or i>=len(parse)-1 else f'{parse[i]}:eq(0)' for i in range(len(parse))])
+            parse = ' '.join([parse[i] if jsoup().test(':eq|:lt|:gt', parse[i]) or i>=len(parse)-1 else f'{parse[i]}:nth-child(1)' for i in range(len(parse))])
+        # print(f'pdfa:{parse}')
+        selector = Selector(text=html)
+        print(parse)
+        items = selector.css(parse)
+        return [str(item) for item in items]
+    r = requests.get(url)
+    html = r.text
+    # parsel 不好用啊,很难实现封装pdfa之类的函数
+    items = pdfa2(html,'.fed-pops-navbar&&ul.fed-part-rows&&a')
+    print(items)
+
