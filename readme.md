@@ -1,3 +1,21 @@
+<div align="center">
+  <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="./static/img/icon.png"/></a>
+  <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
+  <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
+    <img src="https://img.shields.io/github/release/Xhofe/alist" alt="latest version" />
+  </a>
+  <a href="https://gitcode.net/qq_32394351/dr_py/-/issues">
+    <img src="https://img.shields.io/github/discussions/Xhofe/alist?color=%23ED8936" alt="discussions" />
+  </a>
+
+  <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
+    <img src="https://img.shields.io/github/downloads/Xhofe/alist/total?color=%239F7AEA" alt="Downloads" />
+  </a>
+  <a href="https://gitcode.net/qq_32394351/dr_py/-/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/Xhofe/alist" alt="License" />
+  </a>
+</div>  
+
 #### 🚀dr模板的python实现🚀
 ##### python3.6-3.8完美运行(3.9以上不支持linux进程启动)
 [搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  
