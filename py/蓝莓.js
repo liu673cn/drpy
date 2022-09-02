@@ -1,8 +1,9 @@
 js:
 var MY_HOME='http://lanmeiguojiang.com:5244/d/%E8%93%9D%E8%8E%93%E4%BA%91%E7%9B%98';
-let headers = d.headers;
-headers['Referer'] = input;
-let fetch_params = {headers:headers,timeout:d.timeout,encoding:d.encoding};
+// let headers = d.headers;
+// headers['Referer'] = input;
+// let fetch_params = {headers:headers,timeout:d.timeout,encoding:d.encoding};
+print(fetch_params);
 let html = fetch(input,fetch_params);
 var player = JSON.parse(html.match(/r player_.*?=(.*?)</)[1]);
 var jsurl = player.url;

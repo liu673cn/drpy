@@ -14,6 +14,7 @@ subprocess.Popen = partial(subprocess.Popen, encoding="utf-8")  # 固定写法
 # 解决execjs执行js时产生的乱码报错，需要在导入该模块之前，让Popen的encoding参数锁定为utf-8
 # import execjs
 import js2py
+from js2py.base import JsObjectWrapper
 
 # os.environ["EXECJS_RUNTIME"] = "JScript"
 # print(execjs.get().name)
@@ -155,7 +156,7 @@ def covert_demo():
     print(loader.eval('r = requests.get("https://www.baidu.com/");r.encoding = "utf-8";r.text'))
     # 下面是错误用法,没有loader环境没法正确eval_js,有loader用eval不需要eval_js
     # print(js2py.eval_js('r = requests.get("https://www.baidu.com/");r.encoding = "utf-8";r.text'))
-    with open('../js/夜空.js',encoding='utf-8') as f:
+    with open('../js/蓝莓影视.js',encoding='utf-8') as f:
         yk = f.read()
     print(yk)
 

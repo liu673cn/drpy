@@ -14,7 +14,7 @@ from utils.log import logger
 from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl,getHome
 from utils.encode import verifyCode
 from utils.safePython import safePython
-from utils.parser import runPy,runJScode
+from utils.parser import runPy,runJScode,JsObjectWrapper
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
@@ -731,10 +731,13 @@ class CMS:
         if not jxs:
             jxs = []
         if self.lazy:
-            print(f'{play_url}->开始执行免嗅代码->{self.lazy}')
+            print(f'{play_url}->开始执行免嗅代码{type(self.lazy)}->{self.lazy}')
             t1 = time()
             try:
-                if not str(self.lazy).startswith('js:'):
+                if type(self.lazy) == JsObjectWrapper:
+                    logger.info(f'lazy非纯文本免嗅失败耗时:{get_interval(t1)}毫秒,播放地址:{play_url}')
+
+                elif not str(self.lazy).startswith('js:'):
                     pycode = runPy(self.lazy)
                     if pycode:
                         # print(pycode)
@@ -750,16 +753,19 @@ class CMS:
                     jscode = str(self.lazy).split('js:')[1]
                     # jscode = f'var input={play_url};{jscode}'
                     # print(jscode)
+                    headers['Referer'] = getHome(play_url)
                     py_ctx.update({
                         'input': play_url,
+                        'fetch_params':{'headers':headers,'timeout':self.d.timeout,'encoding':self.d.encoding},
                         'd': self.d,
                         'jxs':jxs,
+                        'getParse':self.d.getParse,
+                        'saveParse':self.d.saveParse,
                         'pdfh': self.d.jsp.pdfh,
                         'pdfa': self.d.jsp.pdfa, 'pd': self.d.jsp.pd,
                     })
                     ctx = py_ctx
                     # print(ctx)
-                    t1 = time()
                     jscode = getPreJs() + jscode
                     # print(jscode)
                     loader,_ = runJScode(jscode,ctx=ctx)
@@ -782,6 +788,8 @@ if __name__ == '__main__':
     js_path = f'js/vip影院.js'
     ctx, js_code = parser.runJs(js_path,before=before)
     ruleDict = ctx.rule.to_dict()
+    # lazy = ctx.eval('lazy')
+    # print(lazy)
     # ruleDict['id'] = rule  # 把路由请求的id装到字典里,后面播放嗅探才能用
 
     cms = CMS(ruleDict)

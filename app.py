@@ -216,6 +216,7 @@ def vod():
         return jsonify(error.failed('爬虫规则加载失败'))
 
     # rule = ctx.eval('rule')
+    # print(type(ctx.rule.lazy()),ctx.rule.lazy().toString())
     ruleDict = ctx.rule.to_dict()
     ruleDict['id'] = rule  # 把路由请求的id装到字典里,后面播放嗅探才能用
     # print(ruleDict)
