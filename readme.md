@@ -4,7 +4,7 @@
   <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://gitcode.net/qq_32394351/dr_py/-/raw/1fe0e082b1ceacc4469d7f175a605cc2edf0bab0/static/img/icon.png"/></a>
   <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
-    <img src="https://img.shields.io/badge/version-3.0.3-blue" alt="latest version" />
+    <img src="https://img.shields.io/badge/version-3.0.4-blue" alt="latest version" />
   </a>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/issues">
     <img src="https://img.shields.io/badge/discussions-2-orange" alt="discussions" />
