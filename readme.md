@@ -4,7 +4,7 @@
   <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://gitcode.net/qq_32394351/dr_py/-/raw/1fe0e082b1ceacc4469d7f175a605cc2edf0bab0/static/img/icon.png"/></a>
   <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
-    <img src="https://img.shields.io/badge/version-3.0.5-blue" alt="latest version" />
+    <img src="https://img.shields.io/badge/version-3.0.6-blue" alt="latest version" />
   </a>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/issues">
     <img src="https://img.shields.io/badge/discussions-2-orange" alt="discussions" />
@@ -34,6 +34,7 @@
 - [X] 1.优化了免嗅探的注入变量,封装了fetch_params变量
 - [X] 2.一定程度兼容python3高版本,支持termux直装(高于3.9版本首页推荐无法获取)
 - [X] 3.准备弃坑,基本完结撒花
+- [X] 4.增加自定义配置直播外网地址
 ###### 2022/09/01
 - [X] 1.增加动态分类排除配置
 - [X] 2.优化pdfh,pdfa,pd等函数,支持多个&&写法,自动取第一个

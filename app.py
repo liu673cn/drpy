@@ -417,7 +417,7 @@ def random_pics():
 def get_live_url(new_conf,mode):
     host = getHost(mode)
     live_url = host + '/lives' if new_conf.get('LIVE_MODE',
-                                               1) == 0 else 'https://gitcode.net/qq_26898231/TVBox/-/raw/main/live/0830zb.txt'
+                                               1) == 0 else new_conf.get('LIVE_URL',getHost(2)+'/lives')
     live_url = base64Encode(live_url)
     return live_url
 
