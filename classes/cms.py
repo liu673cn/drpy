@@ -74,7 +74,10 @@ class CMS:
         url = rule.get('url','')
         detailUrl = rule.get('detailUrl','')
         searchUrl = rule.get('searchUrl','')
-        headers = rule.get('headers',{})
+        default_headers = getHeaders(host)
+        self_headers = rule.get('headers',{})
+        default_headers.update(self_headers)
+        headers = default_headers
         cookie = self.getCookie()
         # print(f'{self.title}cookie:{cookie}')
         if cookie:
@@ -97,6 +100,7 @@ class CMS:
             headers['User-Agent'] = UA
         if not 'referer' in lower_keys:
             headers['Referer'] = host
+        # print(headers)
         self.headers = headers
         self.host = host
         self.homeUrl = urljoin(host,homeUrl) if host and homeUrl else homeUrl
@@ -331,6 +335,7 @@ class CMS:
                     'type_id': class_urls[i]
                 })
         # print(self.url)
+        print(self.headers)
         has_cache = False
         if self.homeUrl.startswith('http'):
             # print(self.homeUrl)
@@ -504,6 +509,7 @@ class CMS:
             r.encoding = self.encoding
             print(r.url)
             html = r.text
+            # print(html)
             items = pdfa(html, p[0])
         except:
             pass
