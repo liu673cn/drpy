@@ -100,6 +100,8 @@
 [sqlite3使用教程](https://m.yisu.com/zixun/375448.html)  
 [远程网站](http://cms.nokia.press/index)  
 [本地网站](http://192.168.10.99:5705/index)  
+[gevent下载地址](https://pypi.org/project/gevent/#files)
+[aarch64的cp310](http://pan.nokia.press/d/hiker/whl/gevent-21.12.0-cp310-cp310-linux_aarch64.whl)
 
 [comment]: <> ([需要安装nodejs]&#40;https://registry.npmmirror.com/binary.html?path=node/latest-v14.x/&#41;)
 [本地服务配置地址](http://localhost:5705/config/0)  
