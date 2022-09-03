@@ -28,7 +28,8 @@
 </a>
 
 [搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  
-[dr项目QQ官群](https://qm.qq.com/cgi-bin/qm/qr?k=H2KwcXrMdiR5M2blHR5gjZzPfN_S3N_C&jump_from=webapi)
+[dr项目QQ官群](https://qm.qq.com/cgi-bin/qm/qr?k=H2KwcXrMdiR5M2blHR5gjZzPfN_S3N_C&jump_from=webapi)  
+[参考T4](https://github.com/sec-an/TV_Spider/blob/main/spider/sp360.py)
 ###### 更新日志
 ###### 2022/09/03
 - [X] 1.增加了json定位支持(需要升级依赖),写法为 字符串以json:开头,二级的话含is_json:true
