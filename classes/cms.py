@@ -398,7 +398,7 @@ class CMS:
         if self.filter:
             result['filters'] = playerConfig['filter']
         result.update(video_result)
-        print(result)
+        # print(result)
         logger.info(f'{self.getName()}获取首页总耗时(包含读取缓存):{get_interval(t1)}毫秒')
         return result
 
