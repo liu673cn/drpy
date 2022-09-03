@@ -234,8 +234,8 @@ def vod():
     wd = getParmas('wd')
     ac = getParmas('ac')
     quick = getParmas('quick')
-    play = getParmas('play')
-    flag = getParmas('flag')
+    play = getParmas('play') # 类型为4的时候点击播放会带上来
+    flag = getParmas('flag') # 类型为4的时候点击播放会带上来
     filter = getParmas('filter')
     t = getParmas('t')
     pg = getParmas('pg','1')
@@ -243,6 +243,20 @@ def vod():
     ids = getParmas('ids')
     q = getParmas('q')
     play_url = getParmas('play_url')
+
+    if play:
+        jxs = getJxs()
+        play_url = play.split('play_url=')[1]
+        play_url = cms.playContent(play_url, jxs,flag)
+        if isinstance(play_url, str):
+            # return redirect(play_url)
+            # return jsonify({'parse': 0, 'playUrl': play_url, 'jx': 0, 'url': play_url})
+            # return jsonify({'parse': 0, 'playUrl': play_url, 'jx': 0, 'url': ''})
+            return jsonify({'parse': 0, 'playUrl': '', 'jx': 0, 'url': play_url})
+        elif isinstance(play_url, dict):
+            return jsonify(play_url)
+        else:
+            return play_url
 
     if play_url:  # 播放
         jxs = getJxs()

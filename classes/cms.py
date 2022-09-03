@@ -417,7 +417,7 @@ class CMS:
         pdfh = jsp.pjfh if is_json else jsp.pdfh
         pdfa = jsp.pjfa if is_json else jsp.pdfa
         pd = jsp.pj if is_json else jsp.pd
-        print(html)
+        # print(html)
         try:
             if self.double:
                 items = pdfa(html, p[0])
@@ -771,7 +771,7 @@ class CMS:
         }
         return result
 
-    def playContent(self, play_url,jxs=None):
+    def playContent(self, play_url,jxs=None,flag=None):
         # logger.info('播放免嗅地址: ' + self.play_url)
         if not jxs:
             jxs = []

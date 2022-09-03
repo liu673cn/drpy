@@ -32,3 +32,8 @@ https://cuiqingcai.com/202232.html
 
 "homepage":"https://gitcode.net/qq_32394351/dr_py",
 "imgo",
+
+config文件 type类型
+0 资源网
+1 app(xiaogui)
+4 app(xiaogui) 播放的时候自动带上play 和 flag(线路名)
