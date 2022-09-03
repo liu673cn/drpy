@@ -398,6 +398,7 @@ class CMS:
         if self.filter:
             result['filters'] = playerConfig['filter']
         result.update(video_result)
+        print(result)
         logger.info(f'{self.getName()}获取首页总耗时(包含读取缓存):{get_interval(t1)}毫秒')
         return result
 
@@ -428,7 +429,7 @@ class CMS:
                             title = pdfh(item2, p[2])
                             img = pd(item2, p[3])
                             desc = pdfh(item2, p[4])
-                            links = [pd(item, p5) if not self.detailUrl else pdfh(item, p5) for p5 in p[5].split('+')]
+                            links = [pd(item2, p5) if not self.detailUrl else pdfh(item2, p5) for p5 in p[5].split('+')]
                             link = '$'.join(links)
                             content = '' if len(p) < 7 else pdfh(item2, p[6])
                             videos.append({
@@ -682,6 +683,7 @@ class CMS:
         obj_list = []
         try:
             for vod_url in array:
+                # print(vod_url)
                 vod_class = ''
                 if vod_url.find('$') > -1:
                     tmp = vod_url.split('$')

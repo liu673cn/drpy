@@ -274,7 +274,7 @@ def vod():
         return jsonify(data)
     if ac and ids: # 二级
         id_list = ids.split(',')
-        # print(len(id_list))
+        # print('app:377',len(id_list))
         # print(id_list)
         data = cms.detailContent(pg,id_list)
         # print(data)
