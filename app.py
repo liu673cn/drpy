@@ -371,6 +371,7 @@ def getJxs(path='js'):
                 'name':dt[0],
                 'url':dt[1],
                 'type':dt[2] if len(dt) > 2 else 0,
+                'ua':dt[3] if len(dt) > 3 else UA,
             })
     # jxs = [{'name':dt.split(',')[0],'url':dt.split(',')[1]} for dt in data.split('\n')]
     # jxs = list(filter(lambda x:not str(x['name']).strip().startswith('#'),jxs))
