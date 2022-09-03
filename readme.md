@@ -4,7 +4,7 @@
   <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://gitcode.net/qq_32394351/dr_py/-/raw/1fe0e082b1ceacc4469d7f175a605cc2edf0bab0/static/img/icon.png"/></a>
   <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
-    <img src="https://img.shields.io/badge/version-3.0.6-blue" alt="latest version" />
+    <img src="https://img.shields.io/badge/version-3.0.8-blue" alt="latest version" />
   </a>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/issues">
     <img src="https://img.shields.io/badge/discussions-2-orange" alt="discussions" />
@@ -30,6 +30,10 @@
 [搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  
 [dr项目QQ官群](https://qm.qq.com/cgi-bin/qm/qr?k=H2KwcXrMdiR5M2blHR5gjZzPfN_S3N_C&jump_from=webapi)
 ###### 更新日志
+###### 2022/09/03
+- [X] 1.增加了json定位支持(需要升级依赖),写法为 字符串以json:开头,二级的话含is_json:true
+- [X] 2.研究正版线路对接解析(摸索出type1与4的区别，但是不知道1怎么走解析)
+- [X] 3.调整linux进程配置自动识别(自动去除https)
 ###### 2022/09/02
 - [X] 1.优化了免嗅探的注入变量,封装了fetch_params变量
 - [X] 2.一定程度兼容python3高版本,支持termux直装(高于3.9版本首页推荐无法获取)
