@@ -89,10 +89,14 @@ def forbidden():  # put application's code here
 @app.route('/index')
 def index():  # put application's code here
     # logger.info("进入了首页")
-    sup_port = app.config.get('SUP_PORT', 9001)
-    manager0 = ':'.join(getHost(0).split(':')[0:2]) + f':{sup_port}'
-    manager1 = ':'.join(getHost(1).split(':')[0:2]) + f':{sup_port}'
-    manager2 = ':'.join(getHost(2).split(':')[0:2]) + f':{sup_port}'
+    sup_port = app.config.get('SUP_PORT', False)
+    manager0 = ':'.join(getHost(0).split(':')[0:2])
+    manager1 = ':'.join(getHost(1).split(':')[0:2])
+    manager2 = ':'.join(getHost(2).split(':')[0:2]).replace('https','http')
+    if sup_port:
+        manager0 += f':{sup_port}'
+        manager1 += f':{sup_port}'
+        manager2 += f':{sup_port}'
     # print(manager1)
     # print(manager2)
     return render_template('index.html',getHost=getHost,manager0=manager0,manager1=manager1,manager2=manager2,is_linux=is_linux())
@@ -243,7 +247,12 @@ def vod():
     if play_url:  # 播放
         jxs = getJxs()
         play_url = cms.playContent(play_url,jxs)
-        return redirect(play_url)
+        if isinstance(play_url,str):
+            return redirect(play_url)
+        elif isinstance(play_url,dict):
+            return jsonify(play_url)
+        else:
+            return play_url
 
     if ac and t: # 一级
         data = cms.categoryContent(t,pg)
@@ -337,9 +346,20 @@ def getPics(path='images'):
     return pic_list
 
 def getJxs(path='js'):
-    with open(f'{path}/解析.txt',encoding='utf-8') as f:
+    with open(f'{path}/解析.conf',encoding='utf-8') as f:
         data = f.read().strip()
-    jxs = [{'name':dt.split(',')[0],'url':dt.split(',')[1]} for dt in data.split('\n')]
+    jxs = []
+    for i in data.split('\n'):
+        i = i.strip()
+        dt = i.split(',')
+        if not i.startswith('#'):
+            jxs.append({
+                'name':dt[0],
+                'url':dt[1],
+                'type':dt[2] if len(dt) > 2 else 0,
+            })
+    # jxs = [{'name':dt.split(',')[0],'url':dt.split(',')[1]} for dt in data.split('\n')]
+    # jxs = list(filter(lambda x:not str(x['name']).strip().startswith('#'),jxs))
     # print(jxs)
     print(f'共计{len(jxs)}条解析')
     return jxs

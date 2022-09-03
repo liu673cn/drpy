@@ -3,21 +3,23 @@
 # File  : htmlParser.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
+import json
 
 from pyquery import PyQuery as pq
 from urllib.parse import urljoin
 import re
+from jsonpath import jsonpath
 
 class jsoup:
     def __init__(self,MY_URL=''):
         self.MY_URL = MY_URL
 
-    def test(self, text, string):
+    def test(self, text:str, string:str):
         searchObj = re.search(rf'{text}', string, re.M | re.I)
         test_ret = True if searchObj else False
         return test_ret
 
-    def pdfh(self,html,parse,pd=False):
+    def pdfh(self,html,parse:str,add_url=False):
         if not parse:
             return ''
         doc = pq(html)
@@ -40,7 +42,7 @@ class jsoup:
                 ret = ret.html()
             else:
                 ret = ret.attr(option)
-                if pd and option in ['url','src','href','data-original','data-src']:
+                if add_url and option in ['url','src','href','data-original','data-src']:
                     ret = urljoin(self.MY_URL,ret)
         else:
             # ret = doc(parse+':first')
@@ -52,7 +54,7 @@ class jsoup:
             ret = str(ret)
         return ret
 
-    def pdfa(self,html,parse):
+    def pdfa(self,html,parse:str):
         if not parse:
             return []
         if parse.find('&&') > -1:
@@ -64,11 +66,57 @@ class jsoup:
         # return [item.html() for item in doc(parse).items()]
         return [str(item) for item in doc(parse).items()]
 
-    def pd(self,html,parse):
+    def pd(self,html,parse:str):
         return self.pdfh(html,parse,True)
 
-    def pq(self,html):
+    def pq(self,html:str):
         return pq(html)
+
+    def pjfh(self,html,parse:str,add_url=False):
+        if not parse:
+            return ''
+        if isinstance(html,str):
+            # print(html)
+            try:
+               html = json.loads(html)
+               # html = eval(html)
+            except:
+                print('字符串转json失败')
+                return ''
+        if not parse.startswith('$.'):
+            parse = f'$.{parse}'
+        ret = jsonpath(html,parse)
+        if isinstance(ret,list):
+            ret = str(ret[0]) if ret[0] else ''
+        else:
+            ret = str(ret) if ret else ''
+        if add_url:
+            ret = urljoin(self.MY_URL, ret)
+        return ret
+
+    def pj(self, html, parse:str):
+        return self.pjfh(html, parse, True)
+
+    def pjfa(self,html,parse:str):
+        if not parse:
+            return []
+        if isinstance(html,str):
+            try:
+               html = json.loads(html)
+            except:
+                return ''
+        if not parse.startswith('$.'):
+            parse = f'$.{parse}'
+        # print(parse)
+        ret = jsonpath(html,parse)
+        # print(ret)
+        # print(type(ret))
+        # print(type(ret[0]))
+        # print(len(ret))
+        if isinstance(ret,list) and isinstance(ret[0],list) and len(ret) == 1:
+            # print('自动解包')
+            ret  = ret[0] # 自动解包
+        return ret or []
 
 if __name__ == '__main__':
     import requests

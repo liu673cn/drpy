@@ -2,6 +2,7 @@
 {% if config.WALL_PAPER_ENABLE %}"wallpaper":"{{ host }}/pics",{% endif %}
 "dr_count": {{rules.list|length}},
 "mode": {{ mode }},
+"homepage":"https://gitcode.net/qq_32394351/dr_py",
 "sites": [{% for rule in rules.list %}{% if mode == 0 %}
 {
     "key":"dr_{{ rule.name }}",
@@ -38,9 +39,9 @@
 {
     "name": "{{ jx.name }}",
     "url": "{{ jx.url }}",
-    "type": 1,
+    "type": {{ jx.type }},
     "ext": {
-    "flag": ["qiyi", "爱奇艺", "奇艺", "qq", "腾讯", "youku", "优酷", "pptv", "PPTV", "letv", "乐视", "bilibili", "哔哩哔哩", "哔哩", "mgtv", "芒果","sohu", "xigua"],
+    "flag": ["qiyi","imgo","爱奇艺", "奇艺", "qq", "腾讯", "youku", "优酷", "pptv", "PPTV", "letv", "乐视", "bilibili", "哔哩哔哩", "哔哩", "mgtv", "芒果","sohu", "xigua"],
     "header": {
         "User-Agent": "Dart/2.14 (dart:io)"
     }

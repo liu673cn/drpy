@@ -10,3 +10,4 @@ gunicorn  ; python_version >= '3.6'
 supervisor ; sys_platform != 'win32'
 func_timeout
 easydict
+jsonpath

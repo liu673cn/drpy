@@ -30,3 +30,5 @@ https://cuiqingcai.com/202232.html
 "lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext={% if config.LIVE_MODE==0 %}{{base64Encode(host+'/lives')}}{% else %}{{ base64Encode('https://gitcode.net/qq_26898231/TVBox/-/raw/main/live/0830zb.txt')}}{% endif %}"]}]}],
 
 
+"homepage":"https://gitcode.net/qq_32394351/dr_py",
+"imgo",

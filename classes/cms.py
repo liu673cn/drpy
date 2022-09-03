@@ -186,6 +186,10 @@ class CMS:
         pdfh = jsp.pdfh
         pdfa = jsp.pdfa
         pd = jsp.pd
+        pjfh = jsp.pjfh
+        pjfa = jsp.pjfa
+        pj = jsp.pj
+
         pq = jsp.pq
         return pdfh,pdfa,pd,pq
 
@@ -409,9 +413,11 @@ class CMS:
         result = {}
         videos = []
         jsp = jsoup(self.homeUrl)
-        pdfh = jsp.pdfh
-        pdfa = jsp.pdfa
-        pd = jsp.pd
+        is_json = str(p[0]).startswith('json:')
+        pdfh = jsp.pjfh if is_json else jsp.pdfh
+        pdfa = jsp.pjfa if is_json else jsp.pdfa
+        pd = jsp.pj if is_json else jsp.pd
+        print(html)
         try:
             if self.double:
                 items = pdfa(html, p[0])
@@ -422,7 +428,8 @@ class CMS:
                             title = pdfh(item2, p[2])
                             img = pd(item2, p[3])
                             desc = pdfh(item2, p[4])
-                            link = pd(item2, p[5])
+                            links = [pd(item, p5) if not self.detailUrl else pdfh(item, p5) for p5 in p[5].split('+')]
+                            link = '$'.join(links)
                             content = '' if len(p) < 7 else pdfh(item2, p[6])
                             videos.append({
                                 "vod_id": link,
@@ -436,13 +443,16 @@ class CMS:
                         except:
                             pass
             else:
-                items = pdfa(html, p[0])
+                items = pdfa(html, p[0].replace('json:',''))
+                # print(items)
                 for item in items:
                     try:
                         title = pdfh(item, p[1])
                         img = pd(item, p[2])
                         desc = pdfh(item, p[3])
-                        link = pd(item, p[4])
+                        # link = pd(item, p[4])
+                        links = [pd(item, p5) if not self.detailUrl else pdfh(item, p5) for p5 in p[4].split('+')]
+                        link = '$'.join(links)
                         content = '' if len(p) < 6 else pdfh(item, p[5])
                         videos.append({
                             "vod_id": link,
@@ -495,9 +505,10 @@ class CMS:
             return self.blank()
 
         jsp = jsoup(self.url)
-        pdfh = jsp.pdfh
-        pdfa = jsp.pdfa
-        pd = jsp.pd
+        is_json = str(p[0]).startswith('json:')
+        pdfh = jsp.pjfh if is_json else jsp.pdfh
+        pdfa = jsp.pjfa if is_json else jsp.pdfa
+        pd = jsp.pj if is_json else jsp.pd
         # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(1)&&Text'))
         # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(0)'))
         # print(pdfh(r.text,'body a.module-poster-item.module-item:first'))
@@ -508,28 +519,32 @@ class CMS:
             r = requests.get(url, headers=self.headers, timeout=self.timeout)
             r.encoding = self.encoding
             print(r.url)
-            html = r.text
+            # html = r.text
+            html = r.json() if is_json else r.text
             # print(html)
-            items = pdfa(html, p[0])
+            items = pdfa(html,p[0].replace('json:','',1))
         except:
             pass
+        # print(items)
         for item in items:
             # print(item)
             try:
                 title = pdfh(item, p[1])
                 img = pd(item, p[2])
                 desc = pdfh(item, p[3])
-                link = pd(item, p[4])
+                links = [pd(item, p4) if not self.detailUrl else pdfh(item, p4) for p4 in p[4].split('+')]
+                link = '$'.join(links)
                 content = '' if len(p) < 6 else pdfh(item, p[5])
                 # sid = self.regStr(sid, "/video/(\\S+).html")
                 videos.append({
-                    "vod_id": link,
+                    "vod_id": f'{fyclass}${link}' if self.detailUrl else link,# 分类,播放链接
                     "vod_name": title,
                     "vod_pic": img,
                     "vod_remarks": desc,
                     "vod_content": content,
                 })
-            except:
+            except Exception as e:
+                print(f'发生了错误:{e}')
                 pass
         result['list'] = videos
         result['page'] = fypage
@@ -540,11 +555,11 @@ class CMS:
         
         return result
 
-    def detailOneVod(self,id):
+    def detailOneVod(self,id,fyclass=''):
         detailUrl = str(id)
         vod = {}
         if not detailUrl.startswith('http'):
-            url = self.detailUrl.replace('fyid', detailUrl)
+            url = self.detailUrl.replace('fyid', detailUrl).replace('fyclass',fyclass)
         else:
             url = detailUrl
         # print(url)
@@ -563,20 +578,24 @@ class CMS:
                 return vod
 
             jsp = jsoup(self.url)
-            pdfh = jsp.pdfh
-            pdfa = jsp.pdfa
-            pd = jsp.pd
+
+            is_json = p.get('is_json',False) # 二级里加is_json参数
+            pdfh = jsp.pjfh if is_json else jsp.pdfh
+            pdfa = jsp.pjfa if is_json else jsp.pdfa
+            pd = jsp.pj if is_json else jsp.pd
             pq = jsp.pq
             obj = {}
             vod_name = ''
             r = requests.get(url, headers=self.headers, timeout=self.timeout)
             r.encoding = self.encoding
-            html = r.text
+            # html = r.text
+            html = r.json() if is_json else r.text
             # print(html)
             if p.get('title'):
                 p1 = p['title'].split(';')
                 vod_name = pdfh(html,p1[0]).replace('\n',' ')
-                title = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                # title = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                title = '\n'.join([','.join([pdfh(html, pp1).strip() for pp1 in i.split('+')]) for i in p1])
                 # print(title)
                 obj['title'] = title
             if p.get('desc'):
@@ -610,10 +629,11 @@ class CMS:
             vod_play_from = '$$$'
             playFrom = []
             if p.get('tabs'):
-                vodHeader = pdfa(html,p['tabs'])
+                vodHeader = pdfa(html,p['tabs'].split(';')[0])
                 # print(f'线路列表数:{len((vodHeader))}')
                 # print(vodHeader)
-                vodHeader = [pq(v).text() for v in vodHeader]
+                if not is_json:
+                    vodHeader = [pq(v).text() for v in vodHeader]
             else:
                 vodHeader = ['道长在线']
 
@@ -625,10 +645,20 @@ class CMS:
             vod_tab_list = []
             if p.get('lists'):
                 for i in range(len(vodHeader)):
-                   p1 = p['lists'].replace('#id',str(i))
+                   tab_name = str(vodHeader[i])
+                   tab_ext = p['tabs'].split(';')[1] if len(p['tabs'].split(';')) > 1 else ''
+                   p1 = p['lists'].replace('#idv',tab_name).replace('#id',str(i))
+                   tab_ext = tab_ext.replace('#idv',tab_name).replace('#id',str(i))
                    vodList = pdfa(html,p1) # 1条线路的选集列表
+                   # print(vodList)
                    # vodList = [pq(i).text()+'$'+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
-                   vodList = [pq(i).text()+'$'+self.play_url+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
+                   if self.play_parse: # 自动base64编码
+                       vodList = [(pdfh(html,tab_ext) if tab_ext else tab_name)+'$'+self.play_url+base64Encode(i) for i in vodList] if is_json else\
+                           [pq(i).text()+'$'+self.play_url+base64Encode(pd(i,'a&&href')) for i in vodList]  # 拼接成 名称$链接
+                   else:
+                       vodList = [(pdfh(html, tab_ext) if tab_ext else tab_name) + '$' + self.play_url + i for i in
+                                  vodList] if is_json else \
+                           [pq(i).text() + '$' + self.play_url + pd(i, 'a&&href') for i in vodList]  # 拼接成 名称$链接
                    vlist = '#'.join(vodList) # 拼多个选集
                    vod_tab_list.append(vlist)
                 vod_play_url = vod_play_url.join(vod_tab_list)
@@ -652,7 +682,12 @@ class CMS:
         obj_list = []
         try:
             for vod_url in array:
-                obj = thread_pool.submit(self.detailOneVod, vod_url)
+                vod_class = ''
+                if vod_url.find('$') > -1:
+                    tmp = vod_url.split('$')
+                    vod_class = tmp[0]
+                    vod_url = tmp[1]
+                obj = thread_pool.submit(self.detailOneVod, vod_url,vod_class)
                 obj_list.append(obj)
             thread_pool.shutdown(wait=True)  # 等待所有子线程并行完毕
             vod_list = [obj.result() for obj in obj_list]
@@ -680,17 +715,19 @@ class CMS:
         if len(p) < 5:
             return self.blank()
         jsp = jsoup(self.url)
-        pdfh = jsp.pdfh
-        pdfa = jsp.pdfa
-        pd = jsp.pd
+        is_json = str(p[0]).startswith('json:')
+        pdfh = jsp.pjfh if is_json else jsp.pdfh
+        pdfa = jsp.pjfa if is_json else jsp.pdfa
+        pd = jsp.pj if is_json else jsp.pd
         pq = jsp.pq
         videos = []
         try:
             r = requests.get(url, headers=self.headers,timeout=self.timeout)
             r.encoding = self.encoding
-            html = r.text
+            # html = r.text
+            html = r.json() if is_json else r.text
             # print(html)
-            if html.find('输入验证码') > -1:
+            if not is_json and html.find('输入验证码') > -1:
                 cookie = verifyCode(url,self.headers,self.timeout,self.retry_count,self.ocr_api)
                 # cookie = ''
                 if not cookie:
@@ -703,7 +740,7 @@ class CMS:
                 r.encoding = self.encoding
                 html = r.text
 
-            items = pdfa(html, p[0])
+            items = pdfa(html,p[0].replace('json:','',1))
             # print(items)
             videos = []
             for item in items:
@@ -712,7 +749,9 @@ class CMS:
                     title = pdfh(item, p[1])
                     img = pd(item, p[2])
                     desc = pdfh(item, p[3])
-                    link = pd(item, p[4])
+                    # link = '$'.join([pd(item, p4) for p4 in p[4].split('+')])
+                    links = [pd(item, p4) if not self.detailUrl else pdfh(item, p4) for p4 in p[4].split('+')]
+                    link = '$'.join(links)
                     content = '' if len(p) < 6 else pdfh(item, p[5])
                     # sid = self.regStr(sid, "/video/(\\S+).html")
                     videos.append({
@@ -736,6 +775,10 @@ class CMS:
         # logger.info('播放免嗅地址: ' + self.play_url)
         if not jxs:
             jxs = []
+        try:
+            play_url = baseDecode(play_url) # 自动base64解码
+        except:
+            pass
         if self.lazy:
             print(f'{play_url}->开始执行免嗅代码{type(self.lazy)}->{self.lazy}')
             t1 = time()
@@ -777,6 +820,10 @@ class CMS:
                     loader,_ = runJScode(jscode,ctx=ctx)
                     # print(loader.toString())
                     play_url = loader.eval('input')
+                    if isinstance(play_url,JsObjectWrapper):
+                        play_url = play_url.to_dict()
+                    # print(type(play_url))
+                    # print(play_url)
                     logger.info(f'js免嗅耗时:{get_interval(t1)}毫秒,播放地址:{play_url}')
             except Exception as e:
                 logger.info(f'免嗅耗时:{get_interval(t1)}毫秒,并发生错误:{e}')
@@ -786,12 +833,15 @@ class CMS:
             return play_url
 
 if __name__ == '__main__':
+    print(urljoin('https://api.web.360kan.com/v1/f',
+                  '//0img.hitv.com/preview/sp_images/2022/01/28/202201281528074643023.jpg'))
+    # exit()
     from utils import parser
     # js_path = f'js/玩偶姐姐.js'
     # js_path = f'js/555影视.js'
     with open('../js/模板.js', encoding='utf-8') as f:
         before = f.read()
-    js_path = f'js/vip影院.js'
+    js_path = f'js/360影视.js'
     ctx, js_code = parser.runJs(js_path,before=before)
     ruleDict = ctx.rule.to_dict()
     # lazy = ctx.eval('lazy')
@@ -807,4 +857,5 @@ if __name__ == '__main__':
     # print(cms.detailContent(1,['https://cokemv.me/voddetail/40573.html']))
     # cms.categoryContent('dianying',1)
     # print(cms.detailContent(['67391']))
-    print(cms.searchContent('斗罗大陆'))
+    # print(cms.searchContent('斗罗大陆'))
+    print(cms.searchContent('独行月球'))
