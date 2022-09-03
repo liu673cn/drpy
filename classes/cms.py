@@ -12,7 +12,7 @@ from models import *
 from utils.config import playerConfig
 from utils.log import logger
 from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl,getHome
-from utils.encode import verifyCode
+from utils.encode import verifyCode,setDetail,join,urljoin2
 from utils.safePython import safePython
 from utils.parser import runPy,runJScode,JsObjectWrapper
 from utils.htmlParser import jsoup
@@ -24,7 +24,7 @@ from easydict import EasyDict as edict
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
 'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS,
-'buildUrl':buildUrl,'getHome':getHome
+'buildUrl':buildUrl,'getHome':getHome,'setDetail':setDetail,'join':join,'urljoin2':urljoin2
 }
 # print(getCryptoJS())
 
@@ -569,103 +569,128 @@ class CMS:
             if p == '*':
                 vod = self.blank_vod()
                 vod['vod_play_from'] = '道长在线'
-                vod['desc'] = self.play_url+detailUrl
+                vod['vod_remarks'] = self.play_url+detailUrl
                 vod['vod_actor'] = '没有二级,只有一级链接直接嗅探播放'
-                vod['content'] = detailUrl
+                vod['vod_content'] = detailUrl
                 vod['vod_play_url'] = '嗅探播放$'+detailUrl
                 return vod
 
-            if not isinstance(p,dict):
+            if not isinstance(p,dict) and not isinstance(p,str) and not str(p).startswith('js:'):
                 return vod
 
             jsp = jsoup(self.url)
 
-            is_json = p.get('is_json',False) # 二级里加is_json参数
-            pdfh = jsp.pjfh if is_json else jsp.pdfh
-            pdfa = jsp.pjfa if is_json else jsp.pdfa
-            pd = jsp.pj if is_json else jsp.pd
-            pq = jsp.pq
-            obj = {}
-            vod_name = ''
-            r = requests.get(url, headers=self.headers, timeout=self.timeout)
-            r.encoding = self.encoding
-            # html = r.text
-            html = r.json() if is_json else r.text
-            # print(html)
-            if p.get('title'):
-                p1 = p['title'].split(';')
-                vod_name = pdfh(html,p1[0]).replace('\n',' ')
-                # title = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-                title = '\n'.join([','.join([pdfh(html, pp1).strip() for pp1 in i.split('+')]) for i in p1])
-                # print(title)
-                obj['title'] = title
-            if p.get('desc'):
-                p1 = p['desc'].split(';')
-                desc = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-                obj['desc'] = desc
-
-            if p.get('content'):
-                p1 = p['content'].split(';')
-                content = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-                obj['content'] = content
-
-            if p.get('img'):
-                p1 = p['img'].split(';')
-                img = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-                obj['img'] = img
-
-            vod = {
-                "vod_id": detailUrl,
-                "vod_name": vod_name,
-                "vod_pic": obj.get('img',''),
-                "type_name": obj.get('title',''),
-                "vod_year": "",
-                "vod_area": "",
-                "vod_remarks": obj.get('desc',''),
-                "vod_actor": "",
-                "vod_director": "",
-                "vod_content": obj.get('content','')
-            }
-
-            vod_play_from = '$$$'
-            playFrom = []
-            if p.get('tabs'):
-                vodHeader = pdfa(html,p['tabs'].split(';')[0])
-                # print(f'线路列表数:{len((vodHeader))}')
-                # print(vodHeader)
-                if not is_json:
-                    vodHeader = [pq(v).text() for v in vodHeader]
+            is_json = p.get('is_json',False) if isinstance(p,dict) else False # 二级里加is_json参数
+            is_js = isinstance(p,str) and str(p).startswith('js:') # 是js
+            if is_js:
+                headers['Referer'] = getHome(url)
+                py_ctx.update({
+                    'input': url,
+                    'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                    'd': self.d,
+                    'getParse': self.d.getParse,
+                    'saveParse': self.d.saveParse,
+                    'jsp':jsp,'setDetail':setDetail,
+                })
+                ctx = py_ctx
+                # print(ctx)
+                jscode = getPreJs() + p.replace('js:','',1)
+                # print(jscode)
+                loader, _ = runJScode(jscode, ctx=ctx)
+                # print(loader.toString())
+                vod = loader.eval('vod')
+                if isinstance(vod,JsObjectWrapper):
+                    vod = vod.to_dict()
+                else:
+                    vod = {}
+                # print(type(vod))
+                # print(vod)
             else:
-                vodHeader = ['道长在线']
+                pdfh = jsp.pjfh if is_json else jsp.pdfh
+                pdfa = jsp.pjfa if is_json else jsp.pdfa
+                pd = jsp.pj if is_json else jsp.pd
+                pq = jsp.pq
+                obj = {}
+                vod_name = ''
+                r = requests.get(url, headers=self.headers, timeout=self.timeout)
+                r.encoding = self.encoding
+                # html = r.text
+                html = r.json() if is_json else r.text
+                # print(html)
+                if p.get('title'):
+                    p1 = p['title'].split(';')
+                    vod_name = pdfh(html,p1[0]).replace('\n',' ')
+                    # title = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                    title = '\n'.join([','.join([pdfh(html, pp1).strip() for pp1 in i.split('+')]) for i in p1])
+                    # print(title)
+                    obj['title'] = title
+                if p.get('desc'):
+                    p1 = p['desc'].split(';')
+                    desc = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                    obj['desc'] = desc
 
-            for v in vodHeader:
-                playFrom.append(v)
-            vod_play_from = vod_play_from.join(playFrom)
+                if p.get('content'):
+                    p1 = p['content'].split(';')
+                    content = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                    obj['content'] = content
 
-            vod_play_url = '$$$'
-            vod_tab_list = []
-            if p.get('lists'):
-                for i in range(len(vodHeader)):
-                   tab_name = str(vodHeader[i])
-                   tab_ext = p['tabs'].split(';')[1] if len(p['tabs'].split(';')) > 1 else ''
-                   p1 = p['lists'].replace('#idv',tab_name).replace('#id',str(i))
-                   tab_ext = tab_ext.replace('#idv',tab_name).replace('#id',str(i))
-                   vodList = pdfa(html,p1) # 1条线路的选集列表
-                   # print(vodList)
-                   # vodList = [pq(i).text()+'$'+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
-                   if self.play_parse: # 自动base64编码
-                       vodList = [(pdfh(html,tab_ext) if tab_ext else tab_name)+'$'+self.play_url+base64Encode(i) for i in vodList] if is_json else\
-                           [pq(i).text()+'$'+self.play_url+base64Encode(pd(i,'a&&href')) for i in vodList]  # 拼接成 名称$链接
-                   else:
-                       vodList = [(pdfh(html, tab_ext) if tab_ext else tab_name) + '$' + self.play_url + i for i in
-                                  vodList] if is_json else \
-                           [pq(i).text() + '$' + self.play_url + pd(i, 'a&&href') for i in vodList]  # 拼接成 名称$链接
-                   vlist = '#'.join(vodList) # 拼多个选集
-                   vod_tab_list.append(vlist)
-                vod_play_url = vod_play_url.join(vod_tab_list)
-            # print(vod_play_url)
-            vod['vod_play_from'] = vod_play_from
-            vod['vod_play_url'] = vod_play_url
+                if p.get('img'):
+                    p1 = p['img'].split(';')
+                    img = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                    obj['img'] = img
+
+                vod = {
+                    "vod_id": detailUrl,
+                    "vod_name": vod_name,
+                    "vod_pic": obj.get('img',''),
+                    "type_name": obj.get('title',''),
+                    "vod_year": "",
+                    "vod_area": "",
+                    "vod_remarks": obj.get('desc',''),
+                    "vod_actor": "",
+                    "vod_director": "",
+                    "vod_content": obj.get('content','')
+                }
+
+                vod_play_from = '$$$'
+                playFrom = []
+                if p.get('tabs'):
+                    vodHeader = pdfa(html,p['tabs'].split(';')[0])
+                    # print(f'线路列表数:{len((vodHeader))}')
+                    # print(vodHeader)
+                    if not is_json:
+                        vodHeader = [pq(v).text() for v in vodHeader]
+                else:
+                    vodHeader = ['道长在线']
+
+                for v in vodHeader:
+                    playFrom.append(v)
+                vod_play_from = vod_play_from.join(playFrom)
+
+                vod_play_url = '$$$'
+                vod_tab_list = []
+                if p.get('lists'):
+                    for i in range(len(vodHeader)):
+                       tab_name = str(vodHeader[i])
+                       tab_ext = p['tabs'].split(';')[1] if len(p['tabs'].split(';')) > 1 else ''
+                       p1 = p['lists'].replace('#idv',tab_name).replace('#id',str(i))
+                       tab_ext = tab_ext.replace('#idv',tab_name).replace('#id',str(i))
+                       vodList = pdfa(html,p1) # 1条线路的选集列表
+                       # print(vodList)
+                       # vodList = [pq(i).text()+'$'+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
+                       if self.play_parse: # 自动base64编码
+                           vodList = [(pdfh(html,tab_ext) if tab_ext else tab_name)+'$'+self.play_url+base64Encode(i) for i in vodList] if is_json else\
+                               [pq(i).text()+'$'+self.play_url+base64Encode(pd(i,'a&&href')) for i in vodList]  # 拼接成 名称$链接
+                       else:
+                           vodList = [(pdfh(html, tab_ext) if tab_ext else tab_name) + '$' + self.play_url + i for i in
+                                      vodList] if is_json else \
+                               [pq(i).text() + '$' + self.play_url + pd(i, 'a&&href') for i in vodList]  # 拼接成 名称$链接
+                       vlist = '#'.join(vodList) # 拼多个选集
+                       vod_tab_list.append(vlist)
+                    vod_play_url = vod_play_url.join(vod_tab_list)
+                # print(vod_play_url)
+                vod['vod_play_from'] = vod_play_from
+                vod['vod_play_url'] = vod_play_url
         except Exception as e:
             logger.info(f'{self.getName()}获取单个详情页{detailUrl}出错{e}')
         # print(vod)

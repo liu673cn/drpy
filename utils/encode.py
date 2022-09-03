@@ -5,6 +5,8 @@
 # Date  : 2022/8/29
 
 import base64
+from urllib.parse import urljoin
+
 import requests
 import requests.utils
 from time import sleep
@@ -84,6 +86,48 @@ def base64Encode(text):
 
 def baseDecode(text):
     return base64.b64decode(text).decode("utf-8") #base64解码
+
+def setDetail(title:str,img:str,desc:str,content:str,tabs:list=None,lists:list=None):
+    vod = {
+        "vod_name": title.split('/n')[0],
+        "vod_pic": img,
+        "type_name": title,
+        "vod_year": "",
+        "vod_area": "",
+        "vod_remarks": desc,
+        "vod_actor": "",
+        "vod_director": "",
+        "vod_content": content
+    }
+    return vod
+
+def urljoin2(a,b):
+    a = str(a).replace("'",'').replace('"','')
+    b = str(b).replace("'",'').replace('"','')
+    # print(type(a),a)
+    # print(type(b),b)
+    ret = urljoin(a,b)
+    return ret
+
+def join(lists,string):
+    """
+    残废函数,没法使用
+    :param lists:
+    :param string:
+    :return:
+    """
+    # FIXME
+    lists1 = lists.to_list()
+    string1 = str(string)
+    print(type(lists1),lists1)
+    print(type(string1),string1)
+    try:
+        ret = string1.join(lists1)
+        print(ret)
+        return ret
+    except Exception as e:
+        print(e)
+        return ''
 
 def dealObj(obj=None):
     if not obj:
@@ -165,9 +209,11 @@ def buildUrl(url,obj=None):
     new_obj = {}
     for i in obj:
         new_obj[str(i).replace("'", "")] = str(obj[i]).replace("'", "")
-    if not str(url).endswith('?'):
+    if str(url).find('?') < 0:
         url = str(url) + '?'
     prs = '&'.join([f'{i}={obj[i]}' for i in obj])
+    if len(new_obj) > 0:
+        url += '&'
     url = (url + prs).replace('"','').replace("'",'')
     # print(url)
     return url
