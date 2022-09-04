@@ -47,4 +47,5 @@ ENV LC_ALL C.UTF-8
 # 执行命令
 # CMD [ "python", "/root/sd/pywork/dr_py/app.py" ]
 # supervisord -c /root/sd/pywork/dr_py/super/flask.conf
-CMD [ "supervisord","-c", "/root/sd/pywork/dr_py/super/flask.conf" ]
+# CMD [ "supervisord","-c", "/root/sd/pywork/dr_py/super/flask.conf" ]
+CMD supervisord -c /root/sd/pywork/dr_py/super/flask.conf && /bin/bash
