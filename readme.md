@@ -13,6 +13,15 @@
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
     <img src="https://img.shields.io/badge/downloads-268-blue" alt="Downloads" />
   </a>
+
+<a href="https://wwi.lanzoup.com/iDeIj0b27qob">
+    <img src="https://img.shields.io/badge/蓝奏云下载-3.1.1-blue" alt="Downloads" />
+  </a>
+
+<a href="https://hub.docker.com/repository/docker/hjdhnx/drpy">
+    <img src="https://img.shields.io/badge/docker镜像-drpy-blue" alt="Downloads" />
+  </a>
+
   <a href="https://gitcode.net/qq_32394351/dr_py/-/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-AGPL3.0-orange" alt="License" />
   </a>
