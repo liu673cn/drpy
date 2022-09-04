@@ -39,8 +39,9 @@
 [搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  
 [dr项目QQ官群](https://qm.qq.com/cgi-bin/qm/qr?k=H2KwcXrMdiR5M2blHR5gjZzPfN_S3N_C&jump_from=webapi)  
 [参考T4](https://github.com/sec-an/TV_Spider/blob/main/spider/sp360.py)  
-[golang最好的js引擎-otto](https://github.com/robertkrimen/otto)
-###### 更新日志
+[golang最好的js引擎-otto](https://github.com/robertkrimen/otto)   
+[dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
+
 ###### 2022/09/04
 - [X] 1.增加了dockerfile
 - [X] 2.基于dockerfile构建的镜像并上传至dockerhub,小白可以一键运行.参考[搭建教程](./安卓本地搭建说明.md)

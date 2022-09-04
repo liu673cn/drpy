@@ -1,5 +1,6 @@
 # 基于的基础镜像-在dockerhub找
-FROM silverlogic/python3.8
+# FROM silverlogic/python3.8
+FROM python:3.8-slim-buster
 # 添加描述信息
 MAINTAINER python3.8+drpy+supervisord by "hjdhnx"
 # 设置app文件夹是工作目录
@@ -39,6 +40,7 @@ RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' 
 # 设置语言支持中文打印
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
+EXPOSE 5705 9001
 
 # ENV LC_ALL=zh_CN.utf8
 # ENV LANG=zh_CN.utf8
@@ -48,4 +50,5 @@ ENV LC_ALL C.UTF-8
 # CMD [ "python", "/root/sd/pywork/dr_py/app.py" ]
 # supervisord -c /root/sd/pywork/dr_py/super/flask.conf
 # CMD [ "supervisord","-c", "/root/sd/pywork/dr_py/super/flask.conf" ]
+# ENTRYPOINT supervisord -c /root/sd/pywork/dr_py/super/flask.conf
 CMD supervisord -c /root/sd/pywork/dr_py/super/flask.conf && /bin/bash

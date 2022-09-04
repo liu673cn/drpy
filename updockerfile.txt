@@ -10,5 +10,5 @@ COPY . /root/sd/pywork/dr_py
 # 设置语言支持中文打印
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
-# docker build -f updockerfile.txt -t hjdhnx/drpy .
+# docker build -f updockerfile.txt -t hjdhnx/drpy:v3.1.2 .
 CMD supervisord -c /root/sd/pywork/dr_py/super/flask.conf && /bin/bash
