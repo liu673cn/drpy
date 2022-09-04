@@ -32,6 +32,9 @@
 [参考T4](https://github.com/sec-an/TV_Spider/blob/main/spider/sp360.py)  
 [golang最好的js引擎-otto](https://github.com/robertkrimen/otto)
 ###### 更新日志
+###### 2022/09/04
+- [X] 1.增加了dockerfile
+- [X] 2.基于dockerfile构建的镜像并上传至dockerhub,小白可以一键运行.参考[搭建教程](./安卓本地搭建说明.md)
 ###### 2022/09/03
 - [X] 1.增加了json定位支持(需要升级依赖),写法为 字符串以json:开头,二级的话含is_json:true
 - [X] 2.研究正版线路对接解析(摸索出type1与4的区别，但是不知道1怎么走解析)
