@@ -169,28 +169,31 @@ def upload_file():
         return render_template('login.html')
     if request.method == 'POST':
         try:
-            f = request.files['file']
+            file = request.files['file']
             # print(f.size)
             # print(f)
             # print(request.files)
-            filename = secure_filename(f.filename)
+            filename = secure_filename(file.filename)
             print(f'推荐安全文件命名:{filename}')
             # savePath = f'js/{filename}'
-            savePath = f'js/{f.filename}'
+            savePath = f'js/{file.filename}'
             # print(savePath)
             if os.path.exists(savePath):
                 return jsonify(error.failed(f'上传失败,文件已存在,请先查看删除再试'))
             with open('js/模板.js', encoding='utf-8') as f2:
                 before = f2.read()
-            upcode = f.stream.read().decode('utf-8')
+            upcode = file.stream.read().decode('utf-8')
             check_to_run = before + upcode
             # print(check_to_run)
             try:
                 js2py.eval_js(check_to_run)
             except:
                 return jsonify(error.failed('文件上传失败,检测到上传的文件不是drpy框架支持的源代码'))
+            print(savePath)
+            # savePath = os.path.join('', savePath)
             # print(savePath)
-            f.save(savePath)
+            file.seek(0) # 读取后变成空文件,重新赋能
+            file.save(savePath)
             return jsonify(error.success('文件上传成功'))
         except Exception as e:
             return jsonify(error.failed(f'文件上传失败!{e}'))
