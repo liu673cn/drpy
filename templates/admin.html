@@ -63,6 +63,17 @@
     /*li a {*/
     /*    display: block !important;*/
     /*}*/
+    .ver_title{
+        font-size: 15px;margin-left: 20px
+    }
+
+    .ver{
+        font-size: 16px;margin-left: 5px;color: #ea7d7d;
+    }
+
+    a.funcbtn{
+        margin-left: 10px;
+    }
 </style>
 <body>
 <script>
@@ -77,6 +88,34 @@
             // location.reload();
             let rule = this.getAttribute('value').trim();
             location.href = '/vod?rule='+rule;
+        });
+
+        $("#checkUpdate").click(function(){
+            console.log('开始检查升级...');
+            $.get("/admin/get_ver",function(data,status){
+                console.log("数据: " + data + "\n状态: " + status);
+                if(data.msg){
+                    alert(data.msg);
+                    return false
+                }else{
+                    if(data.local_ver && data.online_ver){
+                        if(data.local_ver !== data.online_ver){
+                            msg = `本地版本:${data.local_ver}\n线上版本:${data.online_ver}\n是否立即执行升级?`;
+                            if(confirm(msg)){
+                               $.get("/admin/update_ver",function(data,status){
+                                   console.log(data);
+                                   alert(data.msg||'未知数据,具体到数据控制台查看');
+                                   return false
+                               });
+                            }
+                        }else{
+                            alert('已经是最新版,无需升级!')
+                        }
+                    }else{
+                        alert('已经是最新版,无需升级!')
+                    }
+                }
+            });
         });
 
         $(".clear").click(function(){
@@ -138,7 +177,11 @@
        }
 </script>
 
-<h2 class="title">欢迎使用drpy管理员界面</h2><h4><a href="/index">返回首页</a></h4>
+<h2 class="title">欢迎使用drpy管理员界面<span class="ver_title">当前版本:</span><span class="ver">{{ ver }}</span></h2>
+<h4>
+<a href="/index" class="funcbtn">返回首页</a>
+<a href="javascript:void(0);" class="funcbtn" id="checkUpdate">检测升级</a>
+</h4>
 <p>你可以在此页面在线上传规则文件到js目录或者删除js目录的文件</p>
  <form action = "/upload" method = "POST" enctype = "multipart/form-data">
 <!--     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>-->

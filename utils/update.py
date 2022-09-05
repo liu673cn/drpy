@@ -6,6 +6,7 @@
 
 import requests
 import os
+import zipfile
 
 def getLocalVer():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
@@ -22,8 +23,61 @@ def getLocalVer():
 def getOnlineVer():
     ver = '1.0.1'
     try:
-        r = requests.get('',timeout=(2,2))
+        r = requests.get('https://gitcode.net/qq_32394351/dr_py/-/raw/master/js/version.txt',timeout=(2,2))
         ver = r.text
     except Exception as e:
         print(f'{e}')
     return ver
+
+def checkUpdate():
+    local_ver = getLocalVer()
+    online_ver = getOnlineVer()
+    if local_ver != online_ver:
+        return True
+    return False
+
+
+def del_file(filepath):
+    """
+    删除execl目录下的所有文件或文件夹
+    :param filepath: 路径
+    :return:
+    """
+    del_list = os.listdir(filepath)
+    for f in del_list:
+        file_path = os.path.join(filepath, f)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
+def download_new_version():
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    tmp_path = os.path.join(base_path, f'tmp')
+    os.makedirs(tmp_path,exist_ok=True)
+    url = 'https://gitcode.net/qq_32394351/dr_py/-/archive/master/dr_py-master.zip'
+    # tmp_files = os.listdir(tmp_path)
+    # for tp in tmp_files:
+    #     print(f'清除缓存文件:{tp}')
+    #     os.remove(os.path.join(tmp_path, tp))
+    del_file(tmp_path)
+    headers = {
+        'Referer': 'https://gitcode.net/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36',
+    }
+    msg = ''
+    try:
+        print(f'开始下载:{url}')
+        r = requests.get(url,headers=headers,timeout=(20,20))
+        rb = r.content
+        download_path = os.path.join(tmp_path, 'dr_py.zip')
+        with open(download_path,mode='wb+') as f:
+            f.write(rb)
+        print(f'开始解压文件:{download_path}')
+        f = zipfile.ZipFile(download_path, 'r')  # 压缩文件位置
+        for file in f.namelist():
+            f.extract(file, tmp_path)  # 解压位置
+        f.close()
+        print('解压完毕')
+        msg = '下载成功'
+    except Exception as e:
+        msg = f'下载失败:{e}'
+    return msg

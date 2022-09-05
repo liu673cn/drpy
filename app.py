@@ -18,6 +18,7 @@ from werkzeug.utils import secure_filename
 from js.rules import getRuleLists
 from utils import error,parser
 from utils.web import *
+from utils.update import checkUpdate,getOnlineVer,getLocalVer,download_new_version
 import sys
 import codecs
 from classes.cms import CMS,logger
@@ -115,7 +116,7 @@ def admin_home():  # 管理员界面
     if not verfy_token(token):
         return render_template('login.html')
     # return jsonify(error.success('登录成功'))
-    return render_template('admin.html',rules=getRules('js'))
+    return render_template('admin.html',rules=getRules('js'),ver=getLocalVer())
 
 @app.route('/api/login',methods=['GET','POST'])
 def login_api():
@@ -159,6 +160,30 @@ def admin_clear_rule(name):
         return jsonify(error.failed('服务端没有此文件!'+file_path))
     os.remove(file_path)
     return jsonify(error.success('成功删除文件:'+file_path))
+
+@app.route('/admin/get_ver')
+def admin_get_ver():
+    cookies = request.cookies
+    # print(cookies)
+    token = cookies.get('token', '')
+    # print(f'mytoken:{token}')
+    if not verfy_token(token):
+        # return render_template('login.html')
+        return jsonify(error.failed('请登录后再试'))
+
+    return jsonify({'local_ver':getLocalVer(),'online_ver':getOnlineVer()})
+
+@app.route('/admin/update_ver')
+def admin_update_ver():
+    cookies = request.cookies
+    # print(cookies)
+    token = cookies.get('token', '')
+    # print(f'mytoken:{token}')
+    if not verfy_token(token):
+        # return render_template('login.html')
+        return jsonify(error.failed('请登录后再试'))
+    msg = download_new_version()
+    return jsonify(error.success(msg))
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
