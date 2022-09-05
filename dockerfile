@@ -29,6 +29,8 @@ ADD sources.list /etc/apt/
 ADD app.sh /etc/autostart/
 
 # RUN sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
+# armv7安装gcc
+# RUN apt-get install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf -y
 RUN chmod +x /etc/autostart/app.sh && apt-get clean && apt-get update && apt-get install -y vim
 # 执行指令，换源并安装依赖 设置默认pip源
 RUN pip install -i https://mirrors.cloud.tencent.com/pypi/simple --upgrade pip \
