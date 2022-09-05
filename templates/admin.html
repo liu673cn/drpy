@@ -74,6 +74,9 @@
     a.funcbtn{
         margin-left: 10px;
     }
+    .wrapper {position: relative;}
+    #input {position: absolute;top: 0;left: 0;opacity: 0;z-index: -10;}
+
 </style>
 <body>
 <script>
@@ -181,14 +184,27 @@
        {
            $('#file_size').text('文件大小为:'+fileObj.files[0].size/1024+'kb');
        }
+
+function copyText(id) {
+console.log(id);
+var text = document.getElementById(id).innerText;
+var input = document.getElementById("input");
+input.value = text; // 修改文本框的内容
+    console.log(text);
+input.select(); // 选中文本
+document.execCommand("copy"); // 执行浏览器复制命令
+alert("复制成功");
+}
 </script>
 
 <h2 class="title">欢迎使用drpy管理员界面<span class="ver_title">当前版本:</span><span class="ver">{{ ver }}</span></h2>
 <h4>
 <a href="/index" class="funcbtn">返回首页</a>
 <a href="javascript:void(0);" class="funcbtn" id="checkUpdate">检测升级</a>
+<a href="javascript:copyText('update_by_self');" class="funcbtn" id="update_by_self">cp ./tmp/dr_py-master/app.py ./app.py</a>
 </h4>
 <p>你可以在此页面在线上传规则文件到js目录或者删除js目录的文件</p>
+<input id="input"/>
  <form action = "/upload" method = "POST" enctype = "multipart/form-data">
 <!--     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>-->
      <input type = "file" name = "file" class="btn" onchange="getFileSize(this)"/>
