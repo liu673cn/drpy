@@ -35,8 +35,9 @@ def create_flask_app(config):
     print('当前操作系统', sys.platform)
     app.logger.name = "drLogger"
     rule_list = getRuleLists()
+    wlan_info,_ = get_wlan_info()
     logger.info(rule_list)
-    logger.info(f'局域网: {getHost(1, 5705)}/index\n本地: {getHost(0, 5705)}/index')
+    logger.info(f'局域网: {getHost(1, 5705)}/index\n本地: {getHost(0, 5705)}\nwlan_info:{wlan_info}/index')
     return app
 
 app = create_flask_app(config)

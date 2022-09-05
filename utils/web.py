@@ -43,6 +43,13 @@ def get_host_ip_old(): # 获取局域网ip
     return real_ips[-1] if len(jyw) < 1 else jyw[0]
 
 def get_host_ip(): # 获取局域网ip
+    netcard_info,ips = get_wlan_info()
+    # print(netcard_info)
+    real_ips = list(filter(lambda x: x and x != '127.0.0.1', ips))
+    jyw = list(filter(lambda x: str(x).startswith('192.168'), real_ips))
+    return real_ips[-1] if len(jyw) < 1 else jyw[0]
+
+def get_wlan_info():
     info = psutil.net_if_addrs()
     # print(info)
     netcard_info = []
@@ -52,10 +59,7 @@ def get_host_ip(): # 获取局域网ip
             if item[0] == 2:
                 netcard_info.append((k, item[1]))
                 ips.append(item[1])
-    print(netcard_info)
-    real_ips = list(filter(lambda x: x and x != '127.0.0.1', ips))
-    jyw = list(filter(lambda x: str(x).startswith('192.168'), real_ips))
-    return real_ips[-1] if len(jyw) < 1 else jyw[0]
+    return netcard_info,ips
 
 def getHost(mode=0,port=None):
     port = port or request.environ.get('SERVER_PORT')

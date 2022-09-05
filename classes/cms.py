@@ -466,13 +466,14 @@ class CMS:
                         })
                     except:
                         pass
-            result['list'] = videos
+            result['list'] = videos[min((fypage-1)*self.limit,len(videos)-1):min(fypage*self.limit,len(videos))]
             result['code'] = 1
             result['msg'] = '数据列表'
             result['page'] = fypage
             result['pagecount'] = math.ceil(len(videos)/self.limit)
             result['limit'] = self.limit
             result['total'] = len(videos)
+            result['now_count'] = len(result['list'])
             return result
         except Exception as e:
             logger.info(f'首页内容获取失败:{e}')
@@ -703,7 +704,7 @@ class CMS:
         :return:
         """
         t1 = time()
-        array = array[(fypage-1)*self.limit:min(self.limit*fypage,len(array))]
+        array = array if len(array) <= self.limit else array[(fypage-1)*self.limit:min(self.limit*fypage,len(array))]
         thread_pool = ThreadPoolExecutor(min(self.limit,len(array)))  # 定义线程池来启动多线程执行此任务
         obj_list = []
         try:
