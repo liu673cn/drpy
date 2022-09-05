@@ -8,6 +8,7 @@ import requests
 import os
 import zipfile
 import shutil # https://blog.csdn.net/weixin_33130113/article/details/112336581
+from utils.log import logger
 
 def getLocalVer():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
@@ -27,7 +28,8 @@ def getOnlineVer():
         r = requests.get('https://gitcode.net/qq_32394351/dr_py/-/raw/master/js/version.txt',timeout=(2,2))
         ver = r.text
     except Exception as e:
-        print(f'{e}')
+        # print(f'{e}')
+        logger.info(f'{e}')
     return ver
 
 def checkUpdate():
@@ -51,7 +53,8 @@ def del_file(filepath):
             os.remove(file_path)
 
 def force_copy_files(from_path,to_path):
-    print(f'开始拷贝文件{from_path}=>{to_path}')
+    # print(f'开始拷贝文件{from_path}=>{to_path}')
+    logger.info(f'开始拷贝文件{from_path}=>{to_path}')
     shutil.copytree(from_path, to_path, dirs_exist_ok=True)
 
 def copy_to_update():
@@ -59,7 +62,8 @@ def copy_to_update():
     tmp_path = os.path.join(base_path, f'tmp')
     dr_path = os.path.join(tmp_path, f'dr_py-master')
     if not os.path.exists(dr_path):
-        print(f'升级失败,找不到目录{dr_path}')
+        # print(f'升级失败,找不到目录{dr_path}')
+        logger.info(f'升级失败,找不到目录{dr_path}')
         return False
     force_copy_files(os.path.join(dr_path, f'js'),os.path.join(base_path, f'js'))
     force_copy_files(os.path.join(dr_path, f'classes'),os.path.join(base_path, f'classes'))
@@ -83,20 +87,24 @@ def download_new_version():
     }
     msg = ''
     try:
-        print(f'开始下载:{url}')
+        # print(f'开始下载:{url}')
+        logger.info(f'开始下载:{url}')
         r = requests.get(url,headers=headers,timeout=(20,20))
         rb = r.content
         download_path = os.path.join(tmp_path, 'dr_py.zip')
         with open(download_path,mode='wb+') as f:
             f.write(rb)
-        print(f'开始解压文件:{download_path}')
+        # print(f'开始解压文件:{download_path}')
+        logger.info(f'开始解压文件:{download_path}')
         f = zipfile.ZipFile(download_path, 'r')  # 压缩文件位置
         for file in f.namelist():
             f.extract(file, tmp_path)  # 解压位置
         f.close()
-        print('解压完毕,开始升级')
+        # print('解压完毕,开始升级')
+        logger.info('解压完毕,开始升级')
         ret = copy_to_update()
-        print(f'升级完毕,结果为:{ret}')
+        logger.info(f'升级完毕,结果为:{ret}')
+        # print(f'升级完毕,结果为:{ret}')
         msg = '升级成功'
     except Exception as e:
         msg = f'升级失败:{e}'
