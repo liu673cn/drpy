@@ -46,7 +46,9 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
-###### 2022/09/04
+###### 2022/09/06
+- [X] 1.增加了后台管理界面在线检测升级系统功能
+###### 2022/09/05
 - [X] 1.内置jar修复了原本tv_box无法播放直播的问题
 - [X] 2.重新构建了三种平台的镜像 amd64,armv7,arm64
 - [X] 3.优化日志打印wlan信息
