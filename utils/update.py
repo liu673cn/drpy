@@ -7,6 +7,7 @@
 import requests
 import os
 import zipfile
+import shutil # https://blog.csdn.net/weixin_33130113/article/details/112336581
 
 def getLocalVer():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
@@ -49,6 +50,19 @@ def del_file(filepath):
         if os.path.isfile(file_path):
             os.remove(file_path)
 
+def copy_to_update():
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    tmp_path = os.path.join(base_path, f'tmp')
+    dr_path = os.path.join(tmp_path, f'dr_py-master')
+    if not os.path.exists(dr_path):
+        print(f'升级失败,找不到目录{dr_path}')
+        return False
+    from_path = os.path.join(dr_path, f'js')
+    to_path = os.path.join(base_path, f'js')
+    print(f'开始拷贝文件{from_path}=>{to_path}')
+    shutil.copytree(from_path, to_path)
+    return True
+
 def download_new_version():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
     tmp_path = os.path.join(base_path, f'tmp')
@@ -76,8 +90,10 @@ def download_new_version():
         for file in f.namelist():
             f.extract(file, tmp_path)  # 解压位置
         f.close()
-        print('解压完毕')
-        msg = '下载成功'
+        print('解压完毕,开始升级')
+        ret = copy_to_update()
+        print(f'升级完毕,结果为:{ret}')
+        msg = '升级成功'
     except Exception as e:
-        msg = f'下载失败:{e}'
+        msg = f'升级失败:{e}'
     return msg

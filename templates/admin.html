@@ -105,7 +105,12 @@
                                $.get("/admin/update_ver",function(data,status){
                                    console.log(data);
                                    alert(data.msg||'未知数据,具体到数据控制台查看');
-                                   return false
+                                   if(data.code !== 200){
+                                       console.log('升级失败了...');
+                                       return false
+                                   }else{
+                                       location.reload()
+                                   }
                                });
                             }
                         }else{
