@@ -2,6 +2,7 @@
 {% if config.WALL_PAPER_ENABLE %}"wallpaper":"{{ host }}/pics",{% endif %}
 "dr_count": {{rules.list|length}},
 "mode": {{ mode }},
+"spider": "{{ host }}/liveslib",
 "homepage":"https://gitcode.net/qq_32394351/dr_py",
 "sites": [{% for rule in rules.list %}{% if mode == 0 %}
 {

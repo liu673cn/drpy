@@ -32,6 +32,7 @@ ADD app.sh /etc/autostart/
 # armv7安装gcc
 # RUN apt-get install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf -y
 RUN chmod +x /etc/autostart/app.sh && apt-get clean && apt-get update
+RUN apt-get install python3-lxml -y
 # 执行指令，换源并安装依赖 设置默认pip源
 RUN pip install -i https://mirrors.cloud.tencent.com/pypi/simple --upgrade pip \
     && pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple \
@@ -56,7 +57,7 @@ EXPOSE 5705 9001
 # docker build -f dockerfile -t hjdhnx/drpy_mini .  构建命令,非此文件内命令
 # docker push hjdhnx/drpy_mini
 # docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfile -t hjdhnx/drpy:mini_arm64 .
-# docker buildx build --platform linux/arm/v7 -f dockerfile -t hjdhnx/drpy:armv7 .
+# docker buildx build --platform linux/arm/v7 -f dockerfile -t hjdhnx/drpy_armv7 .
 # docker buildx build --platform linux/arm/v7 -f dockerfile -t hjdhnx/drpy:armv7 --push .
 # 启动命令,非此文件内命令
 # docker run -it -p 5705:5705 -p 9001:9001 -v /home/pywork/dr_py:/root/sd/pywork/dr_py --restart=always --name drpy -d hjdhnx/drpy:mini

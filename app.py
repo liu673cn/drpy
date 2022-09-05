@@ -487,6 +487,21 @@ def get_lives():
     response.headers['Content-Type'] = 'text/plain; charset=utf-8'
     return response
 
+@app.route('/liveslib')
+def get_liveslib():
+    live_path = 'js/custom_spider.jar'
+    if not os.path.exists(live_path):
+        with open(live_path,mode='w+',encoding='utf-8') as f:
+            f.write('')
+
+    with open(live_path,mode='rb') as f:
+        live_text = f.read()
+    response = make_response(live_text)
+    filename = 'custom_spider.jar'
+    response.headers['Content-Type'] = 'application/octet-stream'
+    response.headers['Content-Disposition'] = f'attachment;filename="{filename}"'
+    return response
+
 @app.route('/configs')
 def config_gen():
     # 生成文件

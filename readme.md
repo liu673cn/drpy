@@ -43,7 +43,9 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
-
+###### 2022/09/04
+- [X] 1.内置jar修复了原本tv_box无法播放直播的问题
+- [X] 2.重新构建了三种平台的镜像 amd64,armv7,arm64
 ###### 2022/09/04
 - [X] 1.增加了dockerfile
 - [X] 2.基于dockerfile构建的镜像并上传至dockerhub,小白可以一键运行.参考[搭建教程](./安卓本地搭建说明.md)
