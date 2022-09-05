@@ -656,6 +656,7 @@ class CMS:
                 vod_play_from = '$$$'
                 playFrom = []
                 if p.get('tabs'):
+                    # print(p['tabs'].split(';')[0])
                     vodHeader = pdfa(html,p['tabs'].split(';')[0])
                     # print(f'线路列表数:{len((vodHeader))}')
                     # print(vodHeader)
@@ -663,6 +664,8 @@ class CMS:
                         vodHeader = [pq(v).text() for v in vodHeader]
                 else:
                     vodHeader = ['道长在线']
+
+                # print(vodHeader)
 
                 for v in vodHeader:
                     playFrom.append(v)
@@ -691,7 +694,9 @@ class CMS:
                     vod_play_url = vod_play_url.join(vod_tab_list)
                 # print(vod_play_url)
                 vod['vod_play_from'] = vod_play_from
+                # print(vod_play_from)
                 vod['vod_play_url'] = vod_play_url
+                # print(vod_play_url)
         except Exception as e:
             logger.info(f'{self.getName()}获取单个详情页{detailUrl}出错{e}')
         # print(vod)
@@ -769,7 +774,7 @@ class CMS:
                 html = r.text
 
             items = pdfa(html,p[0].replace('json:','',1))
-            # print(items)
+            print(items)
             videos = []
             for item in items:
                 # print(item)
