@@ -7,7 +7,7 @@
 import socket
 import hashlib
 from werkzeug.utils import import_string
-from netifaces import interfaces, ifaddresses, AF_INET
+import psutil
 from flask import request
 from utils.log import logger
 MOBILE_UA = 'Mozilla/5.0 (Linux; Android 11; M2007J3SC Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045714 Mobile Safari/537.36'
@@ -31,7 +31,8 @@ def get_host_ip2(): # 获取局域网ip
         s.close()
     return ip
 
-def get_host_ip(): # 获取局域网ip
+def get_host_ip_old(): # 获取局域网ip
+    from netifaces import interfaces, ifaddresses, AF_INET
     ips = []
     for ifaceName in interfaces():
         addresses = ''.join([i['addr'] for i in ifaddresses(ifaceName).setdefault(AF_INET, [{'addr': ''}])])
@@ -39,6 +40,21 @@ def get_host_ip(): # 获取局域网ip
     real_ips = list(filter(lambda x:x and x!='127.0.0.1',ips))
     # logger.info(real_ips)
     jyw = list(filter(lambda x:str(x).startswith('192.168'),real_ips))
+    return real_ips[-1] if len(jyw) < 1 else jyw[0]
+
+def get_host_ip(): # 获取局域网ip
+    info = psutil.net_if_addrs()
+    # print(info)
+    netcard_info = []
+    ips = []
+    for k, v in info.items():
+        for item in v:
+            if item[0] == 2:
+                netcard_info.append((k, item[1]))
+                ips.append(item[1])
+    print(netcard_info)
+    real_ips = list(filter(lambda x: x and x != '127.0.0.1', ips))
+    jyw = list(filter(lambda x: str(x).startswith('192.168'), real_ips))
     return real_ips[-1] if len(jyw) < 1 else jyw[0]
 
 def getHost(mode=0,port=None):
