@@ -46,6 +46,8 @@ ENV LC_ALL C.UTF-8
 EXPOSE 5705 9001
 # docker build -f dockerfile -t hjdhnx/drpy:mini .  构建命令,非此文件内命令
 # docker build -f dockerfile -t hjdhnx/drpy_mini .  构建命令,非此文件内命令
+# docker build -f dockerfile -t hjdhnx/drpy_mini .  构建命令,非此文件内命令
+# docker push hjdhnx/drpy_mini
 # docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfile -t hjdhnx/drpy:mini_arm64 .
 # docker buildx build --platform linux/arm/v7 -f dockerfile -t hjdhnx/drpy_mini:armv7 .
 # 启动命令,非此文件内命令

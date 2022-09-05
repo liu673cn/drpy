@@ -47,6 +47,8 @@ migrate = Migrate(app, db)
 now_python_ver = ".".join([str(i) for i in sys.version_info[:3]])
 if sys.version_info < (3,9):
     from gevent.pywsgi import WSGIServer
+    # from gevent import monkey
+    # monkey.patch_socket() # 开启socket异步
     print(f'当前python版本{now_python_ver}为3.9.0及以下,支持gevent')
 else:
     print(f'当前python版本{now_python_ver}为3.9.0及以上,不支持gevent')
