@@ -24,15 +24,16 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bac
 # deb https://mirrors.bfsu.edu.cn/debian-security bullseye-security main contrib non-free
 # # deb-src https://mirrors.bfsu.edu.cn/debian-security bullseye-security main contrib non-free
 # EOF
+RUN mkdir -p /etc/autostart
 ADD sources.list /etc/apt/
+ADD app.sh /etc/autostart/
 
 # RUN sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
-RUN apt-get clean
-RUN apt-get update && apt-get install -y vim
-# 执行指令，换源并安装依赖
-RUN pip install -i https://mirrors.cloud.tencent.com/pypi/simple --upgrade pip
-# 设置默认pip源
-RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple
+RUN chmod +x /etc/autostart/app.sh && apt-get clean && apt-get update && apt-get install -y vim
+# 执行指令，换源并安装依赖 设置默认pip源
+RUN pip install -i https://mirrors.cloud.tencent.com/pypi/simple --upgrade pip \
+    && pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple
+
 # 执行指令，安装依赖
 RUN pip install -r requirements.txt
 # 切换容器时区
@@ -41,7 +42,11 @@ RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 EXPOSE 5705 9001
-
+# docker build -f dockerfile -t hjdhnx/drpy:mini .  构建命令,非此文件内命令
+# docker build -f dockerfile -t hjdhnx/drpy_mini .  构建命令,非此文件内命令
+# 启动命令,非此文件内命令
+# docker run -it -p 5705:5705 -p 9001:9001 -v /home/pywork/dr_py:/root/sd/pywork/dr_py --restart=always --name drpy -d hjdhnx/drpy:mini
+# docker run -it -p 5705:5705 -p 9001:9001 -v /home/pywork/dr_py:/root/sd/pywork/dr_py --restart=always --name drpy -d hjdhnx/drpy_mini
 # ENV LC_ALL=zh_CN.utf8
 # ENV LANG=zh_CN.utf8
 # ENV LANGUAGE=zh_CN.utf8
@@ -51,4 +56,9 @@ EXPOSE 5705 9001
 # supervisord -c /root/sd/pywork/dr_py/super/flask.conf
 # CMD [ "supervisord","-c", "/root/sd/pywork/dr_py/super/flask.conf" ]
 # ENTRYPOINT supervisord -c /root/sd/pywork/dr_py/super/flask.conf
-CMD supervisord -c /root/sd/pywork/dr_py/super/flask.conf && /bin/bash
+# ENTRYPOINT -c /root/sd/pywork/dr_py/super/flask.conf
+# CMD /bin/bash
+# 启动容器时，执行脚本
+ENTRYPOINT ["/etc/autostart/app.sh","flask"]
+# CMD supervisord -c /root/sd/pywork/dr_py/super/flask.conf && /bin/bash
+

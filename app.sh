@@ -1,5 +1,5 @@
 #!/bin/bash
-kill -9 $(cat supervisord.pid) # 杀掉进程
+#kill -9 $(cat supervisord.pid) # 杀掉进程
 msg='flask或0 ubuntu下自动识别gevent或普通启动flask\nsflask或1 ubuntu下gunicorn启动flask\ntermux或2 termux下自动识别gevent或普通启动flask\nstermux或3 termux下gunicorn启动flask\n'
 case "$1" in
     flask)
@@ -30,3 +30,5 @@ case "$1" in
       echo -e $msg
       ;;
 esac
+# 保留一个 bash
+/bin/bash
