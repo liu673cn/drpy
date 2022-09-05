@@ -50,6 +50,10 @@ def del_file(filepath):
         if os.path.isfile(file_path):
             os.remove(file_path)
 
+def force_copy_files(from_path,to_path):
+    print(f'开始拷贝文件{from_path}=>{to_path}')
+    shutil.copytree(from_path, to_path, dirs_exist_ok=True)
+
 def copy_to_update():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
     tmp_path = os.path.join(base_path, f'tmp')
@@ -57,10 +61,10 @@ def copy_to_update():
     if not os.path.exists(dr_path):
         print(f'升级失败,找不到目录{dr_path}')
         return False
-    from_path = os.path.join(dr_path, f'js')
-    to_path = os.path.join(base_path, f'js')
-    print(f'开始拷贝文件{from_path}=>{to_path}')
-    shutil.copytree(from_path, to_path)
+    force_copy_files(os.path.join(dr_path, f'js'),os.path.join(base_path, f'js'))
+    force_copy_files(os.path.join(dr_path, f'classes'),os.path.join(base_path, f'classes'))
+    force_copy_files(os.path.join(dr_path, f'templates'),os.path.join(base_path, f'templates'))
+    force_copy_files(os.path.join(dr_path, f'utils'),os.path.join(base_path, f'utils'))
     return True
 
 def download_new_version():
