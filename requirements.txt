@@ -5,7 +5,9 @@ flask_migrate
 flask-sqlalchemy
 requests
 netifaces
-gevent ; python_version < '3.9'
+gevent==1.1.2 ; sys_platform != 'win32' and python_version < '3.7'
+gevent==1.3.4 ; sys_platform != 'win32' and python_version >= '3.7' and python_version < '3.9'
+gevent==21.12.0 ; sys_platform == 'win32'
 gunicorn  ; python_version >= '3.6'
 supervisor ; sys_platform != 'win32'
 func_timeout
