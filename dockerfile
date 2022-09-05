@@ -59,9 +59,9 @@ EXPOSE 5705 9001
 # docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -f dockerfile -t hjdhnx/drpy:mini_arm64 .
 # docker buildx build --platform linux/arm/v7 -f dockerfile -t hjdhnx/drpy_armv7 .
 # docker buildx build --platform linux/arm/v7 -f dockerfile -t hjdhnx/drpy:armv7 --push .
-# docker build -f dockerfile -t hjdhnx/drpy:amd64 --push .
+# docker build -f dockerfile -t hjdhnx/drpy:amd64 .
 # 启动命令,非此文件内命令
-# docker run -it -p 5705:5705 -p 9001:9001 -v /home/pywork/dr_py:/root/sd/pywork/dr_py --restart=always --name drpy -d hjdhnx/drpy:mini
+# docker run -it -p 5705:5705 -p 9001:9001 -v /home/pywork/dr_py:/root/sd/pywork/dr_py --restart=always --name drpy -d hjdhnx/drpy:amd64
 # docker run -it -p 5705:5705 -p 9001:9001 -v /home/pywork/dr_py:/root/sd/pywork/dr_py --restart=always --name drpy -d hjdhnx/drpy_mini
 # ENV LC_ALL=zh_CN.utf8
 # ENV LANG=zh_CN.utf8
