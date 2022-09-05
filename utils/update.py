@@ -3,12 +3,14 @@
 # File  : update.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/9/6
+from time import time as getTime
 
 import requests
 import os
 import zipfile
 import shutil # https://blog.csdn.net/weixin_33130113/article/details/112336581
 from utils.log import logger
+from utils.web import get_interval
 
 def getLocalVer():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
@@ -72,6 +74,7 @@ def copy_to_update():
     return True
 
 def download_new_version():
+    t1 = getTime()
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
     tmp_path = os.path.join(base_path, f'tmp')
     os.makedirs(tmp_path,exist_ok=True)
@@ -108,4 +111,5 @@ def download_new_version():
         msg = '升级成功'
     except Exception as e:
         msg = f'升级失败:{e}'
+    logger.info(f'参数检验js读取共计耗时:{get_interval(t1)}毫秒')
     return msg
