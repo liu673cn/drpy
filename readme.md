@@ -18,6 +18,12 @@
     <img src="https://img.shields.io/badge/蓝奏云下载-3.1.1-blue" alt="Downloads" />
   </a>
 
+<a href="https://wwi.lanzoup.com/ieuMV0b3plne">
+    <img src="https://img.shields.io/badge/蓝奏云下载-3.1.3-blue" alt="Downloads" />
+  </a>
+
+
+
 <a href="https://hub.docker.com/repository/docker/hjdhnx/drpy">
     <img src="https://img.shields.io/badge/docker镜像-drpy-blue" alt="Downloads" />
   </a>
