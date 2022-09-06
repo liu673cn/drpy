@@ -9,86 +9,17 @@
     <link rel="stylesheet" media="screen" href="/static/css/admin.css">
   <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
     <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/common.js"></script>
 </head>
-<style>
-    .red {
-        color:red;
-        font-weight: bold;
-        padding-left:10px;
-        /*padding-top:10px;*/
-        margin-left:10px;
-        width: 360px;
-        height: 30px;
-    }
-    .green {
-        color:forestgreen;
-        font-weight: bold;
-        padding-left:10px;
-        /*padding-top:10px;*/
-        margin-left:10px;
-        width: 360px;
-        height: 30px;
-    }
-    .btn{
-        color:#FFFFFF;
-        background-color: #1379cb;
-    }
-    .clear{
-        /*word-spacing:2px;*/
-        letter-spacing:5px;
-        margin-left:20px;
-        width: 120px;
-        height: 30px;
-        text-align: center;
-        border-style: solid;
-        /*border-color: #8CD4F5;*/
-        border-color: #1379cb;
-        text-decoration:none;
-        color:#FFFFFF;
-        background-color: #1379cb;
-    }
-    .view_home{
-        letter-spacing:5px;
-        margin-left:20px;
-        width: 150px;
-        height: 30px;
-        text-align: center;
-        border-style: solid;
-        /*border-color: #8CD4F5;*/
-        border-color: #17af30;
-        text-decoration:none;
-        color:#FFFFFF;
-        background-color: #17af30;
-    }
-    /*li a {*/
-    /*    display: block !important;*/
-    /*}*/
-    .ver_title{
-        font-size: 15px;margin-left: 20px
-    }
-
-    .ver{
-        font-size: 16px;margin-left: 5px;color: #ea7d7d;
-    }
-
-    a.funcbtn{
-        margin-left: 10px;
-    }
-    .wrapper {position: relative;}
-    #input {position: absolute;top: 0;left: 0;opacity: 0;z-index: -10;}
-
-</style>
 <body>
 <script>
     $(document).ready(function(){
         $(".view").click(function(){
-            // location.reload();
             let rule = this.innerText.trim();
             location.href = '/admin/view/'+rule+'.js';
         });
 
         $(".view_home").click(function(){
-            // location.reload();
             let rule = this.getAttribute('value').trim();
             location.href = '/vod?rule='+rule;
         });
@@ -128,8 +59,6 @@
         });
 
         $(".clear").click(function(){
-            // location.reload();
-            // let rule = this.innerText.trim();
             let rule = this.getAttribute('value').trim();
             if(confirm('确认删除内置规则:'+rule+'?')){
             let code = $.ajax({url:'/admin/clear/'+rule+'.js',async:false}).responseText;
@@ -141,12 +70,11 @@
                 alert('操作失败!\n'+code.msg);
             }
             }
-            // location.href = '/admin/clear/'+rule;
         });
 
         $('#upload').click(function(){
             var file_data = $("input[name='file']").prop("files")[0];
-            console.log(file_data);
+            // console.log(file_data);
             if(!file_data){
                 alert('文件必选');
                 return false
@@ -176,35 +104,25 @@
                 console.log(ret);
                 alert(ret.msg);
             });
-
         });
-
 });
- function getFileSize(fileObj)
-       {
-           $('#file_size').text('文件大小为:'+fileObj.files[0].size/1024+'kb');
-       }
-
-function copyText(id) {
-console.log(id);
-var text = document.getElementById(id).innerText;
-var input = document.getElementById("input");
-input.value = text; // 修改文本框的内容
-    console.log(text);
-input.select(); // 选中文本
-document.execCommand("copy"); // 执行浏览器复制命令
-alert("复制成功");
+function getFileSize(fileObj) {
+   $('#file_size').text('文件大小为:'+fileObj.files[0].size/1024+'kb');
 }
 </script>
 
-<h2 class="title">欢迎使用drpy管理员界面<span class="ver_title">当前版本:</span><span class="ver">{{ ver }}</span></h2>
+<h2 class="title">欢迎使用drpy管理员界面</h2>
+<h3 class="title">
+    <span class="ver_title">当前版本:</span><span class="ver">{{ ver }}</span>
+</h3>
 <h4>
 <a href="/index" class="funcbtn">返回首页</a>
 <a href="javascript:void(0);" class="funcbtn" id="checkUpdate">检测升级</a>
-<a href="javascript:copyText('update_by_self');" class="funcbtn" id="update_by_self">cp ./tmp/dr_py-master/app.py ./app.py</a>
+<!--<a href="javascript:copyText('update_by_self');" class="funcbtn" id="update_by_self">cp ./tmp/dr_py-master/app.py ./app.py</a>-->
+<a href="javascript:copy('cp ./tmp/dr_py-master/app.py ./app.py');" class="funcbtn" id="update_by_self">复制主程升级指令</a>
+<a href="javascript:void(0);" class="funcbtn" id="update_lives">同步直播源</a>
 </h4>
 <p>你可以在此页面在线上传规则文件到js目录或者删除js目录的文件</p>
-<input id="input"/>
  <form action = "/upload" method = "POST" enctype = "multipart/form-data">
 <!--     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>-->
      <input type = "file" name = "file" class="btn" onchange="getFileSize(this)"/>

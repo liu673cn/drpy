@@ -6,3 +6,4 @@
 
 from . import rule_classes
 from . import play_parse
+from . import storage

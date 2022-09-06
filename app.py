@@ -58,7 +58,11 @@ else:
 # from geventwebsocket.handler import WebSocketHandler
 RuleClass = rule_classes.init(db)
 PlayParse = play_parse.init(db)
-
+lsg = storage.init(db)
+print(lsg.setItem('直播地址','https://gitcode.net/qq_26898231/TVBox/-/raw/main/live/zb.txt'))
+t12 = time()
+print(lsg.getItem('直播地址','111'))
+print(get_interval(t12))
 def is_linux():
     return not 'win' in sys.platform
 
