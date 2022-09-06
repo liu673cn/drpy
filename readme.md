@@ -4,25 +4,25 @@
   <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://gitcode.net/qq_32394351/dr_py/-/raw/1fe0e082b1ceacc4469d7f175a605cc2edf0bab0/static/img/icon.png"/></a>
   <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
-    <img src="https://img.shields.io/badge/version-3.1.5-blue" alt="latest version" />
+    <img src="https://img.shields.io/badge/version-3.2.1-blue" alt="latest version" />
   </a>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/issues">
     <img src="https://img.shields.io/badge/discussions-2-orange" alt="discussions" />
   </a>
 
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
-    <img src="https://img.shields.io/badge/downloads-632-blue" alt="Downloads" />
+    <img src="https://img.shields.io/badge/downloads-1325-blue" alt="Downloads" />
   </a>
 
 
-<a href="https://wwi.lanzoup.com/i8OgW0b47vti">
-    <img src="https://img.shields.io/badge/蓝奏云下载-3.1.3-blue" alt="Downloads" />
+<a href="https://wwi.lanzoup.com/iEfIW0b6vgza">
+    <img src="https://img.shields.io/badge/蓝奏云下载-3.2.1-blue" alt="Downloads" />
   </a>
 
 
 
 <a href="https://hub.docker.com/repository/docker/hjdhnx/drpy">
-    <img src="https://img.shields.io/badge/docker镜像-drpy-blue" alt="Downloads" />
+    <img src="https://img.shields.io/badge/docker镜像主页-drpy-blue" alt="Downloads" />
   </a>
 
   <a href="https://gitcode.net/qq_32394351/dr_py/-/blob/master/LICENSE">
@@ -54,6 +54,7 @@
 - [X] 5.增加了默认alist挂载
 - [X] 6.升级到3.2.0,进行了全面后端重构用了蓝图写法,app.py文件以后尽量不动
 - [X] 7.后台管理界面显示美化-感谢蓝莓果酱
+- [X] 8.打包升级后的三平台镜像(v3.2.1)
 ###### 2022/09/05
 - [X] 1.内置jar修复了原本tv_box无法播放直播的问题
 - [X] 2.重新构建了三种平台的镜像 amd64,armv7,arm64
