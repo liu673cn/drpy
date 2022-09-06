@@ -97,6 +97,10 @@ def copy_to_update():
     paths = ['js','models','controllers','libs','static','templates','utils']
     for path in paths:
         force_copy_files(os.path.join(dr_path, path),os.path.join(base_path, path))
+    try:
+        shutil.copy(os.path.join(dr_path, 'app.py'), os.path.join(base_path, 'app.py'))  # 复制文件
+    except Exception as e:
+        logger.info(f'更新app.py发生错误:{e}')
     return True
 
 def download_new_version():

@@ -46,6 +46,8 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/07
+- [X] 1.优化后台管理登录界面,升级更新脚本
 ###### 2022/09/06
 - [X] 1.增加了后台管理界面在线检测升级系统功能
 - [X] 2.增加了后台管理界面修改直播源地址和同步直播源

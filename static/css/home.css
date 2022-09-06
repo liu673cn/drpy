@@ -27,6 +27,9 @@ body {
 .tips{
     color: #9b5df1;
 }
+.kf{
+    padding-top: 10px;
+}
 .image::after{
     content: "";
     /*background:url('https://tuapi.eees.cc/api.php?category=dongman&type=302&px=m');*/

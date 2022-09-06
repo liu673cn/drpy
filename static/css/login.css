@@ -99,20 +99,22 @@ top: 0;
 left: 0;
 }
 .login-content{
-  width: 400px;
-  height: 280px;
+  width: 350px;
+  height: 40%;
+ text-align:center;
   margin: 0 auto;
   position: relative;
   top: 300px;
-   border: 1px solid #2890fa;
-   background: rgba(40, 144, 250, 0.2);
-   border-radius: 5px;
+  border: 1px solid #2890fa;
+  background: rgba(40, 144, 250, 0.2);
+  border-radius: 5px;
 }
 .login-tit{
 background: rgba(0, 0, 0, 0.8);
 border: 1px solid #2890fa;
 color: #fff;
 padding: 15px 20px;
+text-align:center;
 font-size: 18px
 }
 .login-input {
