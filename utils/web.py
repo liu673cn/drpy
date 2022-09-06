@@ -3,7 +3,7 @@
 # File  : web.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
-
+import os
 import socket
 import hashlib
 from werkzeug.utils import import_string
@@ -116,3 +116,26 @@ def getHeaders(url):
     headers.setdefault("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
     headers.setdefault("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2")
     return headers
+
+def getAlist():
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    alist_path = os.path.join(base_path, 'js/alist.conf')
+    with open(alist_path,encoding='utf-8') as f:
+        data = f.read().strip()
+    alists = []
+    for i in data.split('\n'):
+        i = i.strip()
+        dt = i.split(',')
+        if not i.strip().startswith('#'):
+            obj = {
+                'name': dt[0],
+                'server': dt[1],
+                'type':"alist",
+            }
+            if len(dt) > 2:
+                obj.update({
+                    'password': dt[2]
+                })
+            alists.append(obj)
+    print(f'共计{len(alists)}条alist记录')
+    return alists

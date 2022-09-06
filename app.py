@@ -535,9 +535,10 @@ def config_render(mode):
     new_conf = dict(app.config)
     host = getHost(mode)
     jxs = getJxs()
+    alists = getAlist()
     live_url = get_live_url(new_conf,mode)
     # html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,base64Encode=base64Encode,config=new_conf)
-    html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,live_url=live_url,config=new_conf)
+    html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,alists=alists,live_url=live_url,config=new_conf)
     response = make_response(html)
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     return response
@@ -576,10 +577,11 @@ def config_gen():
     os.makedirs('txt',exist_ok=True)
     new_conf = dict(app.config)
     jxs = getJxs()
-    set_local = render_template('config.txt',rules=getRules('js'),live_url=get_live_url(new_conf,0),mode=0,host=getHost(0),jxs=jxs)
+    alists = getAlist()
+    set_local = render_template('config.txt',rules=getRules('js'),alists=alists,live_url=get_live_url(new_conf,0),mode=0,host=getHost(0),jxs=jxs)
     print(set_local)
-    set_area = render_template('config.txt',rules=getRules('js'),live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
-    set_online = render_template('config.txt',rules=getRules('js'),live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
+    set_area = render_template('config.txt',rules=getRules('js'),alists=alists,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
+    set_online = render_template('config.txt',rules=getRules('js'),alists=alists,live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
     with open('txt/pycms0.json','w+',encoding='utf-8') as f:
         set_dict = json.loads(set_local)
         f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
