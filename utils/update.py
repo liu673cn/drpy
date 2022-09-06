@@ -73,12 +73,9 @@ def copy_to_update():
         # print(f'升级失败,找不到目录{dr_path}')
         logger.info(f'升级失败,找不到目录{dr_path}')
         return False
-    force_copy_files(os.path.join(dr_path, f'js'),os.path.join(base_path, f'js'))
-    force_copy_files(os.path.join(dr_path, f'classes'),os.path.join(base_path, f'classes'))
-    force_copy_files(os.path.join(dr_path, f'models'),os.path.join(base_path, f'models'))
-    force_copy_files(os.path.join(dr_path, f'static'),os.path.join(base_path, f'static'))
-    force_copy_files(os.path.join(dr_path, f'templates'),os.path.join(base_path, f'templates'))
-    force_copy_files(os.path.join(dr_path, f'utils'),os.path.join(base_path, f'utils'))
+    paths = ['js','models','controllers','libs','static','templates','utils']
+    for path in paths:
+        force_copy_files(os.path.join(dr_path, path),os.path.join(base_path, path))
     return True
 
 def download_new_version():

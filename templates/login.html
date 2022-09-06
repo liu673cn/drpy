@@ -69,7 +69,7 @@ $('#picture_autologin').attr('src',"/static/img/checked.png");
   var json = {"username":username,"password":password,"autologin":autologin,"login":"1"};
   // ajax_post("login.php",json,backmsg);
   console.log(json);
-  $.post("/api/login",json,function(result){
+  $.post("/admin/login",json,function(result){
     console.log(result);
     if(result.code === 200){
         console.log('登录成功');

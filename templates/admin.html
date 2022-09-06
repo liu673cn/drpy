@@ -91,7 +91,7 @@
             form_data.append("file", file_data);
             $.ajax({
                 type: "POST",
-                url: "/upload",
+                url: "/admin/upload",
                 dataType : "json",
                 processData: false,  // 注意：让jQuery不要处理数据
                 contentType: false,  // 注意：让jQuery不要设置contentType
@@ -160,7 +160,7 @@ function getFileSize(fileObj) {
 </h4>
 <input id="live_url" value="{{live_url}}" style="display: none"/>
 <p>你可以在此页面在线上传规则文件到js目录或者删除js目录的文件</p>
- <form action = "/upload" method = "POST" enctype = "multipart/form-data">
+ <form action = "/admin/upload" method = "POST" enctype = "multipart/form-data">
 <!--     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>-->
      <input type = "file" name = "file" class="btn" onchange="getFileSize(this)"/>
 <!--     <input type = "submit" value="上传" class="btn"/>-->

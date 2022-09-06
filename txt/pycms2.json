@@ -1,7 +1,135 @@
 {
     "wallpaper": "http://cms.nokia.press/pics",
-    "dr_count": 20,
+    "dr_count": 21,
     "mode": 1,
+    "spider": "http://cms.nokia.press/liveslib",
+    "drives": [
+        {
+            "name": "🔮嗨翻",
+            "server": "https://pan.hikerfans.com",
+            "type": "alist"
+        },
+        {
+            "name": "🦀9T(Adult)",
+            "server": "https://drive.9t.ee",
+            "type": "alist"
+        },
+        {
+            "name": "🐱梓澪の妙妙屋",
+            "server": "https://xn--i0v44m.xyz",
+            "type": "alist"
+        },
+        {
+            "name": "🚆资源小站",
+            "server": "https://pan.142856.xyz",
+            "type": "alist"
+        },
+        {
+            "name": "🌤晴园的宝藏库",
+            "server": "https://alist.52qy.repl.co",
+            "type": "alist"
+        },
+        {
+            "name": "🐭米奇妙妙屋",
+            "server": "https://anime.mqmmw.ga",
+            "type": "alist"
+        },
+        {
+            "name": "💂小兵组网盘影视",
+            "server": "https://6vv.app",
+            "type": "alist"
+        },
+        {
+            "name": "📀小光盘",
+            "server": "https://alist.xiaoguanxiaocheng.life",
+            "type": "alist"
+        },
+        {
+            "name": "🐋一只鱼",
+            "server": "https://alist.youte.ml",
+            "type": "alist"
+        },
+        {
+            "name": "🌊七米蓝",
+            "server": "https://al.chirmyram.com",
+            "type": "alist"
+        },
+        {
+            "name": "🌴非盘",
+            "server": "http://www.feifwp.top",
+            "type": "alist"
+        },
+        {
+            "name": "🥼帅盘",
+            "server": "https://hi.shuaipeng.wang",
+            "type": "alist"
+        },
+        {
+            "name": "🐉神族九帝",
+            "server": "https://alist.shenzjd.com",
+            "type": "alist"
+        },
+        {
+            "name": "☃姬路白雪",
+            "server": "https://pan.jlbx.xyz",
+            "type": "alist"
+        },
+        {
+            "name": "🎧听闻网盘",
+            "server": "https://wangpan.sangxuesheng.com",
+            "type": "alist"
+        },
+        {
+            "name": "💾DISK",
+            "server": "http://124.222.140.243:8080",
+            "type": "alist"
+        },
+        {
+            "name": "🌨云播放",
+            "server": "https://quanzi.laoxianghuijia.cn",
+            "type": "alist"
+        },
+        {
+            "name": "✨星梦",
+            "server": "https://pan.bashroot.top",
+            "type": "alist"
+        },
+        {
+            "name": "🌊小江",
+            "server": "https://dyj.me",
+            "type": "alist"
+        },
+        {
+            "name": "💫触光",
+            "server": "https://pan.ichuguang.com",
+            "type": "alist"
+        },
+        {
+            "name": "🕵好汉吧",
+            "server": "https://8023.haohanba.cn",
+            "type": "alist"
+        },
+        {
+            "name": "🥗AUNEY",
+            "server": "http://121.227.25.116:8008",
+            "type": "alist"
+        },
+        {
+            "name": "🎡资源小站",
+            "server": "https://960303.xyz/",
+            "type": "alist"
+        },
+        {
+            "name": "🏝fenwe",
+            "server": "http://www.fenwe.tk:5244",
+            "type": "alist"
+        },
+        {
+            "name": "🎢轻弹浅唱",
+            "server": "https://g.xiang.lol",
+            "type": "alist"
+        }
+    ],
     "homepage": "https://gitcode.net/qq_32394351/dr_py",
     "sites": [
         {
@@ -110,6 +238,15 @@
             "api": "http://cms.nokia.press/vod?rule=干饭影视",
             "searchable": 0,
             "quickSearch": 0,
+            "filterable": 0
+        },
+        {
+            "key": "dr_库马伊",
+            "name": "库马伊(道长)",
+            "type": 1,
+            "api": "http://cms.nokia.press/vod?rule=库马伊",
+            "searchable": 1,
+            "quickSearch": 1,
             "filterable": 0
         },
         {
@@ -352,7 +489,7 @@
                 {
                     "name": "直播",
                     "urls": [
-                        "proxy://do=live&type=txt&ext=aHR0cHM6Ly9naXRjb2RlLm5ldC9xcV8yNjg5ODIzMS9UVkJveC8tL3Jhdy9tYWluL2xpdmUvMDgzMHpiLnR4dA=="
+                        "proxy://do=live&type=txt&ext=aHR0cDovL2Ntcy5ub2tpYS5wcmVzcy9saXZlcw=="
                     ]
                 }
             ]
