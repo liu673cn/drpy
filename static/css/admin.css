@@ -57,13 +57,13 @@
     /*    display: block !important;*/
     /*}*/
     .ver_title{
-        font-size: 15px;margin-left: 20px
+        font-size: 15px;margin-right: 10px
     }
 
     .ver{
-        font-size: 16px;margin-left: 5px;color: #ea7d7d;
+        font-size: 16px;margin-left: 1px;color: #ea7d7d;
     }
 
     a.funcbtn{
-        margin-left: 10px;
+        margin-right: 10px;
     }

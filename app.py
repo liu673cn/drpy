@@ -18,7 +18,7 @@ from werkzeug.utils import secure_filename
 from js.rules import getRuleLists
 from utils import error,parser
 from utils.web import *
-from utils.update import checkUpdate,getOnlineVer,getLocalVer,download_new_version
+from utils.update import checkUpdate,getOnlineVer,getLocalVer,download_new_version,download_lives
 import sys
 import codecs
 from classes.cms import CMS,logger
@@ -59,10 +59,13 @@ else:
 RuleClass = rule_classes.init(db)
 PlayParse = play_parse.init(db)
 lsg = storage.init(db)
-print(lsg.setItem('直播地址','https://gitcode.net/qq_26898231/TVBox/-/raw/main/live/zb.txt'))
-t12 = time()
-print(lsg.getItem('直播地址','111'))
-print(get_interval(t12))
+
+def initConfToDb():
+    if not lsg.getItem('LIVE_URL'):
+        lsg.setItem('LIVE_URL', app.config.get('LIVE_URL'))
+
+initConfToDb()
+
 def is_linux():
     return not 'win' in sys.platform
 
@@ -120,7 +123,8 @@ def admin_home():  # 管理员界面
     if not verfy_token(token):
         return render_template('login.html')
     # return jsonify(error.success('登录成功'))
-    return render_template('admin.html',rules=getRules('js'),ver=getLocalVer())
+    live_url = lsg.getItem('LIVE_URL')
+    return render_template('admin.html',rules=getRules('js'),ver=getLocalVer(),live_url=live_url)
 
 @app.route('/api/login',methods=['GET','POST'])
 def login_api():
@@ -188,6 +192,36 @@ def admin_update_ver():
         return jsonify(error.failed('请登录后再试'))
     msg = download_new_version()
     return jsonify(error.success(msg))
+
+@app.route('/admin/update_lives')
+def admin_update_lives():
+    url = getParmas('url')
+    if not url:
+        return jsonify(error.failed('未提供被同步的直播源远程地址!'))
+    cookies = request.cookies
+    token = cookies.get('token', '')
+    if not verfy_token(token):
+        return jsonify(error.failed('请登录后再试'))
+    live_url = url
+    success = download_lives(live_url)
+    if success:
+        return jsonify(error.success(f'直播源{live_url}同步成功'))
+    else:
+        return jsonify(error.failed(f'直播源{live_url}同步失败'))
+
+@app.route('/admin/write_live_url')
+def admin_write_live_url():
+    url = getParmas('url')
+    if not url:
+        return jsonify(error.failed('未提供修改后的直播源地址!'))
+    cookies = request.cookies
+    token = cookies.get('token', '')
+    if not verfy_token(token):
+        return jsonify(error.failed('请登录后再试'))
+    id = lsg.setItem('LIVE_URL',url)
+    msg = f'已修改的配置记录id为:{id}'
+    return jsonify(error.success(msg))
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -486,9 +520,10 @@ def random_pics():
 
 def get_live_url(new_conf,mode):
     host = getHost(mode)
-    live_url = host + '/lives' if new_conf.get('LIVE_MODE',
-                                               1) == 0 else new_conf.get('LIVE_URL',getHost(2)+'/lives')
+    # t1 = time()
+    live_url = host + '/lives' if new_conf.get('LIVE_MODE',1) == 0 else lsg.getItem('LIVE_URL',getHost(2)+'/lives')
     live_url = base64Encode(live_url)
+    # print(f'{get_interval(t1)}毫秒')
     return live_url
 
 @app.route('/config/<int:mode>')

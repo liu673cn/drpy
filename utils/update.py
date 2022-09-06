@@ -3,6 +3,7 @@
 # File  : update.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/9/6
+import re
 from time import time as getTime
 
 import requests
@@ -11,6 +12,11 @@ import zipfile
 import shutil # https://blog.csdn.net/weixin_33130113/article/details/112336581
 from utils.log import logger
 from utils.web import get_interval
+
+headers = {
+        'Referer': 'https://gitcode.net/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36',
+}
 
 def getLocalVer():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
@@ -84,10 +90,6 @@ def download_new_version():
     #     print(f'清除缓存文件:{tp}')
     #     os.remove(os.path.join(tmp_path, tp))
     del_file(tmp_path)
-    headers = {
-        'Referer': 'https://gitcode.net/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36',
-    }
     msg = ''
     try:
         # print(f'开始下载:{url}')
@@ -113,3 +115,24 @@ def download_new_version():
         msg = f'升级失败:{e}'
     logger.info(f'系统升级共计耗时:{get_interval(t1)}毫秒')
     return msg
+
+def download_lives(live_url:str):
+    t1 = getTime()
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    live_path = os.path.join(base_path, f'js/直播.txt')
+    logger.info(f'尝试同步{live_url}远程内容到{live_path}')
+    try:
+        r = requests.get(live_url,headers=headers,timeout=3)
+        html = r.text
+        # print(len(html))
+        if re.search('cctv|.m3u8',html,re.M|re.I) and len(html) > 1000:
+            logger.info(f'直播源同步成功,耗时{get_interval(t1)}毫秒')
+            with open(live_path,mode='w+',encoding='utf-8') as f:
+                f.write(html)
+            return True
+        else:
+            logger.info(f'直播源同步失败,远程文件看起来不是直播源。耗时{get_interval(t1)}毫秒')
+            return False
+    except Exception as e:
+        logger.info(f'直播源同步失败,耗时{get_interval(t1)}毫秒\n{e}')
+        return False

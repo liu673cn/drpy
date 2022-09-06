@@ -105,6 +105,41 @@
                 alert(ret.msg);
             });
         });
+
+        $('#update_lives').click(function(){
+            let live_url = $('#live_url').val();
+            // console.log(live_url);
+            let new_live_url = prompt('输入临时同步远程直播源地址(自动获取当前配置)',live_url);
+            if(new_live_url.startsWith('http')){
+                $.get("/admin/update_lives?url="+new_live_url,function(data,status){
+                console.log("数据: " + data + "\n状态: " + status);
+                if(data.code === 200){
+                    alert('操作成功!\n'+data.msg);
+                    // location.reload();
+                }else{
+                    alert('操作失败!\n'+data.msg);
+                }
+             });
+            }
+        });
+
+        $('#write_lives').click(function(){
+            let live_url = $('#live_url').val();
+            let new_live_url = prompt('请修改默认的远程直播源地址',live_url);
+            if(new_live_url){
+                console.log('修改直播源地址为:'+new_live_url);
+                $.get("/admin/write_live_url?url="+new_live_url,function(data,status){
+                console.log("数据: " + data + "\n状态: " + status);
+                if(data.code === 200){
+                    alert('操作成功!\n'+data.msg);
+                    location.reload();
+                }else{
+                    alert('操作失败!\n'+data.msg);
+                }
+             });
+            }
+        });
+
 });
 function getFileSize(fileObj) {
    $('#file_size').text('文件大小为:'+fileObj.files[0].size/1024+'kb');
@@ -120,8 +155,10 @@ function getFileSize(fileObj) {
 <a href="javascript:void(0);" class="funcbtn" id="checkUpdate">检测升级</a>
 <!--<a href="javascript:copyText('update_by_self');" class="funcbtn" id="update_by_self">cp ./tmp/dr_py-master/app.py ./app.py</a>-->
 <a href="javascript:copy('cp ./tmp/dr_py-master/app.py ./app.py');" class="funcbtn" id="update_by_self">复制主程升级指令</a>
+<a href="javascript:void(0);" class="funcbtn" id="write_lives">修改默认直播源</a>
 <a href="javascript:void(0);" class="funcbtn" id="update_lives">同步直播源</a>
 </h4>
+<input id="live_url" value="{{live_url}}" style="display: none"/>
 <p>你可以在此页面在线上传规则文件到js目录或者删除js目录的文件</p>
  <form action = "/upload" method = "POST" enctype = "multipart/form-data">
 <!--     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>-->
@@ -130,7 +167,6 @@ function getFileSize(fileObj) {
      <input type="button" id="upload" value="上传" class="btn"/>
 </form>
 <p id="file_size"></p>
-
 <h1>内置规则列表-共{{rules.count}}条</h1>
 {% if rules.count < 1 %}
 <h3>暂无内置的规则</h3>

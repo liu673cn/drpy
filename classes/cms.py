@@ -466,7 +466,8 @@ class CMS:
                         })
                     except:
                         pass
-            result['list'] = videos[min((fypage-1)*self.limit,len(videos)-1):min(fypage*self.limit,len(videos))]
+            # result['list'] = videos[min((fypage-1)*self.limit,len(videos)-1):min(fypage*self.limit,len(videos))]
+            result['list'] = videos
             result['code'] = 1
             result['msg'] = '数据列表'
             result['page'] = fypage
