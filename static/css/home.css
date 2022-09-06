@@ -24,11 +24,15 @@ body {
     text-align: center;
     /*fixed center;*/
 }
+.tips{
+    color: #9b5df1;
+}
 .image::after{
     content: "";
-    background:url('https://tuapi.eees.cc/api.php?category=dongman&type=302&px=m');
+    /*background:url('https://tuapi.eees.cc/api.php?category=dongman&type=302&px=m');*/
+    background:url('https://tuapi.eees.cc/api.php?category=dongman&type=302');
     background-repeat: no-repeat;
-    opacity: 0.5;
+    opacity: 0.4;
     /*position: fixed;*/
     position: absolute;
     left: 0;
