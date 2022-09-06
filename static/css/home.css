@@ -45,7 +45,7 @@ body {
 .btn {
     margin-bottom: 1rem;
     border: 1px solid #5fdefe;
-    width: 280px;
+    width: 260px;
     height: 30px;
     text-align: center;
     background-color: #1379cb;
@@ -57,7 +57,7 @@ body {
 .btn1 {
     margin-bottom: 1rem;
     border: 1px solid #5c6cf6;
-    width: 280px;
+    width: 260px;
     height: 30px;
     text-align: center;
     border-radius: 50px;
@@ -65,7 +65,9 @@ body {
 }
 .btn1  a {
     color: #000000;
+    font-size: 13px;
 }
+
 .btn  a {
     color: #ffffff;
 }
