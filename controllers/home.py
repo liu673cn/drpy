@@ -17,6 +17,7 @@ from utils.system import cfg,getHost,is_linux
 from utils import parser
 from utils.log import logger
 from utils.files import getAlist,get_live_url
+from utils.update import getLocalVer
 from js.rules import getJxs
 import random
 
@@ -43,7 +44,8 @@ def index():
         manager0 += f':{sup_port}'
         manager1 += f':{sup_port}'
         manager2 += f':{sup_port}'
-    return render_template('index.html',getHost=getHost,manager0=manager0,manager1=manager1,manager2=manager2,is_linux=is_linux())
+    ver = getLocalVer()
+    return render_template('index.html',ver=ver,getHost=getHost,manager0=manager0,manager1=manager1,manager2=manager2,is_linux=is_linux())
 
 @home.route('/rules/clear')
 def rules_to_clear():
