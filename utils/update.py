@@ -5,7 +5,7 @@
 # Date  : 2022/9/6
 import re
 from time import time as getTime
-
+import sys
 import requests
 import os
 import zipfile
@@ -60,10 +60,31 @@ def del_file(filepath):
         if os.path.isfile(file_path):
             os.remove(file_path)
 
+def copytree(src, dst):
+    dirs = os.listdir(src)  # 获取目录下的所有文件包括文件夹
+    # print(dirs)
+    for dir in dirs:  # 遍历文件或文件夹
+        from_dir = os.path.join(src, dir)  # 将要复制的文件夹或文件路径
+        to_dir = os.path.join(dst, dir)  # 将要复制到的文件夹或文件路径
+        if os.path.isdir(from_dir):  # 判断是否为文件夹
+            if not os.path.exists(to_dir):  # 判断目标文件夹是否存在,不存在则创建
+                os.mkdir(to_dir)
+            copytree(from_dir, to_dir)  # 迭代 遍历子文件夹并复制文件
+        elif os.path.isfile(from_dir):  # 如果为文件,则直接复制文件
+            shutil.copy(from_dir, to_dir)  # 复制文件
+
+
 def force_copy_files(from_path,to_path):
     # print(f'开始拷贝文件{from_path}=>{to_path}')
     logger.info(f'开始拷贝文件{from_path}=>{to_path}')
-    shutil.copytree(from_path, to_path, dirs_exist_ok=True)
+    try:
+        if sys.version_info < (3, 8):
+            copytree(from_path, to_path)
+        else:
+            shutil.copytree(from_path, to_path, dirs_exist_ok=True)
+
+    except Exception as e:
+        logger.info(f'拷贝文件{from_path}=>{to_path}发生错误:{e}')
 
 def copy_to_update():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
