@@ -147,6 +147,10 @@ def download_lives(live_url:str):
     logger.info(f'尝试同步{live_url}远程内容到{live_path}')
     try:
         r = requests.get(live_url,headers=headers,timeout=3)
+        auto_encoding = r.apparent_encoding
+        if auto_encoding.lower() in ['utf-8','gbk','bg2312','gb18030']:
+            r.encoding = auto_encoding
+        # print(r.encoding)
         html = r.text
         # print(len(html))
         if re.search('cctv|.m3u8',html,re.M|re.I) and len(html) > 1000:
