@@ -95,7 +95,49 @@ vfed:{
     一级:'.fed-list-info&&li;a.fed-list-title&&Text;a&&data-original;.fed-list-remarks&&Text;a&&href',
     二级:{"title":"h1.fed-part-eone&&Text;.fed-deta-content&&.fed-part-rows&&li&&Text","img":".fed-list-info&&a&&data-original","desc":".fed-deta-content&&.fed-part-rows&&li:eq(1)&&Text;.fed-deta-content&&.fed-part-rows&&li:eq(2)&&Text;.fed-deta-content&&.fed-part-rows&&li:eq(3)&&Text","content":".fed-part-esan&&Text","tabs":".fed-drop-boxs&&.fed-part-rows&&li","lists":".fed-play-item:eq(#id)&&ul:eq(1)&&li"},
     搜索:'.fed-deta-info;h1&&Text;.lazyload&&data-original;.fed-list-remarks&&Text;a&&href;.fed-deta-content&&Text',
-}
+},
+海螺3:{
+    title:'',
+    host:'',
+    searchUrl:'/v_search/**----------fypage---.html',
+    url:'/vod_____show/fyclass--------fypage---.html',
+    headers:{
+        'User-Agent':'MOBILE_UA'
+    },
+    timeout:5000,
+    class_parse:'body&&.hl-nav li:gt(0);a&&Text;a&&href;.*/(.*?).html',
+    limit:40,
+    play_parse:true,
+    lazy:'',
+    推荐:'.hl-vod-list;li;a&&title;a&&data-original;.remarks&&Text;a&&href',
+    double:true,
+    一级:'.hl-vod-list&&.hl-list-item;a&&title;a&&data-original;.remarks&&Text;a&&href',
+    二级:{"title":".hl-infos-title&&Text;.hl-text-conch&&Text","img":".hl-lazy&&data-original","desc":".hl-infos-content&&.hl-text-conch&&Text","content":".hl-content-text&&Text","tabs":".hl-tabs&&a","lists":".hl-plays-list:eq(#id)&&li"},
+    搜索:'.hl-list-item;a&&title;a&&data-original;.remarks&&Text;a&&href',
+    searchable:1,
+    quickSearch:1,
+},
+海螺2:{
+    title:'',
+    host:'',
+    searchUrl:'/index.php/vod/search/page/fypage/wd/**/',
+    url:'/index.php/vod/show/id/fyclass/page/fypage/',
+    headers:{
+        'User-Agent':'MOBILE_UA'
+    },
+    timeout:5000,
+    class_parse:'#nav-bar li;a&&Text;a&&href;id/(.*?)/',
+    limit:40,
+    play_parse:true,
+    lazy:'',
+    推荐:'.list-a.size;li;a&&title;.lazy&&data-original;.bt&&Text;a&&href',
+    double:true,
+    一级:'.list-a&&li;a&&title;.lazy&&data-original;.list-remarks&&Text;a&&href',
+    二级:{"title":"h2&&Text;.deployment&&Text","img":".lazy&&data-original","desc":".deployment&&Text","content":".ec-show&&Text","tabs":"#tag&&a","lists":".play_list_box:eq(#id)&&li"},
+    搜索:'.search-list;a&&title;.lazy&&data-original;.deployment&&Text;a&&href',
+    searchable:1,
+    quickSearch:1,
+},
 
 
 };

@@ -43,7 +43,11 @@ class jsoup:
             else:
                 ret = ret.attr(option)
                 if add_url and option in ['url','src','href','data-original','data-src']:
-                    ret = urljoin(self.MY_URL,ret)
+                    if 'http' in ret:
+                        ret = ret[ret.find('http'):]
+                    else:
+                        ret = urljoin(self.MY_URL,ret)
+                    # print(ret)
         else:
             # ret = doc(parse+':first')
             ret = doc(parse) # 由于是生成器,直接转str就能拿到第一条数据,不需要next

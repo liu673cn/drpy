@@ -638,19 +638,28 @@ class CMS:
                     # print(title)
                     obj['title'] = title
                 if p.get('desc'):
-                    p1 = p['desc'].split(';')
-                    desc = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-                    obj['desc'] = desc
+                    try:
+                        p1 = p['desc'].split(';')
+                        desc = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                        obj['desc'] = desc
+                    except:
+                        pass
 
                 if p.get('content'):
                     p1 = p['content'].split(';')
-                    content = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-                    obj['content'] = content
+                    try:
+                        content = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
+                        obj['content'] = content
+                    except:
+                        pass
 
                 if p.get('img'):
-                    p1 = p['img'].split(';')
-                    img = '\n'.join([pdfh(html,i).replace('\n',' ') for i in p1])
-                    obj['img'] = img
+                    p1 = p['img']
+                    try:
+                        img = pd(html,p1)
+                        obj['img'] = img
+                    except Exception as e:
+                        logger.info(f'二级图片定位失败,但不影响使用{e}')
 
                 vod = {
                     "vod_id": detailUrl,
@@ -792,8 +801,14 @@ class CMS:
                 # print(item)
                 try:
                     title = pdfh(item, p[1])
-                    img = pd(item, p[2])
-                    desc = pdfh(item, p[3])
+                    try:
+                        img = pd(item, p[2])
+                    except:
+                        img = ''
+                    try:
+                        desc = pdfh(item, p[3])
+                    except:
+                        desc = ''
                     # link = '$'.join([pd(item, p4) for p4 in p[4].split('+')])
                     links = [pd(item, p4) if not self.detailUrl else pdfh(item, p4) for p4 in p[4].split('+')]
                     link = '$'.join(links)
