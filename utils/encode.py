@@ -7,7 +7,12 @@
 import base64
 from urllib.parse import urljoin
 
-import requests
+import requests,warnings
+# 关闭警告
+warnings.filterwarnings("ignore")
+from requests.packages import urllib3
+urllib3.disable_warnings()
+
 import requests.utils
 from time import sleep
 import os
@@ -158,6 +163,7 @@ def dealObj(obj=None):
     }
 
 def base_request(url,obj,method=None):
+    # verify=False 关闭证书验证
     url = str(url).replace("'", "")
     if not method:
         method = 'get'
@@ -166,9 +172,9 @@ def base_request(url,obj,method=None):
     try:
         # r = requests.get(url, headers=headers, params=body, timeout=timeout)
         if method.lower() == 'get':
-            r = requests.get(url, headers=obj['headers'], params=obj['body'], timeout=obj['timeout'])
+            r = requests.get(url, headers=obj['headers'], params=obj['body'], timeout=obj['timeout'],verify=False)
         else:
-            r = requests.post(url, headers=obj['headers'], data=obj['body'], timeout=obj['timeout'])
+            r = requests.post(url, headers=obj['headers'], data=obj['body'], timeout=obj['timeout'],verify=False)
         # r = requests.get(url, timeout=timeout)
         # r = requests.get(url)
         # print(encoding)
