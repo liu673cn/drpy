@@ -100,11 +100,12 @@ left: 0;
 }
 .login-content{
   width: 350px;
-  height: 40%;
- text-align:center;
+  height: 268px;
+  text-align:
+  center;
   margin: 0 auto;
   position: relative;
-  top: 300px;
+  top: 250px;
   border: 1px solid #2890fa;
   background: rgba(40, 144, 250, 0.2);
   border-radius: 5px;
