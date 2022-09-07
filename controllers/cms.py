@@ -34,12 +34,19 @@ class CMS:
             new_conf = {}
         self.title = rule.get('title', '')
         self.id = rule.get('id', self.title)
+        cate_exclude  = rule.get('cate_exclude','')
         self.lazy = rule.get('lazy', False)
         self.play_disable = new_conf.get('PLAY_DISABLE',False)
         self.retry_count = new_conf.get('RETRY_CNT',3)
         self.lazy_mode = new_conf.get('LAZYPARSE_MODE')
         self.ocr_api = new_conf.get('OCR_API')
         self.cate_exclude = new_conf.get('CATE_EXCLUDE','')
+        if cate_exclude:
+            if not str(cate_exclude).startswith('|') and not str(self.cate_exclude).endswith('|'):
+                self.cate_exclude = self.cate_exclude+'|'+cate_exclude
+            else:
+                self.cate_exclude += cate_exclude
+        # print(self.cate_exclude)
         try:
             self.vod = redirect(url_for('vod')).headers['Location']
         except:
@@ -382,7 +389,11 @@ class CMS:
                             # print(url)
                             tag = url
                             if len(p) > 3 and p[3].strip():
-                                tag = self.regexp(p[3].strip(),url,0)
+                                try:
+                                    tag = self.regexp(p[3].strip(),url,0)
+                                except:
+                                    logger.info(f'分类匹配错误:{title}对应的链接{url}无法匹配{p[3]}')
+                                    continue
                             new_classes.append({
                                 'type_name': title,
                                 'type_id': tag
