@@ -24,7 +24,8 @@ from easydict import EasyDict as edict
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
 'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS,
-'buildUrl':buildUrl,'getHome':getHome,'setDetail':setDetail,'join':join,'urljoin2':urljoin2
+'buildUrl':buildUrl,'getHome':getHome,'setDetail':setDetail,'join':join,'urljoin2':urljoin2,
+'PC_UA':PC_UA,'MOBILE_UA':MOBILE_UA,'UC_UA':UC_UA
 }
 # print(getCryptoJS())
 
@@ -514,59 +515,89 @@ class CMS:
         url = self.url.replace('fyclass',fyclass).replace('fypage',pg)
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
-        p = self.一级.split(';')  # 解析
-        if len(p) < 5:
-            return self.blank()
-
+        p = self.一级
         jsp = jsoup(self.url)
-        is_json = str(p[0]).startswith('json:')
-        pdfh = jsp.pjfh if is_json else jsp.pdfh
-        pdfa = jsp.pjfa if is_json else jsp.pdfa
-        pd = jsp.pj if is_json else jsp.pd
-        # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(1)&&Text'))
-        # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(0)'))
-        # print(pdfh(r.text,'body a.module-poster-item.module-item:first'))
-
         videos = []
-        items = []
-        try:
-            r = requests.get(url, headers=self.headers, timeout=self.timeout)
-            r.encoding = self.encoding
-            print(r.url)
-            # html = r.text
-            html = r.json() if is_json else r.text
-            # print(html)
-            items = pdfa(html,p[0].replace('json:','',1))
-        except:
-            pass
-        # print(items)
-        for item in items:
-            # print(item)
+        is_js = isinstance(p, str) and str(p).startswith('js:')  # 是js
+        if is_js:
+            headers['Referer'] = getHome(url)
+            py_ctx.update({
+                'input': url,
+                'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                'd': self.d,
+                'cateID':fyclass, # 分类id
+                'detailUrl':self.detailUrl or '', # 详情页链接
+                'getParse': self.d.getParse,
+                'saveParse': self.d.saveParse,
+                'jsp': jsp, 'setDetail': setDetail,
+            })
+            ctx = py_ctx
+            # print(ctx)
+            jscode = getPreJs() + p.replace('js:', '', 1)
+            # print(jscode)
+            loader, _ = runJScode(jscode, ctx=ctx)
+            # print(loader.toString())
+            vods = loader.eval('VODS')
+            # print(vods)
+            if isinstance(vods, JsObjectWrapper):
+                videos = vods.to_list()
+
+        else:
+            p = p.split(';')  # 解析
+            if len(p) < 5:
+                return self.blank()
+
+            is_json = str(p[0]).startswith('json:')
+            pdfh = jsp.pjfh if is_json else jsp.pdfh
+            pdfa = jsp.pjfa if is_json else jsp.pdfa
+            pd = jsp.pj if is_json else jsp.pd
+            # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(1)&&Text'))
+            # print(pdfh(r.text,'body a.module-poster-item.module-item:eq(0)'))
+            # print(pdfh(r.text,'body a.module-poster-item.module-item:first'))
+
+            items = []
             try:
-                title = pdfh(item, p[1])
-                img = pd(item, p[2])
-                desc = pdfh(item, p[3])
-                links = [pd(item, p4) if not self.detailUrl else pdfh(item, p4) for p4 in p[4].split('+')]
-                link = '$'.join(links)
-                content = '' if len(p) < 6 else pdfh(item, p[5])
-                # sid = self.regStr(sid, "/video/(\\S+).html")
-                videos.append({
-                    "vod_id": f'{fyclass}${link}' if self.detailUrl else link,# 分类,播放链接
-                    "vod_name": title,
-                    "vod_pic": img,
-                    "vod_remarks": desc,
-                    "vod_content": content,
-                })
-            except Exception as e:
-                print(f'发生了错误:{e}')
+                r = requests.get(url, headers=self.headers, timeout=self.timeout)
+                r.encoding = self.encoding
+                print(r.url)
+                # html = r.text
+                html = r.json() if is_json else r.text
+                # print(html)
+                items = pdfa(html,p[0].replace('json:','',1))
+            except:
                 pass
+            # print(items)
+            for item in items:
+                # print(item)
+                try:
+                    title = pdfh(item, p[1])
+                    img = pd(item, p[2])
+                    desc = pdfh(item, p[3])
+                    links = [pd(item, p4) if not self.detailUrl else pdfh(item, p4) for p4 in p[4].split('+')]
+                    link = '$'.join(links)
+                    content = '' if len(p) < 6 else pdfh(item, p[5])
+                    # sid = self.regStr(sid, "/video/(\\S+).html")
+                    videos.append({
+                        "vod_id": f'{fyclass}${link}' if self.detailUrl else link,# 分类,播放链接
+                        "vod_name": title,
+                        "vod_pic": img,
+                        "vod_remarks": desc,
+                        "vod_content": content,
+                    })
+                except Exception as e:
+                    print(f'发生了错误:{e}')
+                    pass
+        # print(videos)
+        limit = 40
+        cnt = 9999 if len(videos) > 0 else 0
         result['list'] = videos
         result['page'] = fypage
-        result['pagecount'] = 9999
-        result['limit'] = 9999
-        result['total'] = 999999
+        result['pagecount'] = max(cnt,fypage)
+        result['limit'] = limit
+        result['total'] = cnt
+        # print(result)
         logger.info(f'{self.getName()}获取分类{fyclass}第{fypage}页耗时:{get_interval(t1)}毫秒,共计{round(len(str(result)) / 1000, 2)} kb')
-        
+
         return result
 
     def detailOneVod(self,id,fyclass=''):
@@ -576,7 +607,7 @@ class CMS:
             url = self.detailUrl.replace('fyid', detailUrl).replace('fyclass',fyclass)
         else:
             url = detailUrl
-        # print(url)
+        print(url)
         try:
             p = self.二级  # 解析
             if p == '*':

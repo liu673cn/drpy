@@ -1,3 +1,47 @@
+var VODS = [];
+ if (!String.prototype.includes) {
+    String.prototype.includes = function (search, start) {
+
+      if (typeof start !== 'number') {
+        start = 0;
+      }
+
+      if (start + search.length > this.length) {
+        return false;
+      } else {
+        return this.indexOf(search, start) !== -1;
+      }
+    };
+  }
+
+  if (!Array.prototype.includes) {
+    Object.defineProperty(Array.prototype, 'includes', {
+      value: function (searchElement, fromIndex) {
+
+        if (this == null) {//this是空或者未定义，抛出错误
+          throw new TypeError('"this" is null or not defined');
+        }
+
+        var o = Object(this);//将this转变成对象
+        var len = o.length >>> 0;//无符号右移0位，获取对象length属性，如果未定义就会变成0
+
+        if (len === 0) {//length为0直接返回false未找到目标值
+          return false;
+        }
+
+        var n = fromIndex | 0;//查找起始索引
+        var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);//计算正确起始索引，因为有可能是负值
+
+        while (k < len) {//从起始索引处开始循环
+          if (o[k] === searchElement) {//如果某一位置与寻找目标相等，返回true，找到了
+            return true;
+          }
+          k++;
+        }
+        return false;//未找到，返回false
+      }
+    });
+  }
 Object.assign = function () {
 	var target = arguments[0];
     for (var i = 1; i < arguments.length; i++) {
@@ -37,49 +81,84 @@ Array.prototype.join = function (emoji) {
       }
       return str;
 };
+function setResult(d){
+    if(!Array.isArray(d)){
+        return []
+    }
+    d.forEach(function (it){
+        let obj = {
+            vod_id:it.url||'',
+            vod_name: it.title||'',
+            vod_remarks: it.desc||'',
+            vod_content: it.content||'',
+            vod_pic: it.pic_url||it.img||'',
+        };
+        let keys = Object.keys(it);
+        if(keys.includes('tname')){
+            obj.type_name = it.tname||'';
+        }
+        if(keys.includes('tid')){
+            obj.type_id = it.tid||'';
+        }
+        if(keys.includes('year')){
+            obj.vod_year = it.year||'';
+        }
+        if(keys.includes('actor')){
+            obj.vod_actor = it.actor||'';
+        }
+        if(keys.includes('director')){
+            obj.vod_director = it.director||'';
+        }
+        if(keys.includes('area')){
+            obj.vod_area = it.area||'';
+        }
+        VODS.push(obj);
+    });
+    return VODS
+}
 // 千万不要用for in 推荐 forEach (for in 会打乱顺序)
 //猫函数
-    function maoss(jxurl, ref, key) {
-        eval(getCryptoJS());
-        try {
-            var getVideoInfo = function(text) {
-                return CryptoJS.AES.decrypt(text, key, {
-                    iv: iv,
-                    padding: CryptoJS.pad.Pkcs7
-                }).toString(CryptoJS.enc.Utf8);
-            };
-            var token_key = key == undefined ? 'dvyYRQlnPRCMdQSe' : key;
-            if (ref) {
-                var html = request(jxurl, {
-                    headers: {
-                        'Referer': ref
-                    }
-                });
-            } else {
-                var html = request(jxurl);
-            }
-            if (html.indexOf('&btwaf=') != -1) {
-                html = request(jxurl + '&btwaf' + html.match(/&btwaf(.*?)"/)[1], {
-                    headers: {
-                        'Referer': ref
-                    }
-                })
-            }
-            var token_iv = html.split('_token = "')[1].split('"')[0];
-            var key = CryptoJS.enc.Utf8.parse(token_key);
-            var iv = CryptoJS.enc.Utf8.parse(token_iv);
-            // log("iv:"+iv);
-            //  log(html);
-            eval(html.match(/var config = {[\s\S]*?}/)[0] + '');
-            if (config.url.slice(0, 4) != 'http') {
-                //config.url = decodeURIComponent(AES(config.url, key, iv));
-                config.url = CryptoJS.AES.decrypt(config.url, key, {
-                    iv: iv,
-                    padding: CryptoJS.pad.Pkcs7
-                }).toString(CryptoJS.enc.Utf8)
-            }
-            return config.url;
-        } catch (e) {
-            return '';
+function maoss(jxurl, ref, key) {
+    eval(getCryptoJS());
+    try {
+        var getVideoInfo = function(text) {
+            return CryptoJS.AES.decrypt(text, key, {
+                iv: iv,
+                padding: CryptoJS.pad.Pkcs7
+            }).toString(CryptoJS.enc.Utf8);
+        };
+        var token_key = key == undefined ? 'dvyYRQlnPRCMdQSe' : key;
+        if (ref) {
+            var html = request(jxurl, {
+                headers: {
+                    'Referer': ref
+                }
+            });
+        } else {
+            var html = request(jxurl);
         }
+        if (html.indexOf('&btwaf=') != -1) {
+            html = request(jxurl + '&btwaf' + html.match(/&btwaf(.*?)"/)[1], {
+                headers: {
+                    'Referer': ref
+                }
+            })
+        }
+        var token_iv = html.split('_token = "')[1].split('"')[0];
+        var key = CryptoJS.enc.Utf8.parse(token_key);
+        var iv = CryptoJS.enc.Utf8.parse(token_iv);
+        // log("iv:"+iv);
+        //  log(html);
+        eval(html.match(/var config = {[\s\S]*?}/)[0] + '');
+        if (config.url.slice(0, 4) != 'http') {
+            //config.url = decodeURIComponent(AES(config.url, key, iv));
+            config.url = CryptoJS.AES.decrypt(config.url, key, {
+                iv: iv,
+                padding: CryptoJS.pad.Pkcs7
+            }).toString(CryptoJS.enc.Utf8)
+        }
+        return config.url;
+    } catch (e) {
+        return '';
     }
+}
