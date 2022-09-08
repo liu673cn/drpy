@@ -7,7 +7,8 @@ if(cateID==='16'){//网络电影
 }else if(cateID==='5'){//音乐
     input = input.replace("data_type=1", "data_type=2");
 }
-let html = fetch(input,fetch_params);
+// let html = fetch(input,fetch_params);
+let html = request(input);
 let json = JSON.parse(html);
 if (json.code === "A00003") {
     fetch_params.headers['user-agent'] = PC_UA;

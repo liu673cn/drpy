@@ -162,3 +162,22 @@ function maoss(jxurl, ref, key) {
         return '';
     }
 }
+
+function request(url,obj){
+    if(typeof(fetch_params)!=='undefined'){
+        obj = obj?Object.assign(fetch_params,obj):fetch_params;
+    }else{
+        obj = obj||{}
+    }
+    // print(obj);
+    if(typeof(fetch)!==undefined){
+        let html = fetch(url,obj);
+        if (/\?btwaf=/.test(html)) {//宝塔验证
+            url=url.split('#')[0]+'?btwaf'+html.match(/btwaf(.*?)\"/)[1];
+            log("宝塔验证跳转到:"+url);
+            html = fetch(url, obj);
+        }
+        return html
+    }
+    return ''
+}

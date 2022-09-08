@@ -3,6 +3,7 @@
 # File  : cms.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
+import json
 
 import requests
 import re
@@ -301,6 +302,25 @@ class CMS:
         else:
             return ''
 
+    def checkHtml(self,r):
+        r.encoding = self.encoding
+        html = r.text
+        if html.find('?btwaf=') > -1:
+            btwaf = re.search('btwaf(.*?)"',html,re.M|re.I).groups()[0]
+            url = r.url.split('#')[0]+'?btwaf'+btwaf
+            # print(f'需要过宝塔验证:{url}')
+            cookies_dict = requests.utils.dict_from_cookiejar(r.cookies)
+            cookie_str = ';'.join([f'{k}={cookies_dict[k]}' for k in cookies_dict])
+            self.headers['cookie'] = cookie_str
+            r = requests.get(url, headers=self.headers, timeout=self.timeout)
+            r.encoding = self.encoding
+            html = r.text
+            if html.find('?btwaf=') < 0:
+                self.saveCookie(cookie_str)
+
+        # print(html)
+        return html
+
     def saveParse(self, play_url,real_url):
         if not self.db:
             msg = '未提供数据库连接'
@@ -367,8 +387,7 @@ class CMS:
                 else:
                     new_classes = []
                     r = requests.get(self.homeUrl, headers=self.headers, timeout=self.timeout)
-                    r.encoding = self.encoding
-                    html = r.text
+                    html = self.checkHtml(r)
                     # print(html)
                     # print(self.headers)
                     if self.class_parse and not has_cache:
@@ -558,10 +577,9 @@ class CMS:
             items = []
             try:
                 r = requests.get(url, headers=self.headers, timeout=self.timeout)
-                r.encoding = self.encoding
-                print(r.url)
-                # html = r.text
-                html = r.json() if is_json else r.text
+                html = self.checkHtml(r)
+                if is_json:
+                    html = json.loads(html)
                 # print(html)
                 items = pdfa(html,p[0].replace('json:','',1))
             except:
@@ -657,10 +675,9 @@ class CMS:
                 obj = {}
                 vod_name = ''
                 r = requests.get(url, headers=self.headers, timeout=self.timeout)
-                r.encoding = self.encoding
-                # html = r.text
-                html = r.json() if is_json else r.text
-                # print(html)
+                html = self.checkHtml(r)
+                if is_json:
+                    html = json.loads(html)
                 if p.get('title'):
                     p1 = p['title'].split(';')
                     vod_name = pdfh(html,p1[0]).replace('\n',' ')
@@ -808,9 +825,9 @@ class CMS:
         videos = []
         try:
             r = requests.get(url, headers=self.headers,timeout=self.timeout)
-            r.encoding = self.encoding
-            # html = r.text
-            html = r.json() if is_json else r.text
+            html = self.checkHtml(r)
+            if is_json:
+                html = json.loads(html)
             # print(html)
             if not is_json and html.find('输入验证码') > -1:
                 cookie = verifyCode(url,self.headers,self.timeout,self.retry_count,self.ocr_api)
