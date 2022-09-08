@@ -6,7 +6,7 @@
 import json
 import os
 
-from flask import Blueprint,abort,render_template,url_for,redirect,make_response
+from flask import Blueprint,abort,render_template,render_template_string,url_for,redirect,make_response
 from controllers.service import storage_service
 from controllers.classes import getClasses,getClassInfo
 from utils.web import getParmas
@@ -95,6 +95,23 @@ def plugin(name):
     except Exception as e:
         return R.failed(f'非法猥亵\n{e}')
 
+@home.route('/files/<name>')
+def get_files(name):
+    base_path = 'base/files'
+    os.makedirs(base_path,exist_ok=True)
+    file_path = os.path.join(base_path, f'{name}')
+    if not os.path.exists(file_path):
+        return R.failed(f'{file_path}文件不存在')
+
+    with open(file_path, mode='rb') as f:
+        file_byte = f.read()
+    response = make_response(file_byte)
+    filename = name
+    response.headers['Content-Type'] = 'application/octet-stream'
+    response.headers['Content-Disposition'] = f'attachment;filename="{filename}"'
+    return response
+
+
 @home.route('/lives')
 def get_lives():
     live_path = 'js/直播.txt'
@@ -131,17 +148,17 @@ def config_render(mode):
         with open(customFile,'w+',encoding='utf-8') as f:
             f.write('{}')
     customConfig = False
-    try:
-        with open(customFile,'r',encoding='utf-8') as f:
-            customConfig = parseText(f.read())
-    except Exception as e:
-        logger.info(f'用户自定义配置加载失败:{e}')
-
     if mode == 1:
         jyw_ip = getHost(mode)
         logger.info(jyw_ip)
     new_conf = cfg
     host = getHost(mode)
+    try:
+        with open(customFile,'r',encoding='utf-8') as f:
+            text = f.read()
+            customConfig = parseText(render_template_string(text,host=host))
+    except Exception as e:
+        logger.info(f'用户自定义配置加载失败:{e}')
     jxs = getJxs()
     alists = getAlist()
     alists_str = json.dumps(alists, ensure_ascii=False)
