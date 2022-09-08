@@ -111,6 +111,20 @@ def get_files(name):
     response.headers['Content-Disposition'] = f'attachment;filename="{filename}"'
     return response
 
+@home.route('/txt/<name>')
+def get_txt_files(name):
+    base_path = 'txt'
+    os.makedirs(base_path,exist_ok=True)
+    file_path = os.path.join(base_path, f'{name}')
+    if not os.path.exists(file_path):
+        return R.failed(f'{file_path}文件不存在')
+
+    with open(file_path, mode='r',encoding='utf-8') as f:
+        file_byte = f.read()
+    response = make_response(file_byte)
+    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    return response
+
 
 @home.route('/lives')
 def get_lives():
