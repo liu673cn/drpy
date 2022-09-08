@@ -69,11 +69,10 @@ def getRules(path='cache'):
     logger.info(f'自动配置装载耗时:{get_interval(t1)}毫秒')
     return rules
 
-def getJxs(path='js'):
-    with open(f'{path}/解析.conf',encoding='utf-8') as f:
-        data = f.read().strip()
+def jxTxt2Json(text:str):
+    data = text.strip().split('\n')
     jxs = []
-    for i in data.split('\n'):
+    for i in data:
         i = i.strip()
         dt = i.split(',')
         if not i.startswith('#'):
@@ -83,9 +82,27 @@ def getJxs(path='js'):
                 'type':dt[2] if len(dt) > 2 else 0,
                 'ua':dt[3] if len(dt) > 3 else UA,
             })
-    # jxs = [{'name':dt.split(',')[0],'url':dt.split(',')[1]} for dt in data.split('\n')]
-    # jxs = list(filter(lambda x:not str(x['name']).strip().startswith('#'),jxs))
-    # print(jxs)
+    return jxs
+
+def getJxs(path='js'):
+    custom_jx = 'base/解析.conf'
+    if not os.path.exists(custom_jx):
+        with open(custom_jx,'w+',encoding='utf-8') as f1:
+            msg = """# 这是用户自定义解析列表,不会被系统升级覆盖
+# 0123，对应，普通解析，json解析，并发多json解析，聚合解析,参数3不填默认0
+# flags是线路名称标识,会自动拦截并走以下的解析
+# 名称，链接，类型,ua (ua不填默认 Mozilla/5.0) 可以手动填 Dart/2.14 (dart:io)
+虾米,https://dm.xmflv.com:4433/?url=
+            """
+            f1.write(msg)
+
+    with open(f'{path}/解析.conf',encoding='utf-8') as f:
+        text = f.read()
+    jxs = jxTxt2Json(text)
+    with open(custom_jx,encoding='utf-8') as f2:
+        text = f2.read()
+    jxs2 = jxTxt2Json(text)
+    jxs.extend(jxs2)
     print(f'共计{len(jxs)}条解析')
     return jxs
 

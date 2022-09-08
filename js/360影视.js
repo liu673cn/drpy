@@ -12,11 +12,12 @@ var rule = {
     class_name:'电视剧&电影&综艺&动漫',
     class_url:'2&1&3&4',
     limit:5,
-    // play_parse:true,
+    play_parse:true,
+    lazy:'js:input=input.split("?")[0];log(input);',
     // 疑似t4专用的
-    lazy:'js:input={parse: 1, playUrl: "", jx: 1, url: input.split("?")[0]}',
+    // lazy:'js:input={parse: 1, playUrl: "", jx: 1, url: input.split("?")[0]}',
     // 手动调用解析请求json的url,此lazy不方便
-    lazy:'js:input="https://cache.json.icu/home/api?type=ys&uid=292796&key=fnoryABDEFJNPQV269&url="+input.split("?")[0];log(input);let html=JSON.parse(request(input));log(html);input=html.url||input',
+    // lazy:'js:input="https://cache.json.icu/home/api?type=ys&uid=292796&key=fnoryABDEFJNPQV269&url="+input.split("?")[0];log(input);let html=JSON.parse(request(input));log(html);input=html.url||input',
     推荐:'json:data;title;cover;comment;cat+ent_id;description',
     一级:'json:data.movies;title;cover;pubdate;id;description',
     // 二级:{is_json:1,"title":"data.title;data.moviecategory[0]+data.moviecategory[1]","img":"data.cdncover","desc":"data.area[0];data.director[0]","content":"data.description","tabs":"data.playlink_sites;data.playlinksdetail.#idv.quality","lists":"data.playlinksdetail.#idv.default_url"},

@@ -178,16 +178,16 @@ class CMS:
 
     def blank_vod(self):
         return {
-            "vod_id": "",
-            "vod_name": "",
-            "vod_pic": "",
-            "type_name": "",
-            "vod_year": "",
-            "vod_area": "",
-            "vod_remarks": "",
-            "vod_actor": "",
-            "vod_director": "",
-            "vod_content": ""
+            "vod_id": "id",
+            "vod_name": "片名",
+            "vod_pic": "",# 图片
+            "type_name": "剧情",
+            "vod_year": "年份",
+            "vod_area": "地区",
+            "vod_remarks": "更新信息",
+            "vod_actor": "主演",
+            "vod_director": "导演",
+            "vod_content": "简介"
         }
 
     def jsoup(self):
@@ -468,9 +468,11 @@ class CMS:
                                 "vod_name": title,
                                 "vod_pic": img,
                                 "vod_remarks": desc,
-                                "vod_content": content,
-                                "type_id": 1,
-                                "type_name": "首页推荐",
+                                "no_use":{
+                                    "vod_content": content,
+                                    "type_id": 1,
+                                    "type_name": "首页推荐",
+                                },
                             })
                         except:
                             pass
@@ -491,21 +493,25 @@ class CMS:
                             "vod_name": title,
                             "vod_pic": img,
                             "vod_remarks": desc,
-                            "vod_content": content,
-                            "type_id": 1,
-                            "type_name": "首页推荐",
+                            "no_use": {
+                                "vod_content": content,
+                                "type_id": 1,
+                                "type_name": "首页推荐",
+                            },
                         })
                     except:
                         pass
             # result['list'] = videos[min((fypage-1)*self.limit,len(videos)-1):min(fypage*self.limit,len(videos))]
             result['list'] = videos
-            result['code'] = 1
-            result['msg'] = '数据列表'
-            result['page'] = fypage
-            result['pagecount'] = math.ceil(len(videos)/self.limit)
-            result['limit'] = self.limit
-            result['total'] = len(videos)
-            result['now_count'] = len(result['list'])
+            result['no_use'] = {
+                'code':1,
+                'msg':'数据列表',
+                'page':fypage,
+                'pagecount':math.ceil(len(videos)/self.limit),
+                'limit':self.limit,
+                'total':len(videos),
+                'now_count':len(result['list']),
+            }
             return result
         except Exception as e:
             logger.info(f'首页内容获取失败:{e}')
@@ -768,7 +774,6 @@ class CMS:
                 # print(vod_play_url)
         except Exception as e:
             logger.info(f'{self.getName()}获取单个详情页{detailUrl}出错{e}')
-        # print(vod)
         return vod
 
     def detailContent(self, fypage, array):
@@ -867,7 +872,7 @@ class CMS:
                         "vod_name": title,
                         "vod_pic": img,
                         "vod_remarks": desc,
-                        "vod_content": content,
+                        "vod_content": content, # 无用参数
                     })
                 except:
                     pass
@@ -880,7 +885,9 @@ class CMS:
         return result
 
     def playContent(self, play_url,jxs=None,flag=None):
+        # flag参数只有类型为4的时候才有,可以忽略
         # logger.info('播放免嗅地址: ' + self.play_url)
+        # 注意:全局flags里的视频没法执行免嗅代码，因为会自动拦截去调用解析: url=yoursite:5705/vod?play_url=xxxx
         if not jxs:
             jxs = []
         try:
