@@ -17,6 +17,7 @@ import requests.utils
 from time import sleep
 import os
 from utils.web import UC_UA,PC_UA
+from ast import literal_eval
 
 def getPreJs():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目
@@ -223,3 +224,7 @@ def buildUrl(url,obj=None):
     url = (url + prs).replace('"','').replace("'",'')
     # print(url)
     return url
+
+def parseText(text:str):
+    text = text.replace('false','False').replace('true','True').replace('null','None')
+    return literal_eval(text)

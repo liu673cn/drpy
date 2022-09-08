@@ -46,6 +46,8 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/08
+- [X] 1.升级到3.2.9,支持自动合并自定义用户配置(内置t4测试源)
 ###### 2022/09/07
 - [X] 1.优化后台管理登录界面,升级更新脚本
 - [X] 2.增加了镜像合并脚本(三合一直接拉 hjdhnx/drpy 即可)

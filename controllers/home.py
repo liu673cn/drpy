@@ -10,7 +10,7 @@ from flask import Blueprint,abort,render_template,url_for,redirect,make_response
 from controllers.service import storage_service
 from controllers.classes import getClasses,getClassInfo
 from utils.web import getParmas
-from utils.files import getPics
+from utils.files import getPics,custom_merge
 from js.rules import getRules
 from base.R import R
 from utils.system import cfg,getHost,is_linux
@@ -18,6 +18,7 @@ from utils import parser
 from utils.log import logger
 from utils.files import getAlist,get_live_url
 from utils.update import getLocalVer
+from utils.encode import parseText
 from js.rules import getJxs
 import random
 
@@ -125,6 +126,17 @@ def get_liveslib():
 @home.route('/config/<int:mode>')
 def config_render(mode):
     # print(dict(app.config))
+    customFile = 'base/custom.conf'
+    if not os.path.exists(customFile):
+        with open(customFile,'w+',encoding='utf-8') as f:
+            f.write('{}')
+    customConfig = False
+    try:
+        with open(customFile,'r',encoding='utf-8') as f:
+            customConfig = parseText(f.read())
+    except Exception as e:
+        logger.info(f'用户自定义配置加载失败:{e}')
+
     if mode == 1:
         jyw_ip = getHost(mode)
         logger.info(jyw_ip)
@@ -136,7 +148,11 @@ def config_render(mode):
     live_url = get_live_url(new_conf,mode)
     # html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,base64Encode=base64Encode,config=new_conf)
     html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,alists=alists,alists_str=alists_str,live_url=live_url,config=new_conf)
-    response = make_response(html)
+    merged_config = custom_merge(parseText(html),customConfig)
+    # print(merged_config)
+    # response = make_response(html)
+    response = make_response(json.dumps(merged_config,ensure_ascii=False,indent=1))
+    # response = make_response(str(merged_config))
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     return response
 

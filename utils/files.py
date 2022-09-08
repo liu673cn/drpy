@@ -52,3 +52,28 @@ def getAlist():
             alists.append(obj)
     print(f'共计{len(alists)}条alist记录')
     return alists
+
+def custom_merge(original:dict,custom:dict):
+    """
+    合并用户配置
+    :param original: 原始配置
+    :param custom: 自定义配置
+    :return:
+    """
+    if not custom or len(custom.keys()) < 1:
+        return original
+    new_keys = custom.keys()
+    updateObj = {}
+    extend_obj = {}
+    for key in ['wallpaper','spider','homepage']:
+        if key in new_keys:
+            updateObj[key] = custom[key]
+
+    for key in ['drives','sites','flags','lives','ads']:
+        if key in new_keys:
+            extend_obj[key] = custom[key]
+
+    original.update(updateObj)
+    for key in extend_obj.keys():
+        original[key].extend(extend_obj[key])
+    return original
