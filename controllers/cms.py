@@ -548,6 +548,7 @@ class CMS:
             headers['Referer'] = getHome(url)
             py_ctx.update({
                 'input': url,
+                'TYPE': 'home',  # 海阔js环境标志
                 'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
                 'cateID':fyclass, # 分类id
@@ -654,6 +655,8 @@ class CMS:
                 headers['Referer'] = getHome(url)
                 py_ctx.update({
                     'input': url,
+                    'TYPE': 'detail',  # 海阔js环境标志
+                    'cateID': fyclass,  # 当前分类
                     'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                     'd': self.d,
                     'getParse': self.d.getParse,
@@ -830,6 +833,7 @@ class CMS:
                 'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
                 'KEY': key,  # 搜索关键字
+                'TYPE': 'search',  # 海阔js环境标志
                 'detailUrl': self.detailUrl or '',  # 详情页链接
                 'getParse': self.d.getParse,
                 'saveParse': self.d.saveParse,
