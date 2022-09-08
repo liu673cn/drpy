@@ -25,14 +25,14 @@
     "filterable": {{ rule.filterable }}
 }{% endif %}{% if loop.last==False %},{% endif %}{% endfor %}],
 	"parses": [{
-		"name": "Ⓤ免",
+		"name": "🌐Ⓤ",
 		"type": 0,
 		"url": "",
 		"header": {
             "User-Agent": "Mozilla/5.0"
         }
 	},{
-		"name": "Ⓙ免",
+		"name": "🌀Ⓙ",
 		"type": 1,
 		"url": "",
 		"header": {
