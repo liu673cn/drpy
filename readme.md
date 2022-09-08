@@ -4,7 +4,7 @@
   <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://gitcode.net/qq_32394351/dr_py/-/raw/1fe0e082b1ceacc4469d7f175a605cc2edf0bab0/static/img/icon.png"/></a>
   <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
-    <img src="https://img.shields.io/badge/version-3.2.1-blue" alt="latest version" />
+    <img src="https://img.shields.io/badge/version-3.3.5-blue" alt="latest version" />
   </a>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/issues">
     <img src="https://img.shields.io/badge/discussions-2-orange" alt="discussions" />
@@ -52,6 +52,7 @@
 - [X] 3.升级到3.3.2,增加自定义本地文件路由: {{ host }}/files/文件名和{{ host }}/txt/文件名 比如 {{ host }}/files/custom_spider.jar
 - [X] 4.升级到3.3.4,修改了默认爬虫jar方案,支持轮询和并发json解析,新增用户自定义解析配置
 - [ ] 5.待开发搜索支持js写法(后续再考虑首页推荐支持json双模式+js)
+- [X] 6.版本升级3.3.5.搜索支持js写法,并修复了360影视搜索问题(搜索定位标题支持||多个分开合并,解决猫壳自动过滤搜索结果问题,比如月升沧海改名了会被猫壳过滤)
 ###### 2022/09/07
 - [X] 1.优化后台管理登录界面,升级更新脚本
 - [X] 2.增加了镜像合并脚本(三合一直接拉 hjdhnx/drpy 即可)

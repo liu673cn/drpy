@@ -818,67 +818,99 @@ class CMS:
         logger.info(f'{self.getName()}搜索链接:{url}')
         if not self.搜索:
             return self.blank()
-        p = self.一级.split(';') if self.搜索 == '*' and self.一级 else self.搜索.split(';')  # 解析
-        if len(p) < 5:
-            return self.blank()
+        # p = self.一级.split(';') if self.搜索 == '*' and self.一级 else self.搜索.split(';')  # 解析
+        p = self.一级 if self.搜索 == '*' and self.一级 else self.搜索
         jsp = jsoup(self.url)
-        is_json = str(p[0]).startswith('json:')
-        pdfh = jsp.pjfh if is_json else jsp.pdfh
-        pdfa = jsp.pjfa if is_json else jsp.pdfa
-        pd = jsp.pj if is_json else jsp.pd
-        pq = jsp.pq
         videos = []
-        try:
-            r = requests.get(url, headers=self.headers,timeout=self.timeout)
-            html = self.checkHtml(r)
-            if is_json:
-                html = json.loads(html)
-            # print(html)
-            if not is_json and html.find('输入验证码') > -1:
-                cookie = verifyCode(url,self.headers,self.timeout,self.retry_count,self.ocr_api)
-                # cookie = ''
-                if not cookie:
-                    return {
-                        'list': videos
-                    }
-                self.saveCookie(cookie)
-                self.headers['cookie'] = cookie
-                r = requests.get(url, headers=self.headers, timeout=self.timeout)
-                r.encoding = self.encoding
-                html = r.text
+        is_js = isinstance(p, str) and str(p).startswith('js:')  # 是js
+        if is_js:
+            headers['Referer'] = getHome(url)
+            py_ctx.update({
+                'input': url,
+                'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                'd': self.d,
+                'KEY': key,  # 搜索关键字
+                'detailUrl': self.detailUrl or '',  # 详情页链接
+                'getParse': self.d.getParse,
+                'saveParse': self.d.saveParse,
+                'jsp': jsp, 'setDetail': setDetail,
+            })
+            ctx = py_ctx
+            # print(ctx)
+            jscode = getPreJs() + p.replace('js:', '', 1)
+            # print(jscode)
+            loader, _ = runJScode(jscode, ctx=ctx)
+            # print(loader.toString())
+            vods = loader.eval('VODS')
+            # print(vods)
+            if isinstance(vods, JsObjectWrapper):
+                videos = vods.to_list()
+        else:
+            p = p.split(';')
+            if len(p) < 5:
+                return self.blank()
+            is_json = str(p[0]).startswith('json:')
+            pdfh = jsp.pjfh if is_json else jsp.pdfh
+            pdfa = jsp.pjfa if is_json else jsp.pdfa
+            pd = jsp.pj if is_json else jsp.pd
+            pq = jsp.pq
+            try:
+                r = requests.get(url, headers=self.headers,timeout=self.timeout)
+                html = self.checkHtml(r)
+                if is_json:
+                    html = json.loads(html)
+                # print(html)
+                if not is_json and html.find('输入验证码') > -1:
+                    cookie = verifyCode(url,self.headers,self.timeout,self.retry_count,self.ocr_api)
+                    # cookie = ''
+                    if not cookie:
+                        return {
+                            'list': videos
+                        }
+                    self.saveCookie(cookie)
+                    self.headers['cookie'] = cookie
+                    r = requests.get(url, headers=self.headers, timeout=self.timeout)
+                    r.encoding = self.encoding
+                    html = r.text
 
-            items = pdfa(html,p[0].replace('json:','',1))
-            print(items)
-            videos = []
-            for item in items:
-                # print(item)
-                try:
-                    title = pdfh(item, p[1])
+                items = pdfa(html,p[0].replace('json:','',1))
+                # print(items)
+                videos = []
+                for item in items:
+                    # print(item)
                     try:
-                        img = pd(item, p[2])
+                        # title = pdfh(item, p[1])
+                        title =''.join([pdfh(item, i) for i in p[1].split('||')])
+
+                        try:
+                            img = pd(item, p[2])
+                        except:
+                            img = ''
+                        try:
+                            desc = pdfh(item, p[3])
+                        except:
+                            desc = ''
+                        try:
+                            content = '' if len(p) < 6 else pdfh(item, p[5])
+                        except:
+                            content = ''
+                        # link = '$'.join([pd(item, p4) for p4 in p[4].split('+')])
+                        links = [pd(item, p4) if not self.detailUrl else pdfh(item, p4) for p4 in p[4].split('+')]
+                        link = '$'.join(links)
+                        # print(content)
+                        # sid = self.regStr(sid, "/video/(\\S+).html")
+                        videos.append({
+                            "vod_id": link,
+                            "vod_name": title,
+                            "vod_pic": img,
+                            "vod_remarks": desc,
+                            "vod_content": content, # 无用参数
+                        })
                     except:
-                        img = ''
-                    try:
-                        desc = pdfh(item, p[3])
-                    except:
-                        desc = ''
-                    # link = '$'.join([pd(item, p4) for p4 in p[4].split('+')])
-                    links = [pd(item, p4) if not self.detailUrl else pdfh(item, p4) for p4 in p[4].split('+')]
-                    link = '$'.join(links)
-                    content = '' if len(p) < 6 else pdfh(item, p[5])
-                    # sid = self.regStr(sid, "/video/(\\S+).html")
-                    videos.append({
-                        "vod_id": link,
-                        "vod_name": title,
-                        "vod_pic": img,
-                        "vod_remarks": desc,
-                        "vod_content": content, # 无用参数
-                    })
-                except:
-                    pass
-            # print(videos)
-        except Exception as e:
-            logger.info(f'搜索{self.getName()}发生错误:{e}')
+                        pass
+                # print(videos)
+            except Exception as e:
+                logger.info(f'搜索{self.getName()}发生错误:{e}')
         result = {
             'list': videos
         }
