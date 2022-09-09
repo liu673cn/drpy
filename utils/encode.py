@@ -140,6 +140,8 @@ def dealObj(obj=None):
         obj = {}
     encoding = obj.get('encoding') or 'utf-8'
     encoding = str(encoding).replace("'", "")
+    method = obj.get('method') or 'get'
+    method = str(method).replace("'", "")
     # print(type(url),url)
     # headers = dict(obj.get('headers')) if obj.get('headers') else {}
     # headers = obj.get('headers').to_dict() if obj.get('headers') else {}
@@ -161,13 +163,16 @@ def dealObj(obj=None):
         'headers':new_headers,
         'timeout':timeout,
         'body': new_body,
+        'method':method
     }
 
-def base_request(url,obj,method=None):
+def base_request(url,obj):
     # verify=False 关闭证书验证
     url = str(url).replace("'", "")
+    method = obj.get('method') or ''
     if not method:
         method = 'get'
+        obj['method'] = 'method'
     # print(obj)
     print(f'{method}:{url}')
     try:
@@ -186,28 +191,24 @@ def base_request(url,obj,method=None):
         print(f'{method}请求发生错误:{e}')
         return ''
 
-def fetch(url,obj,method=None):
-    if not method:
-        method = 'get'
+def fetch(url,obj):
     obj = dealObj(obj)
-    # print(f'{method}:{url}')
     if not obj.get('headers') or not obj['headers'].get('User-Agent'):
         obj['headers']['User-Agent'] = PC_UA
-    return base_request(url,obj,method)
+    return base_request(url,obj)
 
 def post(url,obj):
     obj = dealObj(obj)
-    return base_request(url,obj,'post')
+    obj['method'] = 'post'
+    return base_request(url,obj)
 
-def request(url,obj,method=None):
-    if not method:
-        method = 'get'
+def request(url,obj):
     obj = dealObj(obj)
     # print(f'{method}:{url}')
     if not obj.get('headers') or not obj['headers'].get('User-Agent'):
         obj['headers']['User-Agent'] = UC_UA
 
-    return base_request(url, obj, method)
+    return base_request(url, obj)
 
 def buildUrl(url,obj=None):
     url = str(url).replace("'", "")
