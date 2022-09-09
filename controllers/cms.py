@@ -434,41 +434,94 @@ class CMS:
         return result
 
     def homeVideoContent(self,html,fypage=1):
-        if not self.推荐:
+        p = self.推荐
+        if not p:
             return self.blank()
 
-        p = self.推荐.split(';')  # 解析
-        if not self.double and len(p) < 5:
-            return self.blank()
-        if self.double and len(p) < 6:
-            return self.blank()
+        jsp = jsoup(self.homeUrl)
         result = {}
         videos = []
-        jsp = jsoup(self.homeUrl)
-        is_json = str(p[0]).startswith('json:')
-        pdfh = jsp.pjfh if is_json else jsp.pdfh
-        pdfa = jsp.pjfa if is_json else jsp.pdfa
-        pd = jsp.pj if is_json else jsp.pd
-        # print(html)
-        try:
-            if self.double:
-                items = pdfa(html, p[0])
-                for item in items:
-                    items2 = pdfa(item,p[1])
-                    for item2 in items2:
+        is_js = isinstance(p, str) and str(p).strip().startswith('js:')  # 是js
+        if is_js:
+            headers['Referer'] = getHome(self.host)
+            py_ctx.update({
+                'input': self.homeUrl,
+                'HOST': self.host,
+                'TYPE': 'home',  # 海阔js环境标志
+                'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                'd': self.d,
+                'getParse': self.d.getParse,
+                'saveParse': self.d.saveParse,
+                'jsp': jsp, 'setDetail': setDetail,
+            })
+            ctx = py_ctx
+            jscode = getPreJs() + p.strip().replace('js:', '', 1)
+            # print(jscode)
+            try:
+                loader, _ = runJScode(jscode, ctx=ctx)
+                # print(loader.toString())
+                vods = loader.eval('VODS')
+                # print(vods)
+                if isinstance(vods, JsObjectWrapper):
+                    videos = vods.to_list()
+            except Exception as e:
+                logger.info(f'首页推荐执行js获取列表出错:{e}')
+        else:
+            p = p.strip().split(';')  # 解析
+            if not self.double and len(p) < 5:
+                return self.blank()
+            if self.double and len(p) < 6:
+                return self.blank()
+            jsp = jsoup(self.homeUrl)
+            is_json = str(p[0]).startswith('json:')
+            pdfh = jsp.pjfh if is_json else jsp.pdfh
+            pdfa = jsp.pjfa if is_json else jsp.pdfa
+            pd = jsp.pj if is_json else jsp.pd
+            # print(html)
+            try:
+                if self.double:
+                    items = pdfa(html, p[0])
+                    for item in items:
+                        items2 = pdfa(item,p[1])
+                        for item2 in items2:
+                            try:
+                                title = pdfh(item2, p[2])
+                                img = pd(item2, p[3])
+                                desc = pdfh(item2, p[4])
+                                links = [pd(item2, p5) if not self.detailUrl else pdfh(item2, p5) for p5 in p[5].split('+')]
+                                link = '$'.join(links)
+                                content = '' if len(p) < 7 else pdfh(item2, p[6])
+                                videos.append({
+                                    "vod_id": link,
+                                    "vod_name": title,
+                                    "vod_pic": img,
+                                    "vod_remarks": desc,
+                                    "no_use":{
+                                        "vod_content": content,
+                                        "type_id": 1,
+                                        "type_name": "首页推荐",
+                                    },
+                                })
+                            except:
+                                pass
+                else:
+                    items = pdfa(html, p[0].replace('json:',''))
+                    # print(items)
+                    for item in items:
                         try:
-                            title = pdfh(item2, p[2])
-                            img = pd(item2, p[3])
-                            desc = pdfh(item2, p[4])
-                            links = [pd(item2, p5) if not self.detailUrl else pdfh(item2, p5) for p5 in p[5].split('+')]
+                            title = pdfh(item, p[1])
+                            img = pd(item, p[2])
+                            desc = pdfh(item, p[3])
+                            # link = pd(item, p[4])
+                            links = [pd(item, p5) if not self.detailUrl else pdfh(item, p5) for p5 in p[4].split('+')]
                             link = '$'.join(links)
-                            content = '' if len(p) < 7 else pdfh(item2, p[6])
+                            content = '' if len(p) < 6 else pdfh(item, p[5])
                             videos.append({
                                 "vod_id": link,
                                 "vod_name": title,
                                 "vod_pic": img,
                                 "vod_remarks": desc,
-                                "no_use":{
+                                "no_use": {
                                     "vod_content": content,
                                     "type_id": 1,
                                     "type_name": "首页推荐",
@@ -476,46 +529,24 @@ class CMS:
                             })
                         except:
                             pass
-            else:
-                items = pdfa(html, p[0].replace('json:',''))
-                # print(items)
-                for item in items:
-                    try:
-                        title = pdfh(item, p[1])
-                        img = pd(item, p[2])
-                        desc = pdfh(item, p[3])
-                        # link = pd(item, p[4])
-                        links = [pd(item, p5) if not self.detailUrl else pdfh(item, p5) for p5 in p[4].split('+')]
-                        link = '$'.join(links)
-                        content = '' if len(p) < 6 else pdfh(item, p[5])
-                        videos.append({
-                            "vod_id": link,
-                            "vod_name": title,
-                            "vod_pic": img,
-                            "vod_remarks": desc,
-                            "no_use": {
-                                "vod_content": content,
-                                "type_id": 1,
-                                "type_name": "首页推荐",
-                            },
-                        })
-                    except:
-                        pass
+
             # result['list'] = videos[min((fypage-1)*self.limit,len(videos)-1):min(fypage*self.limit,len(videos))]
-            result['list'] = videos
-            result['no_use'] = {
-                'code':1,
-                'msg':'数据列表',
-                'page':fypage,
-                'pagecount':math.ceil(len(videos)/self.limit),
-                'limit':self.limit,
-                'total':len(videos),
-                'now_count':len(result['list']),
-            }
-            return result
-        except Exception as e:
-            logger.info(f'首页内容获取失败:{e}')
-            return self.blank()
+            except Exception as e:
+                logger.info(f'首页内容获取失败:{e}')
+                return self.blank()
+
+        result['list'] = videos
+        result['no_use'] = {
+            'code': 1,
+            'msg': '数据列表',
+            'page': fypage,
+            'pagecount': math.ceil(len(videos) / self.limit),
+            'limit': self.limit,
+            'total': len(videos),
+            'now_count': len(result['list']),
+        }
+        # print(result)
+        return result
 
     def categoryContent(self, fyclass, fypage):
         """
@@ -548,7 +579,7 @@ class CMS:
             headers['Referer'] = getHome(url)
             py_ctx.update({
                 'input': url,
-                'TYPE': 'home',  # 海阔js环境标志
+                'TYPE': 'cate',  # 海阔js环境标志
                 'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
                 'cateID':fyclass, # 分类id
