@@ -53,19 +53,19 @@ for(let i in sites){
             if(vod_data.allepidetail){ //电视剧或者动漫
                 vod_data = vod_data.allepidetail[site];
                 vod_data.forEach(function(item,index) {
-                    vodItems.push((item.playlink_num||"") + "$" + (item.url||""));
+                    vodItems.push((item.playlink_num||"") + "$" + urlDeal(item.url||""));
                 });
             }else{// 综艺
                 vod_data = vod_data.defaultepisode;
                 vod_data.forEach(function(item,index) {
-                    vodItems.push((item.period||"")+(item.name||"") + "$" + item.url||"");
+                    vodItems.push((item.period||"")+(item.name||"") + "$" + urlDeal(item.url)||"");
                 });
             }
         }
     }else{
         let item = data.playlinksdetail[site];
         // print(item);
-        vodItems.push((item.sort||"") + "$" +(item.default_url||""));
+        vodItems.push((item.sort||"") + "$" +urlDeal(item.default_url||""));
     }
     if(vodItems.length > 0){
        playList = vodItems.join("#");

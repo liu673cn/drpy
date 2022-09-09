@@ -81,6 +81,22 @@ Array.prototype.join = function (emoji) {
       }
       return str;
 };
+function 是否正版(vipUrl){
+    let flag = new RegExp('qq\.com|iqiyi\.com|youku\.com|mgtv\.com|bilibili\.com|sohu\.com|ixigua\.com|pptv\.com|miguvideo\.com|le\.com|1905\.com|fun\.tv');
+    return  flag.test(vipUrl);
+}
+function urlDeal(vipUrl){
+    if(!vipUrl){
+        return ''
+    }
+    if(!是否正版(vipUrl)){
+        return vipUrl
+    }
+    if(!/miguvideo/.test(vipUrl)){
+        vipUrl=vipUrl.split('#')[0].split('?')[0];
+    }
+    return vipUrl
+}
 function setResult(d){
     if(!Array.isArray(d)){
         return []
