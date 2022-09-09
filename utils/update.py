@@ -32,17 +32,19 @@ def getLocalVer():
 
 def getOnlineVer():
     ver = '1.0.1'
+    msg = ''
     try:
         r = requests.get('https://gitcode.net/qq_32394351/dr_py/-/raw/master/js/version.txt',timeout=(2,2))
         ver = r.text
     except Exception as e:
         # print(f'{e}')
-        logger.info(f'{e}')
-    return ver
+        msg = f'{e}'
+        logger.info(msg)
+    return ver,msg
 
 def checkUpdate():
     local_ver = getLocalVer()
-    online_ver = getOnlineVer()
+    online_ver,msg = getOnlineVer()
     if local_ver != online_ver:
         return True
     return False

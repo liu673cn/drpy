@@ -33,7 +33,7 @@
                     alert(data.msg);
                     return false
                 }else{
-                    if(data.local_ver && data.online_ver){
+                    if(data.local_ver && data.online_ver && !data.msg){
                         if(data.local_ver !== data.online_ver){
                             msg = `本地版本:${data.local_ver}\n线上版本:${data.online_ver}\n是否立即执行升级?`;
                             if(confirm(msg)){
@@ -52,6 +52,8 @@
                         }else{
                             alert('已经是最新版,无需升级!')
                         }
+                    }else if(data.msg){
+                        alert('检测升级疑似发生了问题:\n'+data.msg);
                     }else{
                         alert('已经是最新版,无需升级!')
                     }

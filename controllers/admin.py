@@ -67,8 +67,8 @@ def admin_get_ver():
     if not verfy_token():
         # return render_template('login.html')
         return R.error('请登录后再试')
-
-    return jsonify({'local_ver':getLocalVer(),'online_ver':getOnlineVer()})
+    online_ver,msg = getOnlineVer()
+    return jsonify({'local_ver':getLocalVer(),'online_ver':online_ver,'msg':msg})
 
 @admin.route('/update_ver')
 def admin_update_ver():
