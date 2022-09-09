@@ -9,7 +9,7 @@ from flask import Blueprint,request,render_template,jsonify,make_response
 from controllers.service import storage_service
 from base.R import R
 from utils.web import verfy_token
-from utils.update import getLocalVer,getOnlineVer,download_new_version,download_lives
+from utils.update import getLocalVer,getOnlineVer,download_new_version,download_lives,copy_to_update
 from utils import parser
 from utils.web import getParmas
 from js.rules import getRules
@@ -76,6 +76,18 @@ def admin_update_ver():
         return R.failed('请登录后再试')
     msg = download_new_version()
     return R.success(msg)
+
+@admin.route('/force_update')
+def admin_force_update():
+    if not verfy_token():
+        return R.failed('请登录后再试')
+    ret = copy_to_update()
+    if ret:
+        msg = '升级成功'
+        return R.success(msg)
+    else:
+        msg = '升级失败。具体原因只能去看实时日志(通过9001端口)'
+        return R.failed(msg)
 
 @admin.route('/update_lives')
 def admin_update_lives():
