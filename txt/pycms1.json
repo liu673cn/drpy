@@ -1,6 +1,6 @@
 {
     "wallpaper": "http://192.168.3.224:5705/pics",
-    "dr_count": 21,
+    "dr_count": 28,
     "mode": 1,
     "spider": "http://192.168.3.224:5705/liveslib",
     "drives": [
@@ -137,8 +137,8 @@
             "name": "360影视(道长)",
             "type": 1,
             "api": "http://192.168.3.224:5705/vod?rule=360影视",
-            "searchable": 0,
-            "quickSearch": 0,
+            "searchable": 1,
+            "quickSearch": 1,
             "filterable": 0
         },
         {
@@ -151,10 +151,28 @@
             "filterable": 0
         },
         {
+            "key": "dr_AnFuns",
+            "name": "AnFuns(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=AnFuns",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
             "key": "dr_cokemv",
             "name": "cokemv(道长)",
             "type": 1,
             "api": "http://192.168.3.224:5705/vod?rule=cokemv",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "dr_l0l",
+            "name": "l0l(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=l0l",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 0
@@ -205,6 +223,15 @@
             "filterable": 0
         },
         {
+            "key": "dr_吸瓜",
+            "name": "吸瓜(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=吸瓜",
+            "searchable": 0,
+            "quickSearch": 0,
+            "filterable": 0
+        },
+        {
             "key": "dr_喵喵",
             "name": "喵喵(道长)",
             "type": 1,
@@ -227,6 +254,24 @@
             "name": "夜空(道长)",
             "type": 1,
             "api": "http://192.168.3.224:5705/vod?rule=夜空",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "dr_奇珍异兽",
+            "name": "奇珍异兽(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=奇珍异兽",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "dr_小猫咪",
+            "name": "小猫咪(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=小猫咪",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 0
@@ -286,6 +331,15 @@
             "filterable": 0
         },
         {
+            "key": "dr_腾云驾雾",
+            "name": "腾云驾雾(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=腾云驾雾",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
             "key": "dr_莫扎兔",
             "name": "莫扎兔(道长)",
             "type": 1,
@@ -313,6 +367,15 @@
             "filterable": 0
         },
         {
+            "key": "dr_追剧喵",
+            "name": "追剧喵(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=追剧喵",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
             "key": "dr_鸭奈飞",
             "name": "鸭奈飞(道长)",
             "type": 1,
@@ -320,11 +383,191 @@
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 0
+        },
+        {
+            "key": "py_ali",
+            "name": "py_ali(Pyramid)",
+            "type": 3,
+            "api": "py_ali",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_ali.py"
+        },
+        {
+            "key": "py_bilibili",
+            "name": "py_bilibili(Pyramid)",
+            "type": 3,
+            "api": "py_bilibili",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_bilibili.py"
+        },
+        {
+            "key": "py_bilimd",
+            "name": "py_bilimd(Pyramid)",
+            "type": 3,
+            "api": "py_bilimd",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_bilimd.py"
+        },
+        {
+            "key": "py_bilivd",
+            "name": "py_bilivd(Pyramid)",
+            "type": 3,
+            "api": "py_bilivd",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_bilivd.py"
+        },
+        {
+            "key": "py_cctv",
+            "name": "py_cctv(Pyramid)",
+            "type": 3,
+            "api": "py_cctv",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_cctv.py"
+        },
+        {
+            "key": "py_cokemv",
+            "name": "py_cokemv(Pyramid)",
+            "type": 3,
+            "api": "py_cokemv",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_cokemv.py"
+        },
+        {
+            "key": "py_czspp",
+            "name": "py_czspp(Pyramid)",
+            "type": 3,
+            "api": "py_czspp",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_czspp.py"
+        },
+        {
+            "key": "py_douyu",
+            "name": "py_douyu(Pyramid)",
+            "type": 3,
+            "api": "py_douyu",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_douyu.py"
+        },
+        {
+            "key": "py_genmov",
+            "name": "py_genmov(Pyramid)",
+            "type": 3,
+            "api": "py_genmov",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_genmov.py"
+        },
+        {
+            "key": "py_gimytv",
+            "name": "py_gimytv(Pyramid)",
+            "type": 3,
+            "api": "py_gimytv",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_gimytv.py"
+        },
+        {
+            "key": "py_gitcafe",
+            "name": "py_gitcafe(Pyramid)",
+            "type": 3,
+            "api": "py_gitcafe",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_gitcafe.py"
+        },
+        {
+            "key": "py_huya",
+            "name": "py_huya(Pyramid)",
+            "type": 3,
+            "api": "py_huya",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_huya.py"
+        },
+        {
+            "key": "py_pansou",
+            "name": "py_pansou(Pyramid)",
+            "type": 3,
+            "api": "py_pansou",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_pansou.py"
+        },
+        {
+            "key": "py_voflix",
+            "name": "py_voflix(Pyramid)",
+            "type": 3,
+            "api": "py_voflix",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_voflix.py"
+        },
+        {
+            "key": "py_xmaomi",
+            "name": "py_xmaomi(Pyramid)",
+            "type": 3,
+            "api": "py_xmaomi",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_xmaomi.py"
+        },
+        {
+            "key": "py_yiso",
+            "name": "py_yiso(Pyramid)",
+            "type": 3,
+            "api": "py_yiso",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_yiso.py"
+        },
+        {
+            "key": "py_zhaozy",
+            "name": "py_zhaozy(Pyramid)",
+            "type": 3,
+            "api": "py_zhaozy",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_zhaozy.py"
+        },
+        {
+            "key": "py_zxzj",
+            "name": "py_zxzj(Pyramid)",
+            "type": 3,
+            "api": "py_zxzj",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "http://192.168.3.224:5705/txt/py/py_zxzj.py"
         }
     ],
     "parses": [
         {
-            "name": "免解嗅探",
+            "name": "🌐Ⓤ",
             "type": 0,
             "url": "",
             "header": {
@@ -332,11 +575,73 @@
             }
         },
         {
-            "name": "免解JSON",
+            "name": "🌀Ⓙ",
             "type": 1,
             "url": "",
             "header": {
                 "User-Agent": "Mozilla/5.0"
+            }
+        },
+        {
+            "name": "轮询",
+            "url": "Sequence",
+            "type": 2,
+            "ext": {
+                "flag": [
+                    "qiyi",
+                    "imgo",
+                    "爱奇艺",
+                    "奇艺",
+                    "qq",
+                    "腾讯",
+                    "youku",
+                    "优酷",
+                    "pptv",
+                    "PPTV",
+                    "letv",
+                    "乐视",
+                    "bilibili",
+                    "哔哩哔哩",
+                    "哔哩",
+                    "mgtv",
+                    "芒果",
+                    "sohu",
+                    "xigua"
+                ],
+                "header": {
+                    "User-Agent": "Mozilla/5.0"
+                }
+            }
+        },
+        {
+            "name": "并发",
+            "url": "Parallel",
+            "type": 2,
+            "ext": {
+                "flag": [
+                    "qiyi",
+                    "imgo",
+                    "爱奇艺",
+                    "奇艺",
+                    "qq",
+                    "腾讯",
+                    "youku",
+                    "优酷",
+                    "pptv",
+                    "PPTV",
+                    "letv",
+                    "乐视",
+                    "bilibili",
+                    "哔哩哔哩",
+                    "哔哩",
+                    "mgtv",
+                    "芒果",
+                    "sohu",
+                    "xigua"
+                ],
+                "header": {
+                    "User-Agent": "Mozilla/5.0"
+                }
             }
         },
         {
@@ -435,6 +740,37 @@
         {
             "name": "m3u8tv",
             "url": "https://jx.m3u8.tv/jiexi/?url=",
+            "type": 0,
+            "ext": {
+                "flag": [
+                    "qiyi",
+                    "imgo",
+                    "爱奇艺",
+                    "奇艺",
+                    "qq",
+                    "腾讯",
+                    "youku",
+                    "优酷",
+                    "pptv",
+                    "PPTV",
+                    "letv",
+                    "乐视",
+                    "bilibili",
+                    "哔哩哔哩",
+                    "哔哩",
+                    "mgtv",
+                    "芒果",
+                    "sohu",
+                    "xigua"
+                ],
+                "header": {
+                    "User-Agent": "Mozilla/5.0"
+                }
+            }
+        },
+        {
+            "name": "虾米",
+            "url": "https://dm.xmflv.com:4433/?url=",
             "type": 0,
             "ext": {
                 "flag": [

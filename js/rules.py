@@ -106,5 +106,26 @@ def getJxs(path='js'):
     print(f'共计{len(jxs)}条解析')
     return jxs
 
+def getPys(path='txt/py'):
+    t1 = time()
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    py_path = os.path.join(base_path, path)
+    os.makedirs(py_path, exist_ok=True)
+    file_name = os.listdir(py_path)
+    file_name = list(filter(lambda x: str(x).endswith('.py'), file_name))
+    # print(file_name)
+    rule_list = [file.replace('.py', '') for file in file_name]
+    py_path = [f'{path}/{rule}.py' for rule in rule_list]
+    new_rule_list = []
+    for i in range(len(rule_list)):
+        new_rule_list.append({
+            'name': rule_list[i],
+            'searchable': 1,
+            'quickSearch': 1,
+            'filterable': 0,
+        })
+    logger.info(f'自动加载Pyramid耗时:{get_interval(t1)}毫秒')
+    return new_rule_list
+
 if __name__ == '__main__':
     print(getRuleLists())

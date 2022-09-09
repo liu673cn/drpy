@@ -6,12 +6,12 @@
 import json
 import os
 
-from flask import Blueprint,abort,render_template,render_template_string,url_for,redirect,make_response
+from flask import Blueprint,abort,render_template,render_template_string,url_for,redirect,make_response,send_from_directory
 from controllers.service import storage_service
 from controllers.classes import getClasses,getClassInfo
 from utils.web import getParmas
 from utils.files import getPics,custom_merge
-from js.rules import getRules
+from js.rules import getRules,getPys
 from base.R import R
 from utils.system import cfg,getHost,is_linux
 from utils import parser
@@ -111,19 +111,25 @@ def get_files(name):
     response.headers['Content-Disposition'] = f'attachment;filename="{filename}"'
     return response
 
-@home.route('/txt/<name>')
-def get_txt_files(name):
-    base_path = 'txt'
-    os.makedirs(base_path,exist_ok=True)
-    file_path = os.path.join(base_path, f'{name}')
-    if not os.path.exists(file_path):
-        return R.failed(f'{file_path}文件不存在')
+@home.route('/txt/<path:filename>')
+def custom_static(filename):
+    # 自定义静态目录 {{ url_for('custom_static',filename='help.txt')}}
+    # print(filename)
+    return send_from_directory('txt', filename)
 
-    with open(file_path, mode='r',encoding='utf-8') as f:
-        file_byte = f.read()
-    response = make_response(file_byte)
-    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
-    return response
+# @home.route('/txt/<name>')
+# def get_txt_files(name):
+#     base_path = 'txt'
+#     os.makedirs(base_path,exist_ok=True)
+#     file_path = os.path.join(base_path, f'{name}')
+#     if not os.path.exists(file_path):
+#         return R.failed(f'{file_path}文件不存在')
+#
+#     with open(file_path, mode='r',encoding='utf-8') as f:
+#         file_byte = f.read()
+#     response = make_response(file_byte)
+#     response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+#     return response
 
 
 @home.route('/lives')
@@ -174,11 +180,13 @@ def config_render(mode):
     except Exception as e:
         logger.info(f'用户自定义配置加载失败:{e}')
     jxs = getJxs()
+    pys = getPys()
+    print(pys)
     alists = getAlist()
     alists_str = json.dumps(alists, ensure_ascii=False)
     live_url = get_live_url(new_conf,mode)
     # html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,base64Encode=base64Encode,config=new_conf)
-    html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,alists=alists,alists_str=alists_str,live_url=live_url,config=new_conf)
+    html = render_template('config.txt',pys=pys,rules=getRules('js'),host=host,mode=mode,jxs=jxs,alists=alists,alists_str=alists_str,live_url=live_url,config=new_conf)
     merged_config = custom_merge(parseText(html),customConfig)
     # print(merged_config)
     # response = make_response(html)
@@ -193,12 +201,13 @@ def config_gen():
     os.makedirs('txt',exist_ok=True)
     new_conf = cfg
     jxs = getJxs()
+    pys = getPys()
     alists = getAlist()
     alists_str = json.dumps(alists,ensure_ascii=False)
-    set_local = render_template('config.txt',rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,host=getHost(0),jxs=jxs)
+    set_local = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,host=getHost(0),jxs=jxs)
     print(set_local)
-    set_area = render_template('config.txt',rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
-    set_online = render_template('config.txt',rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
+    set_area = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
+    set_online = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
     with open('txt/pycms0.json','w+',encoding='utf-8') as f:
         set_dict = json.loads(set_local)
         f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))

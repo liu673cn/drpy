@@ -96,7 +96,7 @@ def copy_to_update():
         # print(f'升级失败,找不到目录{dr_path}')
         logger.info(f'升级失败,找不到目录{dr_path}')
         return False
-    paths = ['js','models','controllers','libs','static','templates','utils']
+    paths = ['js','models','controllers','libs','static','templates','utils','txt']
     for path in paths:
         force_copy_files(os.path.join(dr_path, path),os.path.join(base_path, path))
     try:
