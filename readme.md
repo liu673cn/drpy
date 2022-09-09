@@ -4,7 +4,7 @@
   <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://gitcode.net/qq_32394351/dr_py/-/raw/1fe0e082b1ceacc4469d7f175a605cc2edf0bab0/static/img/icon.png"/></a>
   <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/releases">
-    <img src="https://img.shields.io/badge/version-3.3.5-blue" alt="latest version" />
+    <img src="https://img.shields.io/badge/version-3.4.1-blue" alt="latest version" />
   </a>
   <a href="https://gitcode.net/qq_32394351/dr_py/-/issues">
     <img src="https://img.shields.io/badge/discussions-2-orange" alt="discussions" />
@@ -15,8 +15,8 @@
   </a>
 
 
-<a href="https://wwi.lanzoup.com/iEfIW0b6vgza">
-    <img src="https://img.shields.io/badge/蓝奏云下载-3.2.1-blue" alt="Downloads" />
+<a href="https://wwi.lanzoup.com/iZgFJ0bdf7ob">
+    <img src="https://img.shields.io/badge/蓝奏云下载-3.4.1-blue" alt="Downloads" />
   </a>
 
 
@@ -48,6 +48,7 @@
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
 ###### 2022/09/09
 - [X] 1.增加西瓜源,修复一级不支持lazy的bug
+- [X] 2.兄弟们dockerhub没法push镜像不知道咋回事,3.4.1的镜像自己用docker目录下的文件build吧
 ###### 2022/09/08
 - [X] 1.升级到3.2.9,支持自动合并自定义用户配置(内置t4测试源)
 - [X] 2.升级到3.3.0,增加奇珍异兽源
