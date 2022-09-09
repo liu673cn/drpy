@@ -112,7 +112,7 @@ class CMS:
         # print(headers)
         self.headers = headers
         self.host = host
-        self.homeUrl = urljoin(host,homeUrl) if host and homeUrl else homeUrl
+        self.homeUrl = urljoin(host,homeUrl) if host and homeUrl else homeUrl or host
         if url.find('[') >-1 and url.find(']') > -1:
             u1 = url.split('[')[0]
             u2 = url.split('[')[1].split(']')[0]
@@ -369,8 +369,8 @@ class CMS:
         # print(self.url)
         print(self.headers)
         has_cache = False
+        # print(self.homeUrl)
         if self.homeUrl.startswith('http'):
-            # print(self.homeUrl)
             # print(self.class_parse)
             try:
                 if self.class_parse:
@@ -638,10 +638,11 @@ class CMS:
             if p == '*':
                 vod = self.blank_vod()
                 vod['vod_play_from'] = '道长在线'
-                vod['vod_remarks'] = self.play_url+detailUrl
+                vod['vod_remarks'] = detailUrl
                 vod['vod_actor'] = '没有二级,只有一级链接直接嗅探播放'
                 vod['vod_content'] = detailUrl
-                vod['vod_play_url'] = '嗅探播放$'+detailUrl
+                vod['vod_play_url'] = '嗅探播放$'+self.play_url+detailUrl
+                print(vod)
                 return vod
 
             if not isinstance(p,dict) and not isinstance(p,str) and not str(p).startswith('js:'):

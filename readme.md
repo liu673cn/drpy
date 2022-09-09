@@ -46,6 +46,8 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/09
+- [X] 1.增加西瓜源,修复一级不支持lazy的bug
 ###### 2022/09/08
 - [X] 1.升级到3.2.9,支持自动合并自定义用户配置(内置t4测试源)
 - [X] 2.升级到3.3.0,增加奇珍异兽源
