@@ -47,7 +47,7 @@ class Storage(db.Model):
             return value
 
     @classmethod
-    # @lru_cache(maxsize=200)
+    @lru_cache(maxsize=200)
     def hasItem(self, key):
         exists = db.session.query(self).filter(self.key == key).scalar() is not None
         # res = db.session.query(self).filter(self.key == key).
@@ -71,3 +71,4 @@ class Storage(db.Model):
     @classmethod
     def clearCache(self):
         self.getItem.cache_clear()
+        self.hasItem.cache_clear()
