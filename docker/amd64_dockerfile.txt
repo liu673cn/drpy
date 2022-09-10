@@ -16,7 +16,7 @@ COPY . /root/sd/pywork/dr_py
 #  vi /etc/resolv.conf 加了两行也不行??
 # systemctl daemon-reload
 # systemctl restart docker
-# docker build -f amd64_dockerfile.txt -t hjdhnx/drpy:amd64-v3.4.1 .
-# docker run -it -p 5705:5705 -p 9001:9001 --restart=always --name drpy -d hjdhnx/drpy:amd64-v3.4.1
-# docker push hjdhnx/drpy:amd64-v3.4.1
+# docker build -f amd64_dockerfile.txt -t hjdhnx/drpy:amd64-v3.4.8 .
+# docker run -it -p 5705:5705 -p 9001:9001 --restart=always --name drpy -d hjdhnx/drpy:amd64-v3.4.8
+# docker push hjdhnx/drpy:amd64-v3.4.8
 CMD supervisord -c /root/sd/pywork/dr_py/super/flask.conf && /bin/bash
