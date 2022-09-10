@@ -12,7 +12,8 @@ HOST = '127.0.0.1'
 PORT = '3306'
 DATABASE = 'pira'
 # DB_URI = '{}+{}://{}:{}@{}:{}/{}?charset=utf8'.format(DIALECT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
-DB_URI = 'sqlite:///models/rules.db?charset=utf8&check_same_thread=False'
+# DB_URI = 'sqlite:///models/rules.db?charset=utf8&check_same_thread=False'
+DB_URI = 'sqlite:///base/rules.db?charset=utf8&check_same_thread=False'
 SQLALCHEMY_DATABASE_URI = DB_URI
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False # 打印sql语句
@@ -36,4 +37,5 @@ MAX_CONTENT_LENGTH = 1 * 1024 * 1024/100  # 100 kB
 LIVE_MODE = 0  # 0 本地 1外网
 LIVE_URL = 'https://gitcode.net/qq_26898231/TVBox/-/raw/main/live/zb.txt'  # 初始化外网直播地址(后续在管理界面改)
 CATE_EXCLUDE = '首页|留言|APP|下载|资讯|新闻|动态'  # 动态分类过滤
+TAB_EXCLUDE = '猜你|喜欢|APP|下载|剧情|简介'  # 动态线路名过滤
 # {% if config.WALL_PAPER %}"wallpaper":"{{ config.WALL_PAPER }}",{% endif %}

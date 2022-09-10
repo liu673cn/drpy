@@ -37,17 +37,24 @@ class CMS:
         self.title = rule.get('title', '')
         self.id = rule.get('id', self.title)
         cate_exclude  = rule.get('cate_exclude','')
+        tab_exclude  = rule.get('tab_exclude','')
         self.lazy = rule.get('lazy', False)
         self.play_disable = new_conf.get('PLAY_DISABLE',False)
         self.retry_count = new_conf.get('RETRY_CNT',3)
         self.lazy_mode = new_conf.get('LAZYPARSE_MODE')
         self.ocr_api = new_conf.get('OCR_API')
         self.cate_exclude = new_conf.get('CATE_EXCLUDE','')
+        self.tab_exclude = new_conf.get('TAB_EXCLUDE','')
         if cate_exclude:
             if not str(cate_exclude).startswith('|') and not str(self.cate_exclude).endswith('|'):
                 self.cate_exclude = self.cate_exclude+'|'+cate_exclude
             else:
                 self.cate_exclude += cate_exclude
+        if tab_exclude:
+            if not str(tab_exclude).startswith('|') and not str(self.tab_exclude).endswith('|'):
+                self.tab_exclude = self.tab_exclude+'|'+tab_exclude
+            else:
+                self.tab_exclude += tab_exclude
         # print(self.cate_exclude)
         try:
             self.vod = redirect(url_for('vod')).headers['Location']
@@ -812,12 +819,20 @@ class CMS:
                         html = str(html)
 
                 if p.get('tabs'):
+                    vodHeader = []
                     # print(p['tabs'].split(';')[0])
-                    vodHeader = pdfa(html,p['tabs'].split(';')[0])
+                    vHeader = pdfa(html,p['tabs'].split(';')[0])
                     # print(f'线路列表数:{len((vodHeader))}')
                     # print(vodHeader)
                     if not is_json:
-                        vodHeader = [pq(v).text() for v in vodHeader]
+                        for v in vHeader:
+                            # 过滤排除掉线路标题
+                            v_title = pq(v).text()
+                            if self.tab_exclude and jsp.test(self.tab_exclude, v_title):
+                                continue
+                            vodHeader.append(v_title)
+                    else:
+                        vodHeader = vHeader
                 else:
                     vodHeader = ['道长在线']
 
