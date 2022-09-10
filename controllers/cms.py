@@ -765,6 +765,31 @@ class CMS:
 
                 vod_play_from = '$$$'
                 playFrom = []
+                if p.get('重定向') and str(p['重定向']).startswith('js:'):
+                    headers['Referer'] = getHome(url)
+                    py_ctx.update({
+                        'input': url,
+                        'html': html,
+                        'TYPE': 'detail',  # 海阔js环境标志
+                        'cateID': fyclass,  # 当前分类
+                        'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                        'd': self.d,
+                        'getParse': self.d.getParse,
+                        'saveParse': self.d.saveParse,
+                        'jsp': jsp, 'setDetail': setDetail,
+                    })
+                    ctx = py_ctx
+                    # print(ctx)
+                    rcode = p['重定向'].replace('js:', '', 1)
+                    jscode = getPreJs() + rcode
+                    # print(jscode)
+                    loader, _ = runJScode(jscode, ctx=ctx)
+                    # print(loader.toString())
+                    logger.info(f'开始执行二级重定向代码:{rcode}')
+                    html = loader.eval('html')
+                    if isinstance(vod, JsObjectWrapper):
+                        html = str(html)
+
                 if p.get('tabs'):
                     # print(p['tabs'].split(';')[0])
                     vodHeader = pdfa(html,p['tabs'].split(';')[0])
