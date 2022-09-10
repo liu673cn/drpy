@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+  <title>管理员操作中心-配置修改</title>
+  <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
+  <meta name="author" content="道长"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" media="screen" href="/static/css/admin.css">
+    <link rel="stylesheet" media="screen" href="/static/css/settings.css">
+  <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/common.js"></script>
+</head>
+<body>
+<script>
+  function saveConf(obj){
+    let thisObj=$(obj);//js对象转jquery对象
+    let key = thisObj.attr("value");
+    let value = $('.conf[name="'+key+'"]').val();
+    console.log('key:'+key+',value:'+value);
+    let params = {
+      key:key,
+      value:value
+    };
+    $.post("/admin/save_conf",params,function(data,status){
+                   // console.log(data);
+                   if(data.code === 200){
+                       alert(data.msg);
+                       console.log('保存'+key+'成功了...');
+                      // location.reload();
+                   }else{
+                      if(/登录/.test(data.msg)){
+                        location.href = '/admin'
+                      }else{
+                        alert(data.msg);
+                       console.log('保存'+key+'失败了...');
+                       return false
+                      }
+                   }
+    });
+  }
+    $(document).ready(function() {
+      $(".save_conf1").click(function () {
+        console.log(this);
+      });
+    });
+</script>
+<h2 class="title">欢迎使用DR-PY配置界面<div><span class="ver_title">当前版本: {{ ver }}</span><span
+                class="ver_title">框架开发：道长</span><span class="ver_title">框架美化：蓝莓</span></div>
+</h2>
+<h4>
+    <button type="button" class="yongyin"><a href="/admin">返回管理页</a></button>
+<!--    <button type="button" class="yongyin"><a href="/index">返回首页</a></button>-->
+  <button type="button" class="yongyin2"><a href="javascript:copy('cp ./tmp/dr_py-master/app.py ./app.py');"
+            class="funcbtn" id="update_by_self">升级指令</a></button>
+    <button type="button" class="yongyin2"><a href="javascript:copy('cp ./tmp/dr_py-master/base/custom.conf base');"
+            class="funcbtn" id="user_custom">用户配置</a></button>
+</h4>
+<form action="#">
+{% for conf in conf_lists %}
+  <label>{{ conf.name }}</label>: <input class="conf" type="text" name="{{ conf.key }}"  placeholder="请输入{{ conf.key }}..." value="{{ conf.value }}"/>
+  <a class="save_conf" href="javascript:void(0);" onclick="saveConf(this)" value="{{ conf.key }}">保存</a>
+{% if loop.last==False %}</br>{% endif %}{% endfor %}
+</form>
+</body>
+</html>

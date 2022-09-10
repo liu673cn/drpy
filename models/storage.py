@@ -6,7 +6,6 @@
 
 from base.database import db
 from functools import lru_cache
-from utils.system import cfg
 
 class Storage(db.Model):
     __tablename__ = 'storage'
@@ -46,6 +45,16 @@ class Storage(db.Model):
             return res.value or value
         else:
             return value
+
+    @classmethod
+    @lru_cache(maxsize=200)
+    def hasItem(self, key):
+        exists = db.session.query(self).filter(self.key == key).scalar() is not None
+        # res = db.session.query(self).filter(self.key == key).
+        if exists:
+            return True
+        else:
+            return False
 
     @classmethod
     def clearItem(self, key):

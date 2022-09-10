@@ -6,7 +6,7 @@
 
 from base.R import copy_utils
 from models.storage import Storage
-from utils.system import cfg
+from utils.cfg import cfg
 
 class storage_service(object):
 
@@ -17,17 +17,47 @@ class storage_service(object):
         return copy_utils.obj_to_list(res)
 
     def __init__(self):
-        if not self.getItem('LIVE_URL'):
-            print('开始初始化lsg')
-            self.setItem('LIVE_URL', cfg.get('LIVE_URL'))
+        conf_list = ['LIVE_URL', 'USE_PY', 'PLAY_URL', 'PLAY_DISABLE', 'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
+                     'WALL_PAPER', 'UNAME', 'PWD', 'LIVE_MODE', 'CATE_EXCLUDE', 'TAB_EXCLUDE']
+        for conf in conf_list:
+            if not self.hasItem(conf):
+                print(f'开始初始化{conf}')
+                self.setItem(conf, cfg.get(conf))
 
-        # if not self.getItem('USE_PY'):
-        #     print('开始初始化USE_PY')
-        #     self.setItem('USE_PY', '1' if cfg.get('USE_PY') else '')
+    @classmethod
+    def getStoreConf(self):
+        conf_list = ['LIVE_URL', 'USE_PY', 'PLAY_URL', 'PLAY_DISABLE', 'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
+                     'WALL_PAPER', 'UNAME', 'PWD', 'LIVE_MODE', 'CATE_EXCLUDE', 'TAB_EXCLUDE']
+        conf_name_list = ['直播地址', '启用py源', '远程地址', '禁用免嗅', '免嗅模式', '启用壁纸', '壁纸链接', '管理账号',
+                          '管理密码', '直播模式', '分类排除', '线路排除']
+        conf_lists = []
+        for i in range(len(conf_list)):
+            conf = conf_list[i]
+            conf_lists.append({
+                'key': conf,
+                'value': self.getItem(conf),
+                'name': conf_name_list[i]
+            })
+        return conf_lists
+
+    @classmethod
+    def getStoreConfDict(self):
+        store_conf = self.getStoreConf()
+        store_conf_dict = {}
+        for stc in store_conf:
+            store_conf_dict[stc['key']] = stc['value']
+        return store_conf_dict
 
     @classmethod
     def getItem(self, key, value=''):
-        return Storage.getItem(key,value)
+        res = Storage.getItem(key,value)
+        if str(res) == '0' or str(res) == 'false' or str(res) == 'False':
+            return 0
+        return res
+
+    @classmethod
+    def hasItem(self, key):
+        return Storage.hasItem(key)
 
     @classmethod
     def setItem(self,key, value):

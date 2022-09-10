@@ -31,15 +31,37 @@ admin = Blueprint("admin", __name__)
 
 @admin.route('/')
 def admin_index():  # 管理员界面
+    if not verfy_token():
+        return render_template('login.html')
     lsg = storage_service()
     live_url = lsg.getItem('LIVE_URL')
     use_py = lsg.getItem('USE_PY')
-    print(f'live_url:',live_url)
+    print(f'live_url:', live_url)
+    return render_template('admin.html', pystate=use_py,rules=getRules('js'), ver=getLocalVer(), live_url=live_url)
+
+@admin.route('/settings')
+def admin_settings():  # 管理员界面
     if not verfy_token():
         return render_template('login.html')
+    lsg = storage_service()
+    # conf_list = 'LIVE_URL|USE_PY|PLAY_URL|PLAY_DISABLE|LAZYPARSE_MODE|WALL_PAPER_ENABLE|WALL_PAPER|UNAME|PWD|LIVE_MODE|LIVE_URL|CATE_EXCLUDE|TAB_EXCLUDE'.split('|')
+    conf_lists = lsg.getStoreConf()
+    # print(conf_lists)
+    return render_template('settings.html', conf_lists=conf_lists,ver=getLocalVer())
 
-    live_url = lsg.getItem('LIVE_URL')
-    return render_template('admin.html', pystate=use_py,rules=getRules('js'), ver=getLocalVer(), live_url=live_url)
+@admin.route('/save_conf',methods=['POST'])
+def admin_save_conf():  # 管理员界面
+    if not verfy_token():
+        if not verfy_token():
+            # return render_template('login.html')
+            return R.error('请登录后再试')
+    key = getParmas('key')
+    value = getParmas('value')
+    print(f'key:{key},value:{value}')
+    lsg = storage_service()
+    res_id = lsg.setItem(key,value)
+    return R.success(f'修改成功,记录ID为:{res_id}')
+
 
 @admin.route("/view/<name>",methods=['GET'])
 def admin_view_rule(name):

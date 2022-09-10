@@ -13,7 +13,8 @@ from utils.web import getParmas
 from utils.files import getPics,custom_merge
 from js.rules import getRules,getPys
 from base.R import R
-from utils.system import cfg,getHost,is_linux
+from utils.system import getHost,is_linux
+from utils.cfg import cfg
 from utils import parser
 from utils.log import logger
 from utils.files import getAlist,get_live_url
@@ -61,8 +62,8 @@ def random_pics():
     id = getParmas('id')
     # print(f'id:{id}')
     pics = getPics()
-    print(pics)
-    if len(pics) > 0:
+    # print(pics)
+    if not cfg.WALL_PAPER and len(pics) > 0:
         if id and f'images/{id}.jpg' in pics:
             pic = f'images/{id}.jpg'
         else:
@@ -172,6 +173,9 @@ def config_render(mode):
         jyw_ip = getHost(mode)
         logger.info(jyw_ip)
     new_conf = cfg
+    lsg = storage_service()
+    store_conf_dict = lsg.getStoreConfDict()
+    new_conf.update(store_conf_dict)
     host = getHost(mode)
     try:
         with open(customFile,'r',encoding='utf-8') as f:
@@ -203,6 +207,9 @@ def config_gen():
     # 生成文件
     os.makedirs('txt',exist_ok=True)
     new_conf = cfg
+    lsg = storage_service()
+    store_conf_dict = lsg.getStoreConfDict()
+    new_conf.update(store_conf_dict)
     jxs = getJxs()
     # pys = getPys() if cfg.get('USE_PY') else []
     lsg = storage_service()

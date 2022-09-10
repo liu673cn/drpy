@@ -22,7 +22,9 @@ def create_flask_app():
     app.register_blueprint(vod.vod, url_prefix='')
     app.register_blueprint(cls.cls, url_prefix='/cls')
     app.logger.name = "drLogger"
-    logger.info(f"自定义播放解析地址:{app.config.get('PLAY_URL')}")
+    # lsg = service.storage_service()
+    logger.info(f"默认解析地址:{app.config.get('PLAY_URL')}")
+    # logger.info(f"自定义播放解析地址:{lsg.getItem('PLAY_URL')}")
     logger.info(f'当前操作系统{sys.platform}')
     rule_list = getRuleLists()
     wlan_info,_ = get_wlan_info()

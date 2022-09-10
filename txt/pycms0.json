@@ -1,6 +1,6 @@
 {
     "wallpaper": "http://localhost:5705/pics",
-    "dr_count": 30,
+    "dr_count": 27,
     "mode": 0,
     "spider": "http://localhost:5705/liveslib",
     "drives": [
@@ -214,30 +214,12 @@
             "filterable": 0
         },
         {
-            "key": "dr_养端",
-            "name": "养端(道长)",
-            "type": 1,
-            "api": "http://localhost:5705/vod?rule=养端",
-            "searchable": 0,
-            "quickSearch": 0,
-            "filterable": 0
-        },
-        {
             "key": "dr_剧白白",
             "name": "剧白白(道长)",
             "type": 1,
             "api": "http://localhost:5705/vod?rule=剧白白",
             "searchable": 1,
             "quickSearch": 1,
-            "filterable": 0
-        },
-        {
-            "key": "dr_吸瓜",
-            "name": "吸瓜(道长)",
-            "type": 1,
-            "api": "http://localhost:5705/vod?rule=吸瓜",
-            "searchable": 0,
-            "quickSearch": 0,
             "filterable": 0
         },
         {
@@ -319,15 +301,6 @@
             "api": "http://localhost:5705/vod?rule=影视工厂",
             "searchable": 1,
             "quickSearch": 1,
-            "filterable": 0
-        },
-        {
-            "key": "dr_玩偶姐姐",
-            "name": "玩偶姐姐(道长)",
-            "type": 1,
-            "api": "http://localhost:5705/vod?rule=玩偶姐姐",
-            "searchable": 0,
-            "quickSearch": 0,
             "filterable": 0
         },
         {
@@ -843,7 +816,7 @@
                 {
                     "name": "直播",
                     "urls": [
-                        "proxy://do=live&type=txt&ext=aHR0cDovL2xvY2FsaG9zdDo1NzA1L2xpdmVz"
+                        "proxy://do=live&type=txt&ext=aHR0cHM6Ly9naXRjb2RlLm5ldC9xcV8yNjg5ODIzMS9UVkJveC8tL3Jhdy9tYWluL2xpdmUvemIudHh0"
                     ]
                 }
             ]

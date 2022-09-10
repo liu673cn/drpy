@@ -188,20 +188,22 @@ function getFileSize(fileObj) {
 </h2>
 <h4>
     <button type="button" class="yongyin"><a href="/index">返回首页</a></button>
+    <button type="button" class="yongyin"><a href="/admin/settings">设置中心</a></button>
     <button type="button" class="yongyin1"><a href="javascript:void(0);" class="funcbtn"
             id="checkUpdate">检测升级</a></button>
-    <button type="button" class="yongyin2"><a href="javascript:copy('cp ./tmp/dr_py-master/app.py ./app.py');"
-            class="funcbtn" id="update_by_self">升级指令</a></button>
-    <button type="button" class="yongyin2"><a href="javascript:copy('cp ./tmp/dr_py-master/base/custom.conf base');"
-            class="funcbtn" id="user_custom">用户配置</a></button>
+    <button type="button" class="yongyin1"><a href="javascript:void(0);" class="funcbtn"
+            id="force_update">强制升级</a></button>
+<!--    <button type="button" class="yongyin2"><a href="javascript:copy('cp ./tmp/dr_py-master/app.py ./app.py');"-->
+<!--            class="funcbtn" id="update_by_self">升级指令</a></button>-->
+<!--    <button type="button" class="yongyin2"><a href="javascript:copy('cp ./tmp/dr_py-master/base/custom.conf base');"-->
+<!--            class="funcbtn" id="user_custom">用户配置</a></button>-->
     <button type="button" class="yongyin3"><a href="javascript:void(0);" class="funcbtn"
             id="write_lives">修改直播源</a></button>
     <button type="button" class="yongyin4"><a href="javascript:void(0);" class="funcbtn"
             id="update_lives">同步直播源</a></button>
     <button type="button" class="yongyin3"><a href="javascript:void(0);" class="funcbtn"
             id="use_py">已{% if pystate=='1' %}启用{% else %}关闭{% endif %}py源</a></button>
-    <button type="button" class="yongyin1"><a href="javascript:void(0);" class="funcbtn"
-            id="force_update">强制升级</a></button>
+
     <input id="live_url" value="{{live_url}}" style="display: none">
     <p class="box">你可以在此界面在线管理JS目录里规则文件的上传/删除</p>
 </h4>

@@ -1,0 +1,21 @@
+.save_conf{
+    border-radius: 50px;
+    border-style: solid;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 1px 3px 1px 3px;
+    border-style: solid;
+    border-color: #5c6cf6;
+    text-decoration: none;
+    background-color: #1379cb;
+}
+
+input.conf{
+    margin-bottom: 10px;
+    width: 240px;
+}
+label{
+    font-size: 12px;
+    color: #5c6cf6;
+    font-weight: bold;
+}

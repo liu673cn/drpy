@@ -16,7 +16,7 @@ def getPics(path='images'):
     file_name = os.listdir(img_path)
     # file_name = list(filter(lambda x: str(x).endswith('.js') and str(x).find('模板') < 0, file_name))
     # print(file_name)
-    pic_list = [base_path+file for file in file_name]
+    pic_list = [img_path+'/'+file for file in file_name]
     # pic_list = file_name
     # print(type(pic_list))
     return pic_list
@@ -25,7 +25,8 @@ def get_live_url(new_conf,mode):
     host = getHost(mode)
     lsg = storage_service()
     # t1 = time()
-    live_url = host + '/lives' if new_conf.get('LIVE_MODE',1) == 0 else lsg.getItem('LIVE_URL',getHost(2)+'/lives')
+    # live_url = host + '/lives' if new_conf.get('LIVE_MODE',1) == 0 else lsg.getItem('LIVE_URL',getHost(2)+'/lives')
+    live_url = host + '/lives' if lsg.getItem('LIVE_MODE',1) == 0 else lsg.getItem('LIVE_URL',getHost(2)+'/lives')
     live_url = base64Encode(live_url)
     # print(f'{get_interval(t1)}毫秒')
     return live_url

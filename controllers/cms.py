@@ -21,6 +21,7 @@ from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
 from flask import url_for,redirect
 from easydict import EasyDict as edict
+from controllers.service import storage_service
 
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
@@ -34,17 +35,22 @@ class CMS:
     def __init__(self, rule, db=None, RuleClass=None, PlayParse=None,new_conf=None):
         if new_conf is None:
             new_conf = {}
+        self.lsg = storage_service()
         self.title = rule.get('title', '')
         self.id = rule.get('id', self.title)
         cate_exclude  = rule.get('cate_exclude','')
         tab_exclude  = rule.get('tab_exclude','')
         self.lazy = rule.get('lazy', False)
-        self.play_disable = new_conf.get('PLAY_DISABLE',False)
+        # self.play_disable = new_conf.get('PLAY_DISABLE',False)
+        self.play_disable = self.lsg.getItem('PLAY_DISABLE',False)
         self.retry_count = new_conf.get('RETRY_CNT',3)
-        self.lazy_mode = new_conf.get('LAZYPARSE_MODE')
+        # self.lazy_mode = new_conf.get('LAZYPARSE_MODE')
+        self.lazy_mode = self.lsg.getItem('LAZYPARSE_MODE')
         self.ocr_api = new_conf.get('OCR_API')
-        self.cate_exclude = new_conf.get('CATE_EXCLUDE','')
-        self.tab_exclude = new_conf.get('TAB_EXCLUDE','')
+        # self.cate_exclude = new_conf.get('CATE_EXCLUDE','')
+        self.cate_exclude = self.lsg.getItem('CATE_EXCLUDE','')
+        # self.tab_exclude = new_conf.get('TAB_EXCLUDE','')
+        self.tab_exclude = self.lsg.getItem('TAB_EXCLUDE','')
         if cate_exclude:
             if not str(cate_exclude).startswith('|') and not str(self.cate_exclude).endswith('|'):
                 self.cate_exclude = self.cate_exclude+'|'+cate_exclude
