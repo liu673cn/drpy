@@ -28,7 +28,9 @@
                    if(data.code === 200){
                        alert(data.msg);
                        console.log('保存'+key+'成功了...');
-                      // location.reload();
+                       if(/UNAME|PWD/.test(params.key)){
+                         location.reload();
+                         }
                    }else{
                       if(/登录/.test(data.msg)){
                         location.href = '/admin'
