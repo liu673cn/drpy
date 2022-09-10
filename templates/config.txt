@@ -24,6 +24,7 @@
     "quickSearch": {{ rule.quickSearch }},
     "filterable": {{ rule.filterable }}
 }{% endif %}{% if loop.last==False %},{% endif %}{% endfor %}
+{% if pys %}
 ,{% for py in pys %}{
     "key":"{{ py.name }}",
     "name":"{{ py.name }}(Pyramid)",
@@ -34,6 +35,7 @@
     "filterable": {{ py.filterable }},
     "ext": "{{ host }}/txt/py/{{ py.name }}.py"
 }{% if loop.last==False %},{% endif %}{% endfor %}
+{% endif %}
 ],
 	"parses": [{
 		"name": "🌐Ⓤ",

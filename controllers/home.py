@@ -180,8 +180,11 @@ def config_render(mode):
     except Exception as e:
         logger.info(f'用户自定义配置加载失败:{e}')
     jxs = getJxs()
-    pys = getPys()
-    print(pys)
+    lsg = storage_service()
+    use_py = lsg.getItem('USE_PY')
+    # pys = getPys() if cfg.get('USE_PY') else []
+    pys = getPys() if use_py else []
+    # print(pys)
     alists = getAlist()
     alists_str = json.dumps(alists, ensure_ascii=False)
     live_url = get_live_url(new_conf,mode)
@@ -201,7 +204,10 @@ def config_gen():
     os.makedirs('txt',exist_ok=True)
     new_conf = cfg
     jxs = getJxs()
-    pys = getPys()
+    # pys = getPys() if cfg.get('USE_PY') else []
+    lsg = storage_service()
+    use_py = lsg.getItem('USE_PY')
+    pys = getPys() if use_py else False
     alists = getAlist()
     alists_str = json.dumps(alists,ensure_ascii=False)
     set_local = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,host=getHost(0),jxs=jxs)

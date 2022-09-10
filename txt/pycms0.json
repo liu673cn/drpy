@@ -1,6 +1,6 @@
 {
     "wallpaper": "http://localhost:5705/pics",
-    "dr_count": 28,
+    "dr_count": 30,
     "mode": 0,
     "spider": "http://localhost:5705/liveslib",
     "drives": [
@@ -205,6 +205,15 @@
             "filterable": 0
         },
         {
+            "key": "dr_兔小贝",
+            "name": "兔小贝(道长)",
+            "type": 1,
+            "api": "http://localhost:5705/vod?rule=兔小贝",
+            "searchable": 1,
+            "quickSearch": 0,
+            "filterable": 0
+        },
+        {
             "key": "dr_养端",
             "name": "养端(道长)",
             "type": 1,
@@ -263,6 +272,15 @@
             "name": "奇珍异兽(道长)",
             "type": 1,
             "api": "http://localhost:5705/vod?rule=奇珍异兽",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "dr_小强迷",
+            "name": "小强迷(道长)",
+            "type": 1,
+            "api": "http://localhost:5705/vod?rule=小强迷",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 0

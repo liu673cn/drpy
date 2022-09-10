@@ -33,11 +33,13 @@ admin = Blueprint("admin", __name__)
 def admin_index():  # 管理员界面
     lsg = storage_service()
     live_url = lsg.getItem('LIVE_URL')
+    use_py = lsg.getItem('USE_PY')
     print(f'live_url:',live_url)
     if not verfy_token():
         return render_template('login.html')
+
     live_url = lsg.getItem('LIVE_URL')
-    return render_template('admin.html', rules=getRules('js'), ver=getLocalVer(), live_url=live_url)
+    return render_template('admin.html', pystate=use_py,rules=getRules('js'), ver=getLocalVer(), live_url=live_url)
 
 @admin.route("/view/<name>",methods=['GET'])
 def admin_view_rule(name):
@@ -114,6 +116,27 @@ def admin_write_live_url():
     id = lsg.setItem('LIVE_URL',url)
     msg = f'已修改的配置记录id为:{id}'
     return R.success(msg)
+
+@admin.route('/change_use_py')
+def admin_change_use_py():
+    if not verfy_token():
+        return R.failed('请登录后再试')
+    lsg = storage_service()
+    use_py = lsg.getItem('USE_PY')
+    new_use_py = '' if use_py else '1'
+    state = '开启' if new_use_py else '关闭'
+    id = lsg.setItem('USE_PY', new_use_py)
+    msg = f'已修改的配置记录id为:{id},结果为{state}'
+    return R.success(msg)
+
+# @admin.route('/get_use_py')
+# def admin_get_use_py():
+#     if not verfy_token():
+#         return R.failed('请登录后再试')
+#     lsg = storage_service()
+#     use_py = lsg.getItem('USE_PY')
+#     state = 1 if use_py else 0
+#     return R.success(state)
 
 @admin.route('/upload', methods=['GET', 'POST'])
 def upload_file():

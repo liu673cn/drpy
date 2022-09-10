@@ -164,6 +164,20 @@
             }
         });
 
+        $('#use_py').click(function (){
+             $.get("/admin/change_use_py",function(data,status){
+                   console.log(data);
+                   if(data.code === 200){
+                       alert(data.msg);
+                      location.reload();
+                   }else{
+                       alert(data.msg);
+                       console.log('升级失败了...');
+                       return false
+                   }
+               });
+        });
+
 });
 function getFileSize(fileObj) {
    $('#file_size').text('文件大小为:'+fileObj.files[0].size/1024+'kb');
@@ -184,6 +198,8 @@ function getFileSize(fileObj) {
             id="write_lives">修改直播源</a></button>
     <button type="button" class="yongyin4"><a href="javascript:void(0);" class="funcbtn"
             id="update_lives">同步直播源</a></button>
+    <button type="button" class="yongyin3"><a href="javascript:void(0);" class="funcbtn"
+            id="use_py">已{% if pystate=='1' %}启用{% else %}关闭{% endif %}py源</a></button>
     <button type="button" class="yongyin1"><a href="javascript:void(0);" class="funcbtn"
             id="force_update">强制升级</a></button>
     <input id="live_url" value="{{live_url}}" style="display: none">

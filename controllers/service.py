@@ -21,6 +21,10 @@ class storage_service(object):
             print('开始初始化lsg')
             self.setItem('LIVE_URL', cfg.get('LIVE_URL'))
 
+        # if not self.getItem('USE_PY'):
+        #     print('开始初始化USE_PY')
+        #     self.setItem('USE_PY', '1' if cfg.get('USE_PY') else '')
+
     @classmethod
     def getItem(self, key, value=''):
         return Storage.getItem(key,value)

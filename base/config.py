@@ -31,6 +31,7 @@ RETRY_CNT = 3 # 验证码重试次数
 OCR_API = 'http://dm.mudery.com:10000' # 验证码识别接口,传参数data
 UNAME = 'admin'  # 管理员账号
 PWD = 'drpy' # 管理员密码
+USE_PY = 0  # 开启py源
 MAX_CONTENT_LENGTH = 1 * 1024 * 1024/100  # 100 kB
 LIVE_MODE = 0  # 0 本地 1外网
 LIVE_URL = 'https://gitcode.net/qq_26898231/TVBox/-/raw/main/live/zb.txt'  # 初始化外网直播地址(后续在管理界面改)
