@@ -26,7 +26,7 @@ py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
 'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS,
 'buildUrl':buildUrl,'getHome':getHome,'setDetail':setDetail,'join':join,'urljoin2':urljoin2,
-'PC_UA':PC_UA,'MOBILE_UA':MOBILE_UA,'UC_UA':UC_UA
+'PC_UA':PC_UA,'MOBILE_UA':MOBILE_UA,'UC_UA':UC_UA,'IOS_UA':IOS_UA
 }
 # print(getCryptoJS())
 
@@ -104,6 +104,8 @@ class CMS:
                     headers[k] = PC_UA
                 elif v == 'UC_UA':
                     headers[k] = UC_UA
+                elif v == 'IOS_UA':
+                    headers[k] = IOS_UA
         lower_keys = list(map(lambda x:x.lower(),keys))
         if not 'user-agent' in lower_keys:
             headers['User-Agent'] = UA
@@ -302,6 +304,14 @@ class CMS:
         else:
             return ''
 
+    def dealJson(self,html):
+        try:
+            res = re.search('.*?{(.*)}',html,re.M|re.I).groups()[0]
+            html = '{' + res + '}'
+            return html
+        except:
+            return html
+
     def checkHtml(self,r):
         r.encoding = self.encoding
         html = r.text
@@ -474,6 +484,8 @@ class CMS:
                 return self.blank()
             jsp = jsoup(self.homeUrl)
             is_json = str(p[0]).startswith('json:')
+            if is_json:
+                html = self.dealJson(html)
             pdfh = jsp.pjfh if is_json else jsp.pdfh
             pdfa = jsp.pjfa if is_json else jsp.pdfa
             pd = jsp.pj if is_json else jsp.pd
@@ -481,12 +493,17 @@ class CMS:
             try:
                 if self.double:
                     items = pdfa(html, p[0])
+                    # print(items)
                     for item in items:
                         items2 = pdfa(item,p[1])
+                        # print(items2)
                         for item2 in items2:
                             try:
                                 title = pdfh(item2, p[2])
-                                img = pd(item2, p[3])
+                                try:
+                                    img = pd(item2, p[3])
+                                except:
+                                    img = ''
                                 desc = pdfh(item2, p[4])
                                 links = [pd(item2, p5) if not self.detailUrl else pdfh(item2, p5) for p5 in p[5].split('+')]
                                 link = '$'.join(links)
@@ -617,6 +634,7 @@ class CMS:
                 r = requests.get(url, headers=self.headers, timeout=self.timeout)
                 html = self.checkHtml(r)
                 if is_json:
+                    html = self.dealJson(html)
                     html = json.loads(html)
                 # print(html)
                 items = pdfa(html,p[0].replace('json:','',1))
@@ -659,8 +677,10 @@ class CMS:
     def detailOneVod(self,id,fyclass=''):
         detailUrl = str(id)
         vod = {}
-        if not detailUrl.startswith('http'):
+        if not detailUrl.startswith('http') and not '/' in detailUrl:
             url = self.detailUrl.replace('fyid', detailUrl).replace('fyclass',fyclass)
+        elif '/' in detailUrl:
+            url = urljoin(self.homeUrl,detailUrl)
         else:
             url = detailUrl
         print(url)
@@ -671,8 +691,8 @@ class CMS:
                 vod['vod_play_from'] = '道长在线'
                 vod['vod_remarks'] = detailUrl
                 vod['vod_actor'] = '没有二级,只有一级链接直接嗅探播放'
-                vod['vod_content'] = detailUrl
-                vod['vod_play_url'] = '嗅探播放$'+self.play_url+detailUrl
+                vod['vod_content'] = url
+                vod['vod_play_url'] = '嗅探播放$'+self.play_url+url
                 print(vod)
                 return vod
 
@@ -718,6 +738,7 @@ class CMS:
                 r = requests.get(url, headers=self.headers, timeout=self.timeout)
                 html = self.checkHtml(r)
                 if is_json:
+                    html = self.dealJson(html)
                     html = json.loads(html)
                 if p.get('title'):
                     p1 = p['title'].split(';')
@@ -867,7 +888,7 @@ class CMS:
                 'list': []
             }
             logger.info(f'{self.getName()}获取详情页耗时:{get_interval(t1)}毫秒,发生错误:{e}')
-        print(result)
+        # print(result)
         return result
 
     def searchContent(self, key, fypage=1):
@@ -919,6 +940,7 @@ class CMS:
                 r = requests.get(url, headers=self.headers,timeout=self.timeout)
                 html = self.checkHtml(r)
                 if is_json:
+                    html = self.dealJson(html)
                     html = json.loads(html)
                 # print(html)
                 if not is_json and html.find('输入验证码') > -1:
@@ -1008,6 +1030,7 @@ class CMS:
                             play_url = lazy_url
                 else:
                     jscode = str(self.lazy).split('js:')[1]
+                    jsp = jsoup(self.url)
                     # jscode = f'var input={play_url};{jscode}'
                     # print(jscode)
                     headers['Referer'] = getHome(play_url)
@@ -1018,6 +1041,7 @@ class CMS:
                         'jxs':jxs,
                         'getParse':self.d.getParse,
                         'saveParse':self.d.saveParse,
+                        'jsp': jsp,
                         'pdfh': self.d.jsp.pdfh,
                         'pdfa': self.d.jsp.pdfa, 'pd': self.d.jsp.pd,
                     })

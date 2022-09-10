@@ -28,13 +28,13 @@ class jsoup:
             option = parse.split('&&')[-1]
             parse = parse.split('&&')[:-1]  # 如果只有一个&& 取的就直接是0
             if len(parse) > 1:  # 如果不大于1可能就是option操作,不需要拼eq
-                parse = ' '.join([i if self.test(':eq|:lt|:gt',i) else f'{i}:eq(0)' for i in parse])
+                parse = ' '.join([i if self.test(':eq|:lt|:gt|#',i) else f'{i}:eq(0)' for i in parse])
             else:
-                parse = parse[0] if self.test(':eq|:lt|:gt',parse[0]) else f'{parse[0]}:eq(0)'
-
+                parse = parse[0] if self.test(':eq|:lt|:gt|#',parse[0]) else f'{parse[0]}:eq(0)'
         if option:
             # print(f'parse:{parse}=>(option:{option})')
             ret = doc(parse)
+            # print(html)
             # FIXME 解析出来有多个的情况应该自动取第一个
             if option == 'Text':
                 ret = ret.text()

@@ -174,7 +174,7 @@ def base_request(url,obj):
         method = 'get'
         obj['method'] = 'method'
     # print(obj)
-    print(f'{method}:{url}')
+    print(f"{method}:{url}:{obj['headers']}")
     try:
         # r = requests.get(url, headers=headers, params=body, timeout=timeout)
         if method.lower() == 'get':
@@ -194,7 +194,7 @@ def base_request(url,obj):
 def fetch(url,obj):
     obj = dealObj(obj)
     if not obj.get('headers') or not obj['headers'].get('User-Agent'):
-        obj['headers']['User-Agent'] = PC_UA
+        obj['headers']['User-Agent'] = obj['headers'].get('user-agent',PC_UA)
     return base_request(url,obj)
 
 def post(url,obj):
@@ -206,7 +206,7 @@ def request(url,obj):
     obj = dealObj(obj)
     # print(f'{method}:{url}')
     if not obj.get('headers') or not obj['headers'].get('User-Agent'):
-        obj['headers']['User-Agent'] = UC_UA
+        obj['headers']['User-Agent'] = obj['headers'].get('user-agent',UC_UA)
 
     return base_request(url, obj)
 
