@@ -13,7 +13,7 @@ from utils.system import getHost
 from utils.config import playerConfig
 from utils.log import logger
 from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl,getHome
-from utils.encode import verifyCode,setDetail,join,urljoin2
+from utils.encode import verifyCode,setDetail,join,urljoin2,parseText
 from utils.safePython import safePython
 from utils.parser import runPy,runJScode,JsObjectWrapper
 from utils.htmlParser import jsoup
@@ -463,7 +463,10 @@ class CMS:
 
         result['class'] = classes
         if self.filter:
-            result['filters'] = playerConfig['filter']
+            if isinstance(self.filter,dict):
+                result['filters'] = self.filter
+            else:
+                result['filters'] = playerConfig['filter']
         result.update(video_result)
         # print(result)
         logger.info(f'{self.getName()}获取首页总耗时(包含读取缓存):{get_interval(t1)}毫秒')
@@ -611,7 +614,23 @@ class CMS:
         # url = self.url + '/{0}.html'.format
         t1 = time()
         pg = str(fypage)
-        url = self.url.replace('fyclass',fyclass).replace('fypage',pg)
+        url = self.url.replace('fyclass',fyclass)
+        if url.find('fypage') > -1:
+            if '(' in url and ')' in url:
+                # url_rep = url[url.find('('):url.find(')')+1]
+                # cnt_page = url.split('(')[1].split(')')[0].replace('fypage',pg)
+                # print(url_rep)
+                url_rep = re.search('.*?\((.*)\)',url,re.M|re.S).groups()[0]
+                cnt_page = url_rep.replace('fypage', pg)
+                # print(url_rep)
+                # print(cnt_page)
+                cnt_ctx = {}
+                exec(f'cnt_pg={cnt_page}', cnt_ctx)
+                cnt_pg = str(cnt_ctx['cnt_pg']) # 计算表达式的结果
+                url = url.replace(url_rep,str(cnt_pg)).replace('(','').replace(')','')
+                print(url)
+            else:
+                url = url.replace('fypage',pg)
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
         p = self.一级
@@ -958,9 +977,10 @@ class CMS:
             loader, _ = runJScode(jscode, ctx=ctx)
             # print(loader.toString())
             vods = loader.eval('VODS')
-            # print(vods)
+            # print(len(vods),type(vods))
             if isinstance(vods, JsObjectWrapper):
                 videos = vods.to_list()
+            # print(videos)
         else:
             p = p.split(';')
             if len(p) < 5:

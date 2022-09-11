@@ -201,6 +201,7 @@ var rule = {
     searchable:0,//是否启用全局搜索,
     quickSearch:0,//是否启用快速搜索,
     filterable:0,//是否启用筛选,
+    filter:{},// 筛选条件字典
     // 注意,由于猫有配置缓存,搜索配置没法热加载，修改了js不需要重启服务器
     // 但是需要tv_box进设置里换源使配置重新装载
     headers:{//网站的请求头,完整支持所有的,常带ua和cookies

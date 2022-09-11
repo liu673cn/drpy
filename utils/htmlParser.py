@@ -31,6 +31,7 @@ class jsoup:
                 parse = ' '.join([i if self.test(':eq|:lt|:gt|#',i) else f'{i}:eq(0)' for i in parse])
             else:
                 parse = parse[0] if self.test(':eq|:lt|:gt|#',parse[0]) else f'{parse[0]}:eq(0)'
+        # FIXME 暂时不支持jsonpath那样的|| 分割取或属性
         if option:
             # print(f'parse:{parse}=>(option:{option})')
             ret = doc(parse)
@@ -89,13 +90,17 @@ class jsoup:
                 return ''
         if not parse.startswith('$.'):
             parse = f'$.{parse}'
-        ret = jsonpath(html,parse)
-        if isinstance(ret,list):
-            ret = str(ret[0]) if ret[0] else ''
-        else:
-            ret = str(ret) if ret else ''
-        if add_url:
-            ret = urljoin(self.MY_URL, ret)
+        ret = ''
+        for ps in parse.split('||'):
+            ret = jsonpath(html,ps)
+            if isinstance(ret,list):
+                ret = str(ret[0]) if ret[0] else ''
+            else:
+                ret = str(ret) if ret else ''
+            if add_url and ret:
+                ret = urljoin(self.MY_URL, ret)
+            if ret:
+                break
         return ret
 
     def pj(self, html, parse:str):
