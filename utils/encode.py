@@ -6,7 +6,7 @@
 
 import base64
 from urllib.parse import urljoin
-
+from js2py.base import PyJsString
 import requests,warnings
 # 关闭警告
 warnings.filterwarnings("ignore")
@@ -88,6 +88,8 @@ def verifyCode(url,headers,timeout=5,total_cnt=3,api=None):
     return ''
 
 def base64Encode(text):
+    if isinstance(text,PyJsString):
+        text = str(text).replace("'","").replace('"','')
     return base64.b64encode(text.encode("utf8")).decode("utf-8") #base64编码
 
 def baseDecode(text):
@@ -174,7 +176,7 @@ def base_request(url,obj):
     url = str(url).replace("'", "")
     method = obj.get('method') or ''
     withHeaders = obj.get('withHeaders') or ''
-    print(f'withHeaders:{withHeaders}')
+    # print(f'withHeaders:{withHeaders}')
     if not method:
         method = 'get'
         obj['method'] = 'method'
@@ -206,7 +208,7 @@ def base_request(url,obj):
 
 def fetch(url,obj):
     obj = dealObj(obj)
-    if not obj.get('headers') or not obj['headers'].get('User-Agent'):
+    if not obj.get('headers') or not any([obj['headers'].get('User-Agent'),obj['headers'].get('user-agent')]):
         obj['headers']['User-Agent'] = obj['headers'].get('user-agent',PC_UA)
     return base_request(url,obj)
 
@@ -218,7 +220,7 @@ def post(url,obj):
 def request(url,obj):
     obj = dealObj(obj)
     # print(f'{method}:{url}')
-    if not obj.get('headers') or not obj['headers'].get('User-Agent'):
+    if not obj.get('headers') or not any([obj['headers'].get('User-Agent'),obj['headers'].get('user-agent')]):
         obj['headers']['User-Agent'] = obj['headers'].get('user-agent',UC_UA)
 
     return base_request(url, obj)

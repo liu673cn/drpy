@@ -1060,10 +1060,12 @@ class CMS:
         # 注意:全局flags里的视频没法执行免嗅代码，因为会自动拦截去调用解析: url=yoursite:5705/vod?play_url=xxxx
         if not jxs:
             jxs = []
-        try:
-            play_url = baseDecode(play_url) # 自动base64解码
-        except:
-            pass
+        # print(play_url)
+        if play_url.find('http') == -1: # 字符串看起来被编码的
+            try:
+                play_url = baseDecode(play_url) # 自动base64解码
+            except:
+                pass
         if self.lazy:
             print(f'{play_url}->开始执行免嗅代码{type(self.lazy)}->{self.lazy}')
             t1 = time()
