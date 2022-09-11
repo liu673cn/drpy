@@ -38,6 +38,7 @@ try {
         // vod.vod_remarks = style + ' 评分:' + score + ',' + update;
         vod.vod_content = introduction;
     }
+    let tp = '&type=json';
     try {
         let tabs = [];
         let lists = [];
@@ -56,7 +57,7 @@ try {
             if (item || shows) { // 动漫,电视剧
                 if(item && Array.isArray(item)&&item.length>1){
                     // let tmp = item.slice(1).map(function (its){return its.index+'$'+play_url+'https://v.sogou.com'+its.url});
-                    let tmp = item.slice(1).map(function (its){return its.index+'$'+play_url+base64Encode('https://v.sogou.com'+its.url)});
+                    let tmp = item.slice(1).map(function (its){return its.index+'$'+play_url+base64Encode('https://v.sogou.com'+its.url)+tp});
                     vod_lists.push(tmp.join('#'));
                 }
                 if (shows) { //综艺,纪录片
@@ -74,7 +75,7 @@ try {
 
                     for (let k = 0; k < arr.length; k++) {
                         let url = "https://v.sogou.com/vc/eplay?query=" + arr[k] + "&date=" + arr[k] + "&key=" + key + "&st=5&tvsite=" + plays[idex].site;
-                        tmp.push("第" + arr[k] + "期"+'$'+play_url+base64Encode('https://v.sogou.com'+url));
+                        tmp.push("第" + arr[k] + "期"+'$'+play_url+base64Encode('https://v.sogou.com'+url)+tp);
                     }
                     vod_lists.push(tmp.join('#'));
                 }
@@ -82,9 +83,9 @@ try {
                 // print(plays[idex].site);
                 let tmp = [];
                 if (!plays[idex].flag_list.includes('trailer')) {
-                    tmp.push(plays[idex].sitename[0]+'$'+play_url+base64Encode('https://v.sogou.com' + plays[idex].url));
+                    tmp.push(plays[idex].sitename[0]+'$'+play_url+base64Encode('https://v.sogou.com' + plays[idex].url)+tp);
                 } else {
-                    tmp.push(plays[idex].sitename[0] + '—预告'+'$'+play_url+base64Encode("https://v.sogou.com" + plays[idex].url));
+                    tmp.push(plays[idex].sitename[0] + '—预告'+'$'+play_url+base64Encode("https://v.sogou.com" + plays[idex].url)+tp);
                 }
                 vod_lists.push(tmp.join('#'));
             }

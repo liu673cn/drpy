@@ -25,6 +25,8 @@ def vod_home():
     rule = getParmas('rule')
     ext = getParmas('ext')
     filters = getParmas('f')
+    tp = getParmas('type')
+    # print(f'type:{tp}')
     if not ext.startswith('http') and not rule:
         return R.failed('规则字段必填')
     rule_list = getRuleLists()

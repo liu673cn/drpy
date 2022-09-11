@@ -7,5 +7,6 @@ let html=request(input);
 let rurl = html.match(/window\.open\('(.*?)',/)[1].split('?')[0];
 // print(input);
 // print(rurl);
-input = rurl;
+// input = rurl;
+input = {parse:1,url:rurl};
 // print(html);
