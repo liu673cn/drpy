@@ -38,9 +38,9 @@ def getHost(mode=0,port=None):
         ip = REAL_IP
         host = f'http://{ip}:{port}'
     else:
-        # host = cfg.get('PLAY_URL','http://cms.nokia.press')
         from controllers.service import storage_service
         lsg = storage_service()
+        # print(cfg.PLAY_URL) # 可能会报错: 'EasyDict' object has no attribute 'xxx'
         host = lsg.getItem('PLAY_URL',cfg.get('PLAY_URL',''))
     # print(mode,host)
     return host

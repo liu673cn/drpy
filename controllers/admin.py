@@ -15,7 +15,6 @@ from utils.web import getParmas
 from js.rules import getRules
 from utils.parser import runJScode
 from werkzeug.utils import secure_filename
-import js2py
 from utils.web import md5
 
 admin = Blueprint("admin", __name__)
@@ -36,7 +35,7 @@ def admin_index():  # 管理员界面
     lsg = storage_service()
     live_url = lsg.getItem('LIVE_URL')
     use_py = lsg.getItem('USE_PY')
-    print(f'live_url:', live_url)
+    # print(f'live_url:', live_url)
     return render_template('admin.html', pystate=use_py,rules=getRules('js'), ver=getLocalVer(), live_url=live_url)
 
 @admin.route('/settings')
@@ -178,7 +177,6 @@ def upload_file():
             check_to_run = before + upcode
             # print(check_to_run)
             try:
-                # js2py.eval_js(check_to_run)
                 loader, _ = runJScode(check_to_run)
                 rule = loader.eval('rule')
                 if not rule:

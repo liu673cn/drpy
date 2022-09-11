@@ -23,11 +23,24 @@ from flask import url_for,redirect
 from easydict import EasyDict as edict
 from controllers.service import storage_service
 
+def setItem(key,value):
+    lsg = storage_service()
+    return lsg.setItem(key,value)
+
+def getItem(key,value=''):
+    lsg = storage_service()
+    return lsg.getItem(key,value)
+
+def clearItem(key):
+    lsg = storage_service()
+    return lsg.clearItem(key)
+
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
 'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS,
 'buildUrl':buildUrl,'getHome':getHome,'setDetail':setDetail,'join':join,'urljoin2':urljoin2,
-'PC_UA':PC_UA,'MOBILE_UA':MOBILE_UA,'UC_UA':UC_UA,'IOS_UA':IOS_UA
+'PC_UA':PC_UA,'MOBILE_UA':MOBILE_UA,'UC_UA':UC_UA,'IOS_UA':IOS_UA,
+'setItem':setItem,'getItem':getItem,'clearItem':clearItem
 }
 # print(getCryptoJS())
 

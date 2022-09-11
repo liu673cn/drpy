@@ -6,7 +6,8 @@
 
 from flask import Blueprint,request,render_template,jsonify,make_response,redirect
 from time import time
-from utils.web import getParmas,get_interval,cfg
+from utils.web import getParmas,get_interval
+from utils.cfg import cfg
 from js.rules import getRuleLists,getJxs
 from base.R import R
 from utils.log import logger

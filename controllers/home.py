@@ -38,7 +38,7 @@ def favicon():
 
 @home.route('/index')
 def index():
-    sup_port = cfg.get('SUP_PORT', False)
+    sup_port = cfg.get('SUP_PORT', 9001)
     manager0 = ':'.join(getHost(0).split(':')[0:2])
     manager1 = ':'.join(getHost(1).split(':')[0:2])
     manager2 = ':'.join(getHost(2).split(':')[0:2]).replace('https','http')
@@ -63,7 +63,11 @@ def random_pics():
     # print(f'id:{id}')
     pics = getPics()
     # print(pics)
-    if not cfg.WALL_PAPER and len(pics) > 0:
+    new_conf = cfg
+    lsg = storage_service()
+    store_conf_dict = lsg.getStoreConfDict()
+    new_conf.update(store_conf_dict)
+    if not new_conf.WALL_PAPER and len(pics) > 0:
         if id and f'images/{id}.jpg' in pics:
             pic = f'images/{id}.jpg'
         else:
@@ -73,7 +77,7 @@ def random_pics():
         response.headers['Content-Type'] = 'image/jpeg'
         return response
     else:
-        return redirect(cfg.WALL_PAPER)
+        return redirect(new_conf.WALL_PAPER)
 
 @home.route('/clear')
 def clear_rule():
@@ -176,6 +180,7 @@ def config_render(mode):
     lsg = storage_service()
     store_conf_dict = lsg.getStoreConfDict()
     new_conf.update(store_conf_dict)
+    # print(type(new_conf),new_conf)
     host = getHost(mode)
     try:
         with open(customFile,'r',encoding='utf-8') as f:
@@ -186,7 +191,6 @@ def config_render(mode):
     jxs = getJxs()
     lsg = storage_service()
     use_py = lsg.getItem('USE_PY')
-    # pys = getPys() if cfg.get('USE_PY') else []
     pys = getPys() if use_py else []
     # print(pys)
     alists = getAlist()
@@ -211,7 +215,6 @@ def config_gen():
     store_conf_dict = lsg.getStoreConfDict()
     new_conf.update(store_conf_dict)
     jxs = getJxs()
-    # pys = getPys() if cfg.get('USE_PY') else []
     lsg = storage_service()
     use_py = lsg.getItem('USE_PY')
     pys = getPys() if use_py else False
