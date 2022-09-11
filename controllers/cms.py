@@ -942,7 +942,7 @@ class CMS:
                 'list': []
             }
             logger.info(f'{self.getName()}获取详情页耗时:{get_interval(t1)}毫秒,发生错误:{e}')
-        print(result)
+        # print(result)
         return result
 
     def searchContent(self, key, fypage=1):
