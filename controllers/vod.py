@@ -3,6 +3,7 @@
 # File  : vod.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/9/6
+import json
 
 from flask import Blueprint,request,render_template,jsonify,make_response,redirect
 from time import time
@@ -23,6 +24,7 @@ def vod_home():
     t0 = time()
     rule = getParmas('rule')
     ext = getParmas('ext')
+    filters = getParmas('f')
     if not ext.startswith('http') and not rule:
         return R.failed('规则字段必填')
     rule_list = getRuleLists()
@@ -90,8 +92,13 @@ def vod_home():
         else:
             return play_url
 
-    if ac and t: # 一级
-        data = cms.categoryContent(t,pg)
+    if ac and t:  # 一级
+        fl = {}
+        if filters and filters.find('{') > -1 and filters.find('}') > -1:
+            fl = json.loads(filters)
+        # print(filters,type(filters))
+        # print(fl,type(fl))
+        data = cms.categoryContent(t,pg,fl)
         # print(data)
         return jsonify(data)
     if ac and ids: # 二级
@@ -105,7 +112,6 @@ def vod_home():
         data = cms.searchContent(wd)
         # print(data)
         return jsonify(data)
-
     # return jsonify({'rule':rule,'js_code':js_code})
     home_data = cms.homeContent(pg)
     return jsonify(home_data)

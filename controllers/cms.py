@@ -19,7 +19,7 @@ from utils.parser import runPy,runJScode,JsObjectWrapper
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
-from flask import url_for,redirect
+from flask import url_for,redirect,render_template_string
 from easydict import EasyDict as edict
 from controllers.service import storage_service
 
@@ -51,6 +51,7 @@ class CMS:
         self.lsg = storage_service()
         self.title = rule.get('title', '')
         self.id = rule.get('id', self.title)
+        self.filter_url = rule.get('filter_url', '')
         cate_exclude  = rule.get('cate_exclude','')
         tab_exclude  = rule.get('tab_exclude','')
         self.lazy = rule.get('lazy', False)
@@ -595,14 +596,17 @@ class CMS:
         # print(result)
         return result
 
-    def categoryContent(self, fyclass, fypage):
+    def categoryContent(self, fyclass, fypage, fl=None):
         """
         一级带分类的数据返回
         :param fyclass: 分类标识
         :param fypage: 页码
+        :param fl: 筛选
         :return: cms一级数据
         """
-        
+
+        if fl is None:
+            fl = {}
         result = {}
         # urlParams = ["", "", "", "", "", "", "", "", "", "", "", ""]
         # urlParams = [""] * 12
@@ -629,11 +633,17 @@ class CMS:
                 exec(f'cnt_pg={cnt_page}', cnt_ctx)
                 cnt_pg = str(cnt_ctx['cnt_pg']) # 计算表达式的结果
                 url = url.replace(url_rep,str(cnt_pg)).replace('(','').replace(')','')
-                print(url)
+                # print(url)
             else:
                 url = url.replace('fypage',pg)
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
+        if self.filter_url:
+            fl_url = render_template_string(self.filter_url,fl=fl)
+            if not url.endswith('&') and not fl_url.startswith('&'):
+                url += '&'
+            url += fl_url
+        # print(url)
         p = self.一级
         jsp = jsoup(self.url)
         videos = []
