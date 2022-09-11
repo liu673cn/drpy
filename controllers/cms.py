@@ -58,7 +58,7 @@ class CMS:
         self.play_disable = self.lsg.getItem('PLAY_DISABLE',False)
         self.retry_count = new_conf.get('RETRY_CNT',3)
         # self.lazy_mode = new_conf.get('LAZYPARSE_MODE')
-        self.lazy_mode = self.lsg.getItem('LAZYPARSE_MODE')
+        self.lazy_mode = self.lsg.getItem('LAZYPARSE_MODE',2)
         self.ocr_api = new_conf.get('OCR_API')
         # self.cate_exclude = new_conf.get('CATE_EXCLUDE','')
         self.cate_exclude = self.lsg.getItem('CATE_EXCLUDE','')
@@ -89,6 +89,7 @@ class CMS:
             # play_url = new_conf.get('PLAY_URL',getHost(2))
             if not play_url.startswith('http'):
                 play_url = 'http://'+play_url
+            # print(play_url)
             if self.play_parse:
                 # self.play_url = play_url + self.vod + '?play_url='
                 self.play_url = f'{play_url}{self.vod}?rule={self.id}&play_url='
@@ -98,7 +99,7 @@ class CMS:
         else:
             self.play_parse = False
             self.play_url = ''
-        # logger.info('播放免嗅地址: '+self.play_url)
+        logger.info('播放免嗅地址: '+self.play_url)
 
         self.db = db
         self.RuleClass = RuleClass
@@ -758,7 +759,7 @@ class CMS:
                     'd': self.d,
                     'getParse': self.d.getParse,
                     'saveParse': self.d.saveParse,
-                    'jsp':jsp,'setDetail':setDetail,
+                    'jsp':jsp,'setDetail':setDetail,'play_url':self.play_url
                 })
                 ctx = py_ctx
                 # print(ctx)
@@ -941,7 +942,7 @@ class CMS:
                 'list': []
             }
             logger.info(f'{self.getName()}获取详情页耗时:{get_interval(t1)}毫秒,发生错误:{e}')
-        # print(result)
+        print(result)
         return result
 
     def searchContent(self, key, fypage=1):
@@ -1097,7 +1098,7 @@ class CMS:
                         'saveParse':self.d.saveParse,
                         'jsp': jsp,
                         'pdfh': self.d.jsp.pdfh,
-                        'pdfa': self.d.jsp.pdfa, 'pd': self.d.jsp.pd,
+                        'pdfa': self.d.jsp.pdfa, 'pd': self.d.jsp.pd,'play_url':self.play_url
                     })
                     ctx = py_ctx
                     # print(ctx)

@@ -31,6 +31,10 @@ def get_host_ip(): # 获取局域网ip
 def getHost(mode=0,port=None):
     port = port or request.environ.get('SERVER_PORT')
     # mode 为0是本地,1是局域网 2是线上
+    try:
+        mode = int(mode)
+    except:
+        mode = 2
     if mode == 0:
         host = f'http://localhost:{port}'
     elif mode == 1:

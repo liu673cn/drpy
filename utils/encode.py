@@ -142,6 +142,8 @@ def dealObj(obj=None):
     encoding = str(encoding).replace("'", "")
     method = obj.get('method') or 'get'
     method = str(method).replace("'", "")
+    withHeaders = obj.get('withHeaders') or ''
+    withHeaders = str(withHeaders).replace("'", "")
     # print(type(url),url)
     # headers = dict(obj.get('headers')) if obj.get('headers') else {}
     # headers = obj.get('headers').to_dict() if obj.get('headers') else {}
@@ -163,13 +165,16 @@ def dealObj(obj=None):
         'headers':new_headers,
         'timeout':timeout,
         'body': new_body,
-        'method':method
+        'method':method,
+        'withHeaders':withHeaders
     }
 
 def base_request(url,obj):
     # verify=False 关闭证书验证
     url = str(url).replace("'", "")
     method = obj.get('method') or ''
+    withHeaders = obj.get('withHeaders') or ''
+    print(f'withHeaders:{withHeaders}')
     if not method:
         method = 'get'
         obj['method'] = 'method'
@@ -186,10 +191,18 @@ def base_request(url,obj):
         # print(encoding)
         r.encoding = obj['encoding']
         # print(f'源码:{r.text}')
-        return r.text
+        if withHeaders:
+            backObj = {
+                'url':r.url,
+                'body':r.text,
+                'headers':r.headers
+            }
+            return backObj
+        else:
+            return r.text
     except Exception as e:
         print(f'{method}请求发生错误:{e}')
-        return ''
+        return {} if withHeaders else ''
 
 def fetch(url,obj):
     obj = dealObj(obj)
