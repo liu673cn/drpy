@@ -62,7 +62,9 @@ def del_file(filepath):
         if os.path.isfile(file_path):
             os.remove(file_path)
 
-def copytree(src, dst):
+def copytree(src, dst, ignore=None):
+    if ignore is None:
+        ignore = []
     dirs = os.listdir(src)  # 获取目录下的所有文件包括文件夹
     # print(dirs)
     for dir in dirs:  # 遍历文件或文件夹
@@ -71,19 +73,30 @@ def copytree(src, dst):
         if os.path.isdir(from_dir):  # 判断是否为文件夹
             if not os.path.exists(to_dir):  # 判断目标文件夹是否存在,不存在则创建
                 os.mkdir(to_dir)
-            copytree(from_dir, to_dir)  # 迭代 遍历子文件夹并复制文件
+            copytree(from_dir, to_dir,ignore)  # 迭代 遍历子文件夹并复制文件
         elif os.path.isfile(from_dir):  # 如果为文件,则直接复制文件
-            shutil.copy(from_dir, to_dir)  # 复制文件
+            if ignore:
+                regxp = '|'.join(ignore).replace('\\','/') # 组装正则
+                to_dir_str = str(to_dir).replace('\\','/')
+                if not re.search(rf'{regxp}', to_dir_str, re.M):
+                    shutil.copy(from_dir, to_dir)  # 复制文件
+            else:
+                shutil.copy(from_dir, to_dir)  # 复制文件
 
 
-def force_copy_files(from_path,to_path):
+def force_copy_files(from_path, to_path, exclude_files=None):
     # print(f'开始拷贝文件{from_path}=>{to_path}')
+    if exclude_files is None:
+        exclude_files = []
     logger.info(f'开始拷贝文件{from_path}=>{to_path}')
     try:
         if sys.version_info < (3, 8):
-            copytree(from_path, to_path)
+            copytree(from_path, to_path,exclude_files)
         else:
-            shutil.copytree(from_path, to_path, dirs_exist_ok=True)
+            if len(exclude_files) > 0:
+                shutil.copytree(from_path, to_path, dirs_exist_ok=True,ignore=shutil.ignore_patterns(*exclude_files))
+            else:
+                shutil.copytree(from_path, to_path, dirs_exist_ok=True)
 
     except Exception as e:
         logger.info(f'拷贝文件{from_path}=>{to_path}发生错误:{e}')
@@ -98,8 +111,9 @@ def copy_to_update():
         return False
     # 千万不能覆盖super，base
     paths = ['js','models','controllers','libs','static','templates','utils','txt']
+    exclude_files = ['txt/pycms0.json','txt/pycms1.json','txt/pycms2.json']
     for path in paths:
-        force_copy_files(os.path.join(dr_path, path),os.path.join(base_path, path))
+        force_copy_files(os.path.join(dr_path, path),os.path.join(base_path, path),exclude_files)
     try:
         shutil.copy(os.path.join(dr_path, 'app.py'), os.path.join(base_path, 'app.py'))  # 复制文件
     except Exception as e:

@@ -40,7 +40,8 @@
                                $.get("/admin/update_ver",function(data,status){
                                    console.log(data);
                                    if(data.code === 200){
-                                       alert(data.msg+'\n除主程序app.py需要自行检测替换升级外,其他关键文件全部更新完毕');
+                                       // alert(data.msg+'\n除主程序app.py需要自行检测替换升级外,其他关键文件全部更新完毕');
+                                       alert(data.msg);
                                       location.reload();
                                    }else{
                                        alert(data.msg||'未知数据,具体到数据控制台查看');
@@ -153,7 +154,8 @@
                 $.get("/admin/force_update",function(data,status){
                                    console.log(data);
                                    if(data.code === 200){
-                                       alert(data.msg+'\n除主程序app.py需要自行检测替换升级外,其他关键文件全部更新完毕');
+                                       // alert(data.msg+'\n除主程序app.py需要自行检测替换升级外,其他关键文件全部更新完毕');
+                                       alert(data.msg);
                                       location.reload();
                                    }else{
                                        alert(data.msg||'未知数据,具体到数据控制台查看');
