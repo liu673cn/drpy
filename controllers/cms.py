@@ -334,7 +334,8 @@ class CMS:
 
     def dealJson(self,html):
         try:
-            res = re.search('.*?{(.*)}',html,re.M|re.I).groups()[0]
+            # res = re.search('.*?\{(.*)\}',html,re.M|re.I).groups()[0]
+            res = re.search('.*?\{(.*)\}',html,re.M|re.S).groups()[0]
             html = '{' + res + '}'
             return html
         except:

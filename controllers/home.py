@@ -165,14 +165,23 @@ def get_liveslib():
     response.headers['Content-Disposition'] = f'attachment;filename="{filename}"'
     return response
 
+def getCustonDict(host):
+    customFile = 'base/custom.conf'
+    if not os.path.exists(customFile):
+        with open(customFile, 'w+', encoding='utf-8') as f:
+            f.write('{}')
+    customConfig = False
+    try:
+        with open(customFile,'r',encoding='utf-8') as f:
+            text = f.read()
+            customConfig = parseText(render_template_string(text,host=host))
+    except Exception as e:
+        logger.info(f'用户自定义配置加载失败:{e}')
+    return customConfig
+
 @home.route('/config/<int:mode>')
 def config_render(mode):
     # print(dict(app.config))
-    customFile = 'base/custom.conf'
-    if not os.path.exists(customFile):
-        with open(customFile,'w+',encoding='utf-8') as f:
-            f.write('{}')
-    customConfig = False
     if mode == 1:
         jyw_ip = getHost(mode)
         logger.info(jyw_ip)
@@ -182,12 +191,7 @@ def config_render(mode):
     new_conf.update(store_conf_dict)
     # print(type(new_conf),new_conf)
     host = getHost(mode)
-    try:
-        with open(customFile,'r',encoding='utf-8') as f:
-            text = f.read()
-            customConfig = parseText(render_template_string(text,host=host))
-    except Exception as e:
-        logger.info(f'用户自定义配置加载失败:{e}')
+    customConfig = getCustonDict(host)
     jxs = getJxs()
     lsg = storage_service()
     use_py = lsg.getItem('USE_PY')
@@ -226,14 +230,20 @@ def config_gen():
         set_area = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
         set_online = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
         with open('txt/pycms0.json','w+',encoding='utf-8') as f:
-            set_dict = json.loads(set_local)
+            customConfig = getCustonDict(0)
+            set_dict = custom_merge(parseText(set_local), customConfig)
+            # set_dict = json.loads(set_local)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
         with open('txt/pycms1.json','w+',encoding='utf-8') as f:
-            set_dict = json.loads(set_area)
+            customConfig = getCustonDict(1)
+            set_dict = custom_merge(parseText(set_area), customConfig)
+            # set_dict = json.loads(set_area)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
 
         with open('txt/pycms2.json','w+',encoding='utf-8') as f:
-            set_dict = json.loads(set_online)
+            customConfig = getCustonDict(2)
+            set_dict = custom_merge(parseText(set_online), customConfig)
+            # set_dict = json.loads(set_online)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
         files = [os.path.abspath(rf'txt\pycms{i}.json') for i in range(3)]
         # print(files)
