@@ -214,29 +214,32 @@ def config_gen():
     lsg = storage_service()
     store_conf_dict = lsg.getStoreConfDict()
     new_conf.update(store_conf_dict)
-    jxs = getJxs()
-    lsg = storage_service()
-    use_py = lsg.getItem('USE_PY')
-    pys = getPys() if use_py else False
-    alists = getAlist()
-    alists_str = json.dumps(alists,ensure_ascii=False)
-    set_local = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,host=getHost(0),jxs=jxs)
-    print(set_local)
-    set_area = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
-    set_online = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
-    with open('txt/pycms0.json','w+',encoding='utf-8') as f:
-        set_dict = json.loads(set_local)
-        f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
-    with open('txt/pycms1.json','w+',encoding='utf-8') as f:
-        set_dict = json.loads(set_area)
-        f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
+    try:
+        jxs = getJxs()
+        lsg = storage_service()
+        use_py = lsg.getItem('USE_PY')
+        pys = getPys() if use_py else False
+        alists = getAlist()
+        alists_str = json.dumps(alists,ensure_ascii=False)
+        set_local = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,host=getHost(0),jxs=jxs)
+        print(set_local)
+        set_area = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
+        set_online = render_template('config.txt',pys=pys,rules=getRules('js'),alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
+        with open('txt/pycms0.json','w+',encoding='utf-8') as f:
+            set_dict = json.loads(set_local)
+            f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
+        with open('txt/pycms1.json','w+',encoding='utf-8') as f:
+            set_dict = json.loads(set_area)
+            f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
 
-    with open('txt/pycms2.json','w+',encoding='utf-8') as f:
-        set_dict = json.loads(set_online)
-        f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
-    files = [os.path.abspath(rf'txt\pycms{i}.json') for i in range(3)]
-    # print(files)
-    return R.success('猫配置生成完毕，文件位置在:\n'+'\n'.join(files))
+        with open('txt/pycms2.json','w+',encoding='utf-8') as f:
+            set_dict = json.loads(set_online)
+            f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
+        files = [os.path.abspath(rf'txt\pycms{i}.json') for i in range(3)]
+        # print(files)
+        return R.success('猫配置生成完毕，文件位置在:\n'+'\n'.join(files))
+    except Exception as e:
+        return R.failed(f'配置文件生成错误:\n{e}')
 
 @home.route("/info",methods=['get'])
 def info_all():

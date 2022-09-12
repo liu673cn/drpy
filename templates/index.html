@@ -23,9 +23,7 @@
                 // let rule = this.innerText.trim();
                 let code = $.ajax({ url: "/configs", async: false }).responseText;
                 code = typeof (code) === "object" ? code : JSON.parse(code);
-                if (code.code === 200) {
-                    alert(code.msg);
-                }
+                alert(code.msg);
             });
         });
 </script>
@@ -85,6 +83,9 @@
 
         <div class="btn">
             <a href="javascript:void(0);" id="gen_config">生成配置文件</a>
+        </div>
+        <div class="btn">
+            <a href="/txt/pycms2.json" target="_blank">静态配置文件</a>
         </div>
     </div>
 </center>
