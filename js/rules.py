@@ -77,13 +77,16 @@ def jxTxt2Json(text:str):
     for i in data:
         i = i.strip()
         dt = i.split(',')
-        if not i.startswith('#'):
-            jxs.append({
-                'name':dt[0],
-                'url':dt[1],
-                'type':dt[2] if len(dt) > 2 else 0,
-                'ua':dt[3] if len(dt) > 3 else UA,
-            })
+        if not i.startswith('#') and len(i) > 10:
+            try:
+                jxs.append({
+                    'name':dt[0],
+                    'url':dt[1],
+                    'type':dt[2] if len(dt) > 2 else 0,
+                    'ua':dt[3] if len(dt) > 3 else UA,
+                })
+            except Exception as e:
+                logger.info(f'解析行有错误:{e}')
     return jxs
 
 def getJxs(path='js'):
