@@ -78,7 +78,8 @@ Object.prototype.myValues=function(obj){
    return res;
 }
 Array.prototype.join = function (emoji) {
-    emoji = emoji||',';
+    // emoji = emoji||',';
+    emoji = emoji||'';
       let self = this;
       let str = "";
       let i = 0;
@@ -148,11 +149,8 @@ function setResult(d){
 function maoss(jxurl, ref, key) {
     eval(getCryptoJS());
     try {
-        var getVideoInfo = function(text) {
-            return CryptoJS.AES.decrypt(text, key, {
-                iv: iv,
-                padding: CryptoJS.pad.Pkcs7
-            }).toString(CryptoJS.enc.Utf8);
+        var getVideoInfo = function (text) {
+                return CryptoJS.AES.decrypt(text, key, {iv: iv, padding: CryptoJS.pad.Pkcs7}).toString(CryptoJS.enc.Utf8);
         };
         var token_key = key == undefined ? 'dvyYRQlnPRCMdQSe' : key;
         if (ref) {
@@ -164,6 +162,7 @@ function maoss(jxurl, ref, key) {
         } else {
             var html = request(jxurl);
         }
+        // print(html);
         if (html.indexOf('&btwaf=') != -1) {
             html = request(jxurl + '&btwaf' + html.match(/&btwaf(.*?)"/)[1], {
                 headers: {
@@ -176,8 +175,12 @@ function maoss(jxurl, ref, key) {
         var iv = CryptoJS.enc.Utf8.parse(token_iv);
         // log("iv:"+iv);
         //  log(html);
+        // print(key);
+        // print(iv);
         eval(html.match(/var config = {[\s\S]*?}/)[0] + '');
-        if (config.url.slice(0, 4) != 'http') {
+        // config.url = config.url.replace(/,/g,'');
+        // print(config.url);
+        if (!config.url.startsWith('http')) {
             //config.url = decodeURIComponent(AES(config.url, key, iv));
             config.url = CryptoJS.AES.decrypt(config.url, key, {
                 iv: iv,
@@ -191,18 +194,24 @@ function maoss(jxurl, ref, key) {
 }
 
 function request(url,obj){
+    // obj = obj||{'user-agent': MOBILE_UA};
+    let new_obj;
     if(typeof(fetch_params)!=='undefined'){
-        obj = obj?Object.assign(fetch_params,obj):fetch_params;
+        new_obj = obj?Object.assign(fetch_params,obj):fetch_params;
     }else{
-        obj = obj||{}
+        new_obj = obj||{}
     }
+    if(!obj||!obj.headers||(!obj.headers['User-Agent']&&!obj.headers['user-agent'])){
+        new_obj.headers['User-Agent'] = MOBILE_UA;
+    }
+    // delete new_obj.headers['Referer'];
     // print(obj);
     if(typeof(fetch)!==undefined){
-        let html = fetch(url,obj);
+        let html = fetch(url,new_obj);
         if (/\?btwaf=/.test(html)) {//宝塔验证
             url=url.split('#')[0]+'?btwaf'+html.match(/btwaf(.*?)\"/)[1];
             log("宝塔验证跳转到:"+url);
-            html = fetch(url, obj);
+            html = fetch(url, new_obj);
         }
         return html
     }
