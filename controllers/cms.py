@@ -641,10 +641,13 @@ class CMS:
             url = url.split('[')[1].split(']')[0]
         if self.filter_url:
             fl_url = render_template_string(self.filter_url,fl=fl)
-            if not url.endswith('&') and not fl_url.startswith('&'):
-                url += '&'
-            url += fl_url
-        # print(url)
+            if not 'fyfilter' in url: # 第一种情况,默认不写fyfilter关键字,视为直接拼接在链接后面当参数
+                if not url.endswith('&') and not fl_url.startswith('&'):
+                    url += '&'
+                url += fl_url
+            else: # 第二种情况直接替换关键字为渲染后的结果,适用于 ----fypage.html的情况
+                url = url.replace('fyfilter',fl_url)
+        print(url)
         p = self.一级
         jsp = jsoup(self.url)
         videos = []

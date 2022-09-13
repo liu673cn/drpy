@@ -46,6 +46,9 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/13
+- [X] 1.升级至3.5.8
+- [X] 2.迁移alist.conf文件,修改默认模板,增加模板url参数支持fyfilter变量从此支持更多筛选场景
 ###### 2022/09/12
 ###### 特别说明:仅pluto 1.4.2以上版本支持此项目的筛选及自定义播放免嗅
 - [X] 1.升级至3.5.7
