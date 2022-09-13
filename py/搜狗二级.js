@@ -3,6 +3,13 @@ js:
 var vod = {vod_id:input};
 let html = request(input);
 
+function adhead(url){
+    let hd = 'https://v.sogou.com';
+    if(!url.startsWith(hd)){
+        url = hd+url
+    }
+    return url
+}
 try {
     let json = JSON.parse(html.match(/INITIAL_STATE.*?({.*});/)[1]).detail.itemData;
     let key = json.dockey;
@@ -58,7 +65,7 @@ try {
             if (item || shows) { // 动漫,电视剧
                 if(item && Array.isArray(item)&&item.length>1){
                     // let tmp = item.slice(1).map(function (its){return its.index+'$'+play_url+'https://v.sogou.com'+its.url});
-                    let tmp = item.slice(1).map(function (its){return its.index+'$'+play_url+base64Encode('https://v.sogou.com'+its.url)});
+                    let tmp = item.slice(1).map(function (its){return its.index+'$'+play_url+base64Encode(adhead(its.url))});
                     vod_lists.push(tmp.join('#'));
                 }
                 if (shows) { //综艺,纪录片
@@ -76,7 +83,7 @@ try {
 
                     for (let k = 0; k < arr.length; k++) {
                         let url = "https://v.sogou.com/vc/eplay?query=" + arr[k] + "&date=" + arr[k] + "&key=" + key + "&st=5&tvsite=" + plays[idex].site;
-                        tmp.push("第" + arr[k] + "期"+'$'+play_url+base64Encode('https://v.sogou.com'+url));
+                        tmp.push("第" + arr[k] + "期"+'$'+play_url+base64Encode(adhead(url)));
                     }
                     vod_lists.push(tmp.join('#'));
                 }
@@ -84,9 +91,9 @@ try {
                 // print(plays[idex].site);
                 let tmp = [];
                 if (!plays[idex].flag_list.includes('trailer')) {
-                    tmp.push(plays[idex].sitename[0]+'$'+play_url+base64Encode('https://v.sogou.com' + plays[idex].url));
+                    tmp.push(plays[idex].sitename[0]+'$'+play_url+base64Encode(adhead(plays[idex].url)));
                 } else {
-                    tmp.push(plays[idex].sitename[0] + '—预告'+'$'+play_url+base64Encode("https://v.sogou.com" + plays[idex].url));
+                    tmp.push(plays[idex].sitename[0] + '—预告'+'$'+play_url+base64Encode(adhead(plays[idex].url)));
                 }
                 vod_lists.push(tmp.join('#'));
             }
