@@ -526,6 +526,7 @@ class CMS:
                 if self.double:
                     items = pdfa(html, p[0])
                     # print(items)
+                    # print(len(items))
                     for item in items:
                         items2 = pdfa(item,p[1])
                         # print(items2)
@@ -585,6 +586,7 @@ class CMS:
                 return self.blank()
 
         result['list'] = videos
+        # print(videos)
         result['no_use'] = {
             'code': 1,
             'msg': '数据列表',
