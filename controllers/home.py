@@ -18,7 +18,7 @@ from utils.cfg import cfg
 from utils import parser
 from utils.log import logger
 from utils.files import getAlist,get_live_url
-from utils.update import getLocalVer
+from utils.update import getLocalVer,getHotSuggest
 from utils.encode import parseText
 from js.rules import getJxs
 import random
@@ -178,6 +178,11 @@ def getCustonDict(host):
     except Exception as e:
         logger.info(f'用户自定义配置加载失败:{e}')
     return customConfig
+
+@home.route('/hotsugg')
+def get_hot_search():
+    data = getHotSuggest()
+    return R.success('获取成功',data)
 
 @home.route('/config/<int:mode>')
 def config_render(mode):

@@ -12,11 +12,28 @@ import zipfile
 import shutil # https://blog.csdn.net/weixin_33130113/article/details/112336581
 from utils.log import logger
 from utils.web import get_interval
+from utils.htmlParser import jsoup
 
 headers = {
         'Referer': 'https://gitcode.net/',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36',
 }
+
+def getHotSuggest(url='http://4g.v.sogou.com/hotsugg'):
+    jsp = jsoup(url)
+    pdfh = jsp.pdfh
+    pdfa = jsp.pdfa
+    pd = jsp.pd
+    try:
+        r = requests.get(url,headers=headers,timeout=2)
+        html = r.text
+        data = pdfa(html,'ul.hot-list&&li')
+        suggs = [{'title':pdfh(dt,'a&&Text'),'url':pd(dt,'a&&href')} for dt in data]
+        # print(html)
+        # print(suggs)
+        return suggs
+    except:
+        return []
 
 def getLocalVer():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录

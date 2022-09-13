@@ -66,6 +66,30 @@
 }{% if loop.last==False %},{% endif %}{% endfor %}
 	 ],
 "flags": ["imgo","youku", "qq", "iqiyi", "qiyi", "letv", "sohu", "tudou","xigua","cntv","1905", "pptv", "mgtv", "wasu", "bilibili", "renrenmi"],
+"hotSearch": [{
+    "name": "mobilesearch",
+    "request": {
+      "method": "GET",
+      "header": [
+        {
+          "key": "Referer",
+          "value": "{{ host }}"
+        }
+      ],
+      "url": {
+        "raw": "{{ host }}/hotsugg?t={time}"
+      }
+    },
+    "response": {
+        "result": "$.data",
+        "data": [
+          {
+            "key": "keyword",
+            "value": "title"
+          }
+        ]
+    }
+}],
 "lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext={{live_url}}"]}]}],
 "ijk": [{
 "group": "软解码",
