@@ -621,6 +621,22 @@ class CMS:
         t1 = time()
         pg = str(fypage)
         url = self.url.replace('fyclass',fyclass)
+        if self.filter_url:
+            if not 'fyfilter' in url: # 第一种情况,默认不写fyfilter关键字,视为直接拼接在链接后面当参数
+                if not url.endswith('&') and not self.filter_url.startswith('&'):
+                    url += '&'
+                url += self.filter_url
+            else: # 第二种情况直接替换关键字为待拼接的结果后面渲染,适用于 ----fypage.html的情况
+                url = url.replace('fyfilter', self.filter_url)
+            url = render_template_string(url,fl=fl)
+
+            # fl_url = render_template_string(self.filter_url,fl=fl)
+            # if not 'fyfilter' in url: # 第一种情况,默认不写fyfilter关键字,视为直接拼接在链接后面当参数
+            #     if not url.endswith('&') and not fl_url.startswith('&'):
+            #         url += '&'
+            #     url += fl_url
+            # else: # 第二种情况直接替换关键字为渲染后的结果,适用于 ----fypage.html的情况
+            #     url = url.replace('fyfilter',fl_url)
         if url.find('fypage') > -1:
             if '(' in url and ')' in url:
                 # url_rep = url[url.find('('):url.find(')')+1]
@@ -639,15 +655,7 @@ class CMS:
                 url = url.replace('fypage',pg)
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
-        if self.filter_url:
-            fl_url = render_template_string(self.filter_url,fl=fl)
-            if not 'fyfilter' in url: # 第一种情况,默认不写fyfilter关键字,视为直接拼接在链接后面当参数
-                if not url.endswith('&') and not fl_url.startswith('&'):
-                    url += '&'
-                url += fl_url
-            else: # 第二种情况直接替换关键字为渲染后的结果,适用于 ----fypage.html的情况
-                url = url.replace('fyfilter',fl_url)
-        print(url)
+        # print(url)
         p = self.一级
         jsp = jsoup(self.url)
         videos = []
