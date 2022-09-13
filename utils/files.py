@@ -5,6 +5,8 @@
 # Date  : 2022/9/6
 
 import os
+import shutil
+
 from utils.system import getHost
 from utils.encode import base64Encode
 from controllers.service import storage_service
@@ -34,25 +36,32 @@ def get_live_url(new_conf,mode):
 def getAlist():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
     alist_path = os.path.join(base_path, 'js/alist.conf')
-    with open(alist_path,encoding='utf-8') as f:
-        data = f.read().strip()
-    alists = []
-    for i in data.split('\n'):
-        i = i.strip()
-        dt = i.split(',')
-        if not i.strip().startswith('#'):
-            obj = {
-                'name': dt[0],
-                'server': dt[1],
-                'type':"alist",
-            }
-            if len(dt) > 2:
-                obj.update({
-                    'password': dt[2]
-                })
-            alists.append(obj)
-    print(f'共计{len(alists)}条alist记录')
-    return alists
+    alist_cpath = os.path.join(base_path, 'base/alist.conf')
+    try:
+        if not os.path.exists(alist_cpath):
+            shutil.copy(alist_path, alist_cpath)  # 复制文件
+        with open(alist_cpath,encoding='utf-8') as f:
+            data = f.read().strip()
+        alists = []
+        for i in data.split('\n'):
+            i = i.strip()
+            dt = i.split(',')
+            if not i.strip().startswith('#'):
+                obj = {
+                    'name': dt[0],
+                    'server': dt[1],
+                    'type':"alist",
+                }
+                if len(dt) > 2:
+                    obj.update({
+                        'password': dt[2]
+                    })
+                alists.append(obj)
+        print(f'共计{len(alists)}条alist记录')
+        return alists
+    except Exception as e:
+        print(f'获取alist列表失败:{e}')
+        return []
 
 def custom_merge(original:dict,custom:dict):
     """
