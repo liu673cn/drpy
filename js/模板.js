@@ -10,7 +10,7 @@ Object.assign = function () {
     }
     return target;
 };
-var muban = {
+var mubanDict = { // 模板字典
  mxpro:{
     title:'',
     host:'',
@@ -148,3 +148,4 @@ vfed:{
 
 
 };
+var muban = JSON.parse(JSON.stringify(mubanDict));

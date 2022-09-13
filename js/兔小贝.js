@@ -23,4 +23,5 @@ var rule = {
     二级:'*',
     搜索:'.list-con&&.items;.text&&Text;mip-img&&src;.time&&Text;a&&href',
     quickSearch:0,
+    searchable:1,
 }

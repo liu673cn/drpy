@@ -44,7 +44,9 @@ def getRules(path='cache'):
         js = js_path[i]
         with open(js,encoding='utf-8') as f:
             code = f.read()
-            codes.append(code.replace('rule',f'rule{i}',1))
+            new_code = 'var muban = JSON.parse(JSON.stringify(mubanDict));\n'+code.replace('rule',f'rule{i}',1)
+            # new_code = ''+code.replace('rule',f'rule{i}',1)
+            codes.append(new_code)
     newCodes = before + '\n'+ '\n'.join(codes)
     # print(newCodes)
     ctx.execute(newCodes)
