@@ -9,7 +9,5 @@ title:'小强迷',
 host:'http://xqmi.top',
 url:'/index.php/vod/show/id/fyclass/page/fypage.html',
 searchUrl:'/index.php/vod/search/page/fypage/wd/**.html',
-searchable:1,
-quickSearch:1,
 搜索:'li.stui-vodlist__item;a&&title;a&&data-original;.pic-text&&Text;a&&href'
 });

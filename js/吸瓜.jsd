@@ -6,6 +6,8 @@ var rule = {
     headers:{
         'User-Agent':'MOBILE_UA'
     },
+    searchable:0,
+    quickSearch:0,
     timeout:5000,
     class_parse:'.wap-roll&&li;a&&Text;a&&href;(\\d+).html',
     cate_exclude:'独家',

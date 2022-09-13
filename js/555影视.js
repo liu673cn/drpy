@@ -5,6 +5,4 @@ headers:{//网站的请求头,完整支持所有的,常带ua和cookies
     'User-Agent':'MOBILE_UA',
     "Cookie": "searchneed=ok"
 },
-searchable:1,
-quickSearch:1,
 });

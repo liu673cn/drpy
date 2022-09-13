@@ -6,6 +6,8 @@ var rule = {
     headers:{
         'User-Agent':'MOBILE_UA'
     },
+    searchable:0,
+    quickSearch:0,
     timeout:5000,
     class_parse:'.menu&&dl&&dd;a&&Text;a&&href;.*/(.*?)-',
     limit:5,
