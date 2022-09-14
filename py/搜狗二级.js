@@ -8,7 +8,7 @@ function adhead(url){
     if(!url.startsWith(hd)){
         url = hd+url
     }
-    return url
+    return urlencode(url)
 }
 try {
     let json = JSON.parse(html.match(/INITIAL_STATE.*?({.*});/)[1]).detail.itemData;

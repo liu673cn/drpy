@@ -17,7 +17,7 @@ from utils.encode import verifyCode,setDetail,join,urljoin2,parseText
 from utils.safePython import safePython
 from utils.parser import runPy,runJScode,JsObjectWrapper
 from utils.htmlParser import jsoup
-from urllib.parse import urljoin
+from urllib.parse import urljoin,quote,unquote
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
 from flask import url_for,redirect,render_template_string
 from easydict import EasyDict as edict
@@ -34,6 +34,11 @@ def getItem(key,value=''):
 def clearItem(key):
     lsg = storage_service()
     return lsg.clearItem(key)
+
+def encodeUrl(url):
+    # return base64Encode(quote(url))
+    # return base64Encode(url)
+    return quote(url)
 
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
@@ -917,8 +922,8 @@ class CMS:
                        # print(vodList)
                        # vodList = [pq(i).text()+'$'+pd(i,'a&&href') for i in vodList]  # 拼接成 名称$链接
                        if self.play_parse: # 自动base64编码
-                           vodList = [(pdfh(html,tab_ext) if tab_ext else tab_name)+'$'+self.play_url+base64Encode(i) for i in vodList] if is_json else\
-                               [pq(i).text()+'$'+self.play_url+base64Encode(pd(i,'a&&href')) for i in vodList]  # 拼接成 名称$链接
+                           vodList = [(pdfh(html,tab_ext) if tab_ext else tab_name)+'$'+self.play_url+encodeUrl(i) for i in vodList] if is_json else\
+                               [pq(i).text()+'$'+self.play_url+encodeUrl(pd(i,'a&&href')) for i in vodList]  # 拼接成 名称$链接
                        else:
                            vodList = [(pdfh(html, tab_ext) if tab_ext else tab_name) + '$' + self.play_url + i for i in
                                       vodList] if is_json else \
@@ -1084,12 +1089,15 @@ class CMS:
         # 注意:全局flags里的视频没法执行免嗅代码，因为会自动拦截去调用解析: url=yoursite:5705/vod?play_url=xxxx
         if not jxs:
             jxs = []
+
         # print(play_url)
         if play_url.find('http') == -1: # 字符串看起来被编码的
             try:
                 play_url = baseDecode(play_url) # 自动base64解码
             except:
                 pass
+        # print(unquote(play_url))
+        play_url = unquote(play_url)
         if self.lazy:
             print(f'{play_url}->开始执行免嗅代码{type(self.lazy)}->{self.lazy}')
             t1 = time()
