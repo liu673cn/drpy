@@ -37,7 +37,7 @@ class R(object):
     def ok(self,msg='操作成功',data=None):
         if not data:
             data = []
-        result = {"code": 200, "msg": msg, "data": data}
+        result = {"code": 200, "msg": msg, "data": data,"count":len(data)}
         return jsonify(result)
 
     @classmethod

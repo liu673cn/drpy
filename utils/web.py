@@ -5,7 +5,7 @@
 # Date  : 2022/9/6
 import os
 
-from flask import request
+from flask import request,jsonify
 import hashlib
 from time import time
 # from utils.cfg import cfg
@@ -44,6 +44,16 @@ def getParmas(key=None,value=''):
         return args.get(key,value)
     else:
         return args
+
+def layuiBack(msg:str, data=None,code:int=0,count:int=0):
+    if data is None:
+        data = []
+    return jsonify({
+        'msg':msg,
+        'code':code,
+        'data':data,
+        'count':count or len(data)
+    })
 
 def md5(str):
     return hashlib.md5(str.encode(encoding='UTF-8')).hexdigest()

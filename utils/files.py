@@ -10,6 +10,9 @@ import shutil
 from utils.system import getHost
 from utils.encode import base64Encode
 from controllers.service import storage_service
+from utils.encode import parseText
+from flask import render_template_string
+from utils.log import logger
 
 def getPics(path='images'):
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
@@ -87,3 +90,17 @@ def custom_merge(original:dict,custom:dict):
     for key in extend_obj.keys():
         original[key].extend(extend_obj[key])
     return original
+
+def getCustonDict(host):
+    customFile = 'base/custom.conf'
+    if not os.path.exists(customFile):
+        with open(customFile, 'w+', encoding='utf-8') as f:
+            f.write('{}')
+    customConfig = False
+    try:
+        with open(customFile,'r',encoding='utf-8') as f:
+            text = f.read()
+            customConfig = parseText(render_template_string(text,host=host))
+    except Exception as e:
+        logger.info(f'用户自定义配置加载失败:{e}')
+    return customConfig

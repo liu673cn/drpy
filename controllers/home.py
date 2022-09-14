@@ -20,6 +20,7 @@ from utils.log import logger
 from utils.files import getAlist,get_live_url
 from utils.update import getLocalVer,getHotSuggest
 from utils.encode import parseText
+from utils.files import getCustonDict
 from js.rules import getJxs
 import random
 
@@ -164,20 +165,6 @@ def get_liveslib():
     response.headers['Content-Type'] = 'application/octet-stream'
     response.headers['Content-Disposition'] = f'attachment;filename="{filename}"'
     return response
-
-def getCustonDict(host):
-    customFile = 'base/custom.conf'
-    if not os.path.exists(customFile):
-        with open(customFile, 'w+', encoding='utf-8') as f:
-            f.write('{}')
-    customConfig = False
-    try:
-        with open(customFile,'r',encoding='utf-8') as f:
-            text = f.read()
-            customConfig = parseText(render_template_string(text,host=host))
-    except Exception as e:
-        logger.info(f'用户自定义配置加载失败:{e}')
-    return customConfig
 
 @home.route('/hotsugg')
 def get_hot_search():

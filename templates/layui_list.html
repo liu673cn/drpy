@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+<!--  <title>layui规则管理</title>-->
+  <title>规则管控</title>
+  <meta name="description" content="不会写前端只好用layui">
+  <meta name="author" content="道长"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+  <script src="/static/plugin/layui/layui.js"></script>
+  <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+</head>
+<body>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="getData">获取当前页数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="isAll">是否全选</button>
+    <button class="layui-btn layui-btn-sm layui-bg-blue" id="reloadTest">
+      重载测试
+      <i class="layui-icon layui-icon-down layui-font-12"></i>
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="multi-row">
+      多行
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="default-row">
+      单行
+    </button>
+    <button class="layui-btn layui-btn-sm" id="moreTest">
+      更多测试
+      <i class="layui-icon layui-icon-down layui-font-12"></i>
+    </button>
+  </div>
+</script>
+
+<script type="text/html" id="cityTpl">
+  <select id="demoCity1" class="layui-border" lay-ignore>
+    <option value="浙江杭州">浙江杭州</option>
+    <option value="江西南昌">江西南昌</option>
+    <option value="湖北武汉">湖北武汉</option>
+  </select>
+</script>
+
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">隐藏</a>
+</script>
+
+
+<script>
+layui.use(['table', 'dropdown'], function(){
+  var table = layui.table;
+  var dropdown = layui.dropdown;
+  layer.msg('本页面展示数据为未来功能，<br>可能并没有实际作用,等道长弃坑后续有缘人补上。', {
+    closeBtn: 1,
+    icon: 6,
+    time: 21*1000,
+    offset: '21px'
+  });
+
+  // 创建渲染实例
+  table.render({
+    elem: '#test'
+    ,url: '/layui/api/list' // 此处为静态模拟数据，实际使用时需换成真实接口
+    ,toolbar: '#toolbarDemo'
+    ,defaultToolbar: ['filter', 'exports', 'print', {
+      title: '帮助'
+      ,layEvent: 'LAYTABLE_TIPS'
+      ,icon: 'layui-icon-tips'
+    }]
+    // ,height: 'full-200' // 最大高度减去其他容器已占有的高度差
+    // ,cellMinWidth: 80
+    // ,totalRow: true // 开启合计行
+    ,page: true
+    ,limit:12
+    ,cols: [[
+      {type: 'checkbox', fixed: 'left'}
+      // ,{field: 'id', fixed: 'left',title: 'ID', width: 20, sort: true,totalRowText: '合计：'}
+      ,{field: 'id',title: 'ID', width: 20, sort: true}
+      ,{field: 'name', title: '名称', width: 120}
+      ,{field: 'key', title: '唯一标识', width: 120}
+      ,{field: 'type', title: '<i class="layui-icon layui-icon-email">类型</i>', minWidth: 80}
+      ,{field: 'searchable', title: '可搜索', minWidth: 80}
+      ,{field: 'quickSearch', title: '可快搜', minWidth: 80}
+      ,{field: 'filterable', title: '可筛选', minWidth: 80}
+      // ,{field:'city', width:115, title: '城市', minWidth:115, templet: '#cityTpl', exportTemplet: function(d, obj){
+      //   //console.log(obj)
+      //   // 处理该字段的导出数据
+      //   var td = obj.td(this.field); //获取当前 td
+      //   return td.find('select').val();
+      // }}
+      ,{fixed: 'right', title:'操作', width: 125, minWidth: 125, toolbar: '#barDemo'}
+    ]]
+    ,done: function(){
+      var id = this.id;
+
+      // 重载测试
+      dropdown.render({
+        elem: '#reloadTest' //可绑定在任意元素中，此处以上述按钮为例
+        ,data: [{
+          id: 'reload',
+          title: '重载'
+        },{
+          id: 'reload-deep',
+          title: '重载 - 参数叠加'
+        },{
+          id: 'reloadData',
+          title: '仅重载数据'
+        },{
+          id: 'reloadData-deep',
+          title: '仅重载数据 - 参数叠加'
+        }]
+        // 菜单被点击的事件
+        ,click: function(obj){
+          switch(obj.id){
+            case 'reload':
+              // 重载 - 默认（参数重置）
+              table.reload('test', {
+                where: {
+                  abc: '123456'
+                  //,test: '新的 test2'
+                  //,token: '新的 token2'
+                }
+              });
+            break;
+            case 'reload-deep':
+              // 重载 - 深度（参数叠加）
+              table.reload('test', {
+                where: {
+                  abc: 123
+                  ,test: '新的 test1'
+                }
+                //,defaultToolbar: ['print'] // 重载头部工具栏右侧图标
+                //,cols: ins1.config.cols
+              }, true);
+            break;
+            case 'reloadData':
+              // 数据重载 - 参数重置
+              table.reloadData('test', {
+                where: {
+                  abc: '123456'
+                  //,test: '新的 test2'
+                  //,token: '新的 token2'
+                }
+                ,scrollPos: 'fixed'  // 保持滚动条位置不变 - v2.7.3 新增
+                ,height: 2000 // 测试无效参数（即与数据无关的参数设置无效，此处以 height 设置无效为例）
+                //,url: '404'
+                //,page: {curr: 1, limit: 30} // 重新指向分页
+              });
+            break;
+            case 'reloadData-deep':
+              // 数据重载 - 参数叠加
+              table.reloadData('test', {
+                where: {
+                  abc: 123
+                  ,test: '新的 test1'
+                }
+              }, true);
+            break;
+          }
+          layer.msg('可观察 Network 请求参数的变化');
+        }
+      });
+
+      // 更多测试
+      dropdown.render({
+        elem: '#moreTest' //可绑定在任意元素中，此处以上述按钮为例
+        ,data: [{
+          id: 'add',
+          title: '添加'
+        },{
+          id: 'update',
+          title: '编辑'
+        },{
+          id: 'delete',
+          title: '删除'
+        }]
+        //菜单被点击的事件
+        ,click: function(obj){
+          var checkStatus = table.checkStatus(id)
+          var data = checkStatus.data; // 获取选中的数据
+          switch(obj.id){
+            case 'add':
+              layer.open({
+                title: '添加',
+                type: 1,
+                area: ['80%','80%'],
+                content: '<div style="padding: 16px;">自定义表单元素</div>'
+              });
+            break;
+            case 'update':
+              if(data.length !== 1) return layer.msg('请选择一行');
+              layer.open({
+                title: '编辑',
+                type: 1,
+                area: ['80%','80%'],
+                content: '<div style="padding: 16px;">自定义表单元素</div>'
+              });
+            break;
+            case 'delete':
+              if(data.length === 0){
+                return layer.msg('请选择一行');
+              }
+              layer.msg('delete event');
+            break;
+          }
+        }
+      });
+    }
+    ,error: function(res, msg){
+      console.log(res, msg)
+    }
+  });
+
+  // 工具栏事件
+  table.on('toolbar(test)', function(obj){
+    var id = obj.config.id;
+    var checkStatus = table.checkStatus(id);
+    var othis = lay(this);
+    switch(obj.event){
+      case 'getCheckData':
+        var data = checkStatus.data;
+        layer.alert(layui.util.escape(JSON.stringify(data)));
+      break;
+      case 'getData':
+        var getData = table.getData(id);
+        console.log(getData);
+        layer.alert(layui.util.escape(JSON.stringify(getData)));
+      break;
+      case 'isAll':
+        layer.msg(checkStatus.isAll ? '全选': '未全选')
+      break;
+      case 'multi-row':
+        table.reload('test', {
+          // 设置行样式，此处以设置多行高度为例。若为单行，则没必要设置改参数 - 注：v2.7.0 新增
+          lineStyle: 'height: 95px;'
+        });
+        layer.msg('即通过设置 lineStyle 参数可开启多行');
+      break;
+      case 'default-row':
+        table.reload('test', {
+          lineStyle: null // 恢复单行
+        });
+        layer.msg('已设为单行');
+      break;
+      case 'LAYTABLE_TIPS':
+        layer.alert('Table for layui-v'+ layui.v);
+      break;
+    };
+  });
+
+  //触发单元格工具事件
+  table.on('tool(test)', function(obj){ // 双击 toolDouble
+    var data = obj.data;
+    //console.log(obj)
+    if(obj.event === 'del'){
+      layer.confirm('真的隐藏行么', function(index){
+        obj.del();
+        layer.close(index);
+      });
+    } else if(obj.event === 'edit'){
+      layer.open({
+        title: '编辑',
+        type: 1,
+        area: ['80%','80%'],
+        content: '<div style="padding: 16px;">自定义表单元素</div>'
+      });
+    }
+  });
+
+  //触发表格复选框选择
+  table.on('checkbox(test)', function(obj){
+    console.log(obj)
+  });
+
+  //触发表格单选框选择
+  table.on('radio(test)', function(obj){
+    console.log(obj)
+  });
+
+  // 行单击事件
+  table.on('row(test)', function(obj){
+    //console.log(obj);
+    //layer.closeAll('tips');
+  });
+  // 行双击事件
+  table.on('rowDouble(test)', function(obj){
+    console.log(obj);
+  });
+
+  // 单元格编辑事件
+  table.on('edit(test)', function(obj){
+    var field = obj.field //得到字段
+    ,value = obj.value //得到修改后的值
+    ,data = obj.data; //得到所在行所有键值
+
+    var update = {};
+    update[field] = value;
+    obj.update(update);
+  });
+});
+</script>
+
+</body>
+</html>

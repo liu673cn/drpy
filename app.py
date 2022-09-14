@@ -21,6 +21,7 @@ def create_flask_app():
     app.register_blueprint(admin.admin, url_prefix='/admin')
     app.register_blueprint(vod.vod, url_prefix='')
     app.register_blueprint(cls.cls, url_prefix='/cls')
+    app.register_blueprint(layui.layui, url_prefix='/layui')
     app.logger.name = "drLogger"
     # lsg = service.storage_service()
     logger.info(f"默认解析地址:{app.config.get('PLAY_URL')}")
