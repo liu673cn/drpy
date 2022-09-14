@@ -15,8 +15,8 @@
   </a>
 
 
-<a href="https://wwi.lanzoup.com/iwdPS0bfwj8b">
-    <img src="https://img.shields.io/badge/蓝奏云下载-3.5.2-blue" alt="Downloads" />
+<a href="https://wwi.lanzoup.com/iEwHP0bo1m9i">
+    <img src="https://img.shields.io/badge/蓝奏云下载-3.6.5-blue" alt="Downloads" />
   </a>
 
 
