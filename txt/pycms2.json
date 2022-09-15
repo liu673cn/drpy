@@ -1,6 +1,6 @@
 {
     "wallpaper": "http://192.168.3.224:5705/pics",
-    "dr_count": 31,
+    "dr_count": 35,
     "mode": 1,
     "spider": "http://192.168.3.224:5705/files/custom_spider.jar",
     "drives": [
@@ -133,6 +133,15 @@
     "homepage": "https://gitcode.net/qq_32394351/dr_py",
     "sites": [
         {
+            "key": "dr_007影视",
+            "name": "007影视(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=007影视",
+            "searchable": 1,
+            "quickSearch": 0,
+            "filterable": 0
+        },
+        {
             "key": "dr_360影视",
             "name": "360影视(道长)",
             "type": 1,
@@ -205,6 +214,15 @@
             "filterable": 0
         },
         {
+            "key": "dr_人人影视",
+            "name": "人人影视(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=人人影视",
+            "searchable": 1,
+            "quickSearch": 0,
+            "filterable": 0
+        },
+        {
             "key": "dr_兔小贝",
             "name": "兔小贝(道长)",
             "type": 1,
@@ -268,6 +286,15 @@
             "filterable": 0
         },
         {
+            "key": "dr_奇优影院",
+            "name": "奇优影院(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=奇优影院",
+            "searchable": 1,
+            "quickSearch": 0,
+            "filterable": 0
+        },
+        {
             "key": "dr_奇珍异兽",
             "name": "奇珍异兽(道长)",
             "type": 1,
@@ -319,6 +346,15 @@
             "api": "http://192.168.3.224:5705/vod?rule=影视工厂",
             "searchable": 1,
             "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "dr_牛马TV",
+            "name": "牛马TV(道长)",
+            "type": 1,
+            "api": "http://192.168.3.224:5705/vod?rule=牛马TV",
+            "searchable": 1,
+            "quickSearch": 0,
             "filterable": 0
         },
         {
@@ -2478,13 +2514,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2509,13 +2548,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2540,13 +2582,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2571,13 +2616,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2602,13 +2650,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2633,13 +2684,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2664,13 +2718,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2695,13 +2752,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2726,13 +2786,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2757,13 +2820,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2788,13 +2854,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2819,13 +2888,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2850,13 +2922,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2881,13 +2956,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2912,13 +2990,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2943,13 +3024,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -2974,13 +3058,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3005,13 +3092,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3036,13 +3126,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3067,13 +3160,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3098,13 +3194,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3129,13 +3228,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3160,13 +3262,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3191,13 +3296,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3222,13 +3330,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3253,13 +3364,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3284,13 +3398,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3315,13 +3432,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3346,13 +3466,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3377,13 +3500,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3408,13 +3534,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3439,13 +3568,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3470,13 +3602,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3501,13 +3636,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3532,13 +3670,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3563,13 +3704,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3594,13 +3738,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3625,13 +3772,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3656,13 +3806,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3687,13 +3840,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3718,13 +3874,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3749,13 +3908,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3780,13 +3942,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3811,13 +3976,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3842,13 +4010,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3873,13 +4044,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3904,13 +4078,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3935,13 +4112,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3966,13 +4146,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -3997,13 +4180,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -4028,13 +4214,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -4059,13 +4248,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -4090,13 +4282,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -4121,13 +4316,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -4152,13 +4350,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -4183,13 +4384,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -4214,13 +4418,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -4245,13 +4452,16 @@
                     "PPTV",
                     "letv",
                     "乐视",
+                    "leshi",
                     "bilibili",
                     "哔哩哔哩",
                     "哔哩",
                     "mgtv",
                     "芒果",
                     "sohu",
-                    "xigua"
+                    "xigua",
+                    "fun",
+                    "风行"
                 ],
                 "header": {
                     "User-Agent": "Mozilla/5.0"
@@ -4265,7 +4475,9 @@
         "qq",
         "iqiyi",
         "qiyi",
+        "fun",
         "letv",
+        "leshi",
         "sohu",
         "tudou",
         "xigua",

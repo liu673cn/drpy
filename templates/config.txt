@@ -58,14 +58,14 @@
     "url": "{{ jx.url }}",
     "type": {{ jx.type }},
     "ext": {
-    "flag": ["qiyi","imgo","爱奇艺", "奇艺", "qq", "腾讯", "youku", "优酷", "pptv", "PPTV", "letv", "乐视", "bilibili", "哔哩哔哩", "哔哩", "mgtv", "芒果","sohu", "xigua"],
+    "flag": ["qiyi","imgo","爱奇艺", "奇艺", "qq", "腾讯", "youku", "优酷", "pptv", "PPTV", "letv", "乐视","leshi", "bilibili", "哔哩哔哩", "哔哩", "mgtv", "芒果","sohu", "xigua","fun","风行"],
     "header": {
         "User-Agent": "{{ jx.ua }}"
     }
     }
 }{% if loop.last==False %},{% endif %}{% endfor %}
 	 ],
-"flags": ["imgo","youku", "qq", "iqiyi", "qiyi", "letv", "sohu", "tudou","xigua","cntv","1905", "pptv", "mgtv", "wasu", "bilibili", "renrenmi"],
+"flags": ["imgo","youku", "qq", "iqiyi", "qiyi","fun", "letv","leshi","sohu", "tudou","xigua","cntv","1905", "pptv", "mgtv", "wasu", "bilibili", "renrenmi"],
 "hotSearch": [{
     "name": "mobilesearch",
     "request": {
