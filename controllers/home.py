@@ -40,13 +40,17 @@ def favicon():
 @home.route('/index')
 def index():
     sup_port = cfg.get('SUP_PORT', 9001)
+    lsg = storage_service()
+    pid_url = lsg.getItem('PID_URL')
     manager0 = ':'.join(getHost(0).split(':')[0:2])
     manager1 = ':'.join(getHost(1).split(':')[0:2])
-    manager2 = ':'.join(getHost(2).split(':')[0:2]).replace('https','http')
+    manager2 = pid_url or ':'.join(getHost(2).split(':')[0:2]).replace('https','http')
     if sup_port:
         manager0 += f':{sup_port}'
         manager1 += f':{sup_port}'
-        manager2 += f':{sup_port}'
+        if not pid_url:
+            manager2 += f':{sup_port}'
+    # print(manager2)
     ver = getLocalVer()
     return render_template('index.html',ver=ver,getHost=getHost,manager0=manager0,manager1=manager1,manager2=manager2,is_linux=is_linux())
 
@@ -140,7 +144,7 @@ def custom_static(filename):
 
 @home.route('/lives')
 def get_lives():
-    live_path = 'js/直播.txt'
+    live_path = 'base/直播.txt'
     if not os.path.exists(live_path):
         with open(live_path,mode='w+',encoding='utf-8') as f:
             f.write('')
@@ -184,6 +188,7 @@ def config_render(mode):
     # print(type(new_conf),new_conf)
     host = getHost(mode)
     customConfig = getCustonDict(host)
+    # print(customConfig)
     jxs = getJxs()
     lsg = storage_service()
     use_py = lsg.getItem('USE_PY')
@@ -223,18 +228,18 @@ def config_gen():
         set_area = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
         set_online = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
         with open('txt/pycms0.json','w+',encoding='utf-8') as f:
-            customConfig = getCustonDict(0)
+            customConfig = getCustonDict(getHost(0))
             set_dict = custom_merge(parseText(set_local), customConfig)
             # set_dict = json.loads(set_local)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
         with open('txt/pycms1.json','w+',encoding='utf-8') as f:
-            customConfig = getCustonDict(1)
+            customConfig = getCustonDict(getHost(1))
             set_dict = custom_merge(parseText(set_area), customConfig)
             # set_dict = json.loads(set_area)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
 
         with open('txt/pycms2.json','w+',encoding='utf-8') as f:
-            customConfig = getCustonDict(2)
+            customConfig = getCustonDict(getHost(2))
             set_dict = custom_merge(parseText(set_online), customConfig)
             # set_dict = json.loads(set_online)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))

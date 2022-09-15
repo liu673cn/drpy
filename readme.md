@@ -39,13 +39,20 @@
 <img src="https://img.shields.io/badge/install support-termux|windows|ubuntu|python3.6~python3.8-yellowgreen" />
 </a>
 
-[搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  
+[搭建教程](./安卓本地搭建说明.md) | [install_help](./安卓本地搭建说明.md)  |[goorm](./道长乱说.md)  
 [dr项目QQ官群](https://qm.qq.com/cgi-bin/qm/qr?k=H2KwcXrMdiR5M2blHR5gjZzPfN_S3N_C&jump_from=webapi)  
 [参考T4](https://github.com/sec-an/TV_Spider/blob/main/spider/sp360.py)  
 [golang最好的js引擎-otto](https://github.com/robertkrimen/otto)   
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/15
+- [X] 1.修复生成配置文件中静态文件链接对应的配置文本爬虫地址渲染异常问题
+- [X] 2.删除custom里的xb、xp源
+- [X] 3.未来功能页面设置为管理员登录后可见
+- [X] 4.修复局域网ip可能会获取成网关地址问题
+- [X] 5.设置中心增加自定义进程管理地址(可用于goorm等设备绑定快捷方式)
+- [X] 6.直播文件目录迁移
 ###### 2022/09/14
 - [X] 1.升级至3.6.2,增加了一些解析
 - [X] 2.升级至3.6.5,修复菜狗部分源解析失败问题(url参数有+号被自动变空格导致的)

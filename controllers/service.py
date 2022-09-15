@@ -27,10 +27,10 @@ class storage_service(object):
     @classmethod
     def getStoreConf(self):
         # MAX_CONTENT_LENGTH 最大上传和端口ip一样是顶级配置,无法外部修改的
-        conf_list = ['LIVE_URL', 'USE_PY', 'PLAY_URL', 'PLAY_DISABLE', 'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
-                     'WALL_PAPER', 'UNAME', 'PWD', 'LIVE_MODE', 'CATE_EXCLUDE', 'TAB_EXCLUDE']
-        conf_name_list = ['直播地址', '启用py源', '远程地址', '禁用免嗅', '免嗅模式', '启用壁纸', '壁纸链接', '管理账号',
-                          '管理密码', '直播模式', '分类排除', '线路排除']
+        conf_list = ['LIVE_URL', 'LIVE_MODE','PLAY_URL', 'PID_URL','USE_PY', 'PLAY_DISABLE', 'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
+                     'WALL_PAPER', 'UNAME', 'PWD',  'CATE_EXCLUDE', 'TAB_EXCLUDE']
+        conf_name_list = ['直播地址', '直播模式','远程地址', '进程管理链接','启用py源', '禁用免嗅', '免嗅模式', '启用壁纸', '壁纸链接', '管理账号',
+                          '管理密码',  '分类排除', '线路排除']
         conf_lists = []
         for i in range(len(conf_list)):
             conf = conf_list[i]

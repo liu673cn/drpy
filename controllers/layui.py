@@ -5,7 +5,7 @@
 # Date  : 2022/9/14
 
 from flask import Blueprint,request,render_template,jsonify,make_response,redirect
-from utils.web import getParmas,get_interval,layuiBack
+from utils.web import getParmas,get_interval,layuiBack,verfy_token
 from utils.cfg import cfg
 from controllers.service import storage_service
 from utils.system import getHost
@@ -22,6 +22,8 @@ def hello():  # put application's code here
 @layui.route('/index')
 def layui_index():  # put application's code here
     # return render_template('layui_index.html')
+    if not verfy_token():
+        return render_template('login.html')
     return render_template('layui_list.html')
 
 @layui.route('/api/list')

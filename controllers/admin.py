@@ -8,10 +8,9 @@ import os
 from flask import Blueprint,request,render_template,jsonify,make_response
 from controllers.service import storage_service
 from base.R import R
-from utils.web import verfy_token
 from utils.update import getLocalVer,getOnlineVer,download_new_version,download_lives,copy_to_update
 from utils import parser
-from utils.web import getParmas
+from utils.web import getParmas,verfy_token
 from js.rules import getRules
 from utils.parser import runJScode
 from werkzeug.utils import secure_filename

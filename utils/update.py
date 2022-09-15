@@ -177,7 +177,7 @@ def download_new_version():
 def download_lives(live_url:str):
     t1 = getTime()
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
-    live_path = os.path.join(base_path, f'js/直播.txt')
+    live_path = os.path.join(base_path, f'base/直播.txt')
     logger.info(f'尝试同步{live_url}远程内容到{live_path}')
     try:
         r = requests.get(live_url,headers=headers,timeout=3)

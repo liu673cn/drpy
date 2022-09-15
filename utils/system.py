@@ -25,7 +25,8 @@ def get_host_ip(): # 获取局域网ip
     netcard_info,ips = get_wlan_info()
     # print(netcard_info)
     real_ips = list(filter(lambda x: x and x != '127.0.0.1', ips))
-    jyw = list(filter(lambda x: str(x).startswith('192.168'), real_ips))
+    jyw = list(filter(lambda x: str(x).startswith('192.168') and not str(x).endswith('.1'), real_ips))
+    # print(jyw)
     return real_ips[-1] if len(jyw) < 1 else jyw[0]
 
 def getHost(mode=0,port=None):
