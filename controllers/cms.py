@@ -436,7 +436,8 @@ class CMS:
                     # print(self.headers)
                     if self.class_parse and not has_cache:
                         p = self.class_parse.split(';')
-                        # print(p)
+                        # print(p[0])
+                        # print(html)
                         jsp = jsoup(self.url)
                         pdfh = jsp.pdfh
                         pdfa = jsp.pdfa
