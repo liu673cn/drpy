@@ -144,6 +144,16 @@ function setResult(d){
     });
     return VODS
 }
+function setResult2(res){
+    VODS = res.list;
+    return VODS
+}
+function setHomeResult(res){
+    if(!res||typeof(res)!=='object'){
+        return []
+    }
+    return setResult(res.list);
+}
 // 千万不要用for in 推荐 forEach (for in 会打乱顺序)
 //猫函数
 function maoss(jxurl, ref, key) {

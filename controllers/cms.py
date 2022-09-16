@@ -122,8 +122,10 @@ class CMS:
         headers = default_headers
         cookie = self.getCookie()
         # print(f'{self.title}cookie:{cookie}')
+        self.oheaders = self_headers
         if cookie:
             headers['cookie'] = cookie
+            self.oheaders['cookie'] = cookie
         limit = rule.get('limit',6)
         encoding = rule.get('编码', 'utf-8')
         self.limit = min(limit,30)
@@ -183,6 +185,7 @@ class CMS:
             'getParse':self.getParse,
             'saveParse':self.saveParse,
             'headers':self.headers,
+            'oheaders':self.oheaders,
             'encoding':self.encoding,
             'name':self.title,
             'timeout':self.timeout,
@@ -496,7 +499,8 @@ class CMS:
                 'input': self.homeUrl,
                 'HOST': self.host,
                 'TYPE': 'home',  # 海阔js环境标志
-                'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                'oheaders':self.d.oheaders,
+                'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
                 'getParse': self.d.getParse,
                 'saveParse': self.d.saveParse,
@@ -673,9 +677,13 @@ class CMS:
             py_ctx.update({
                 'input': url,
                 'TYPE': 'cate',  # 海阔js环境标志
-                'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                'oheaders': self.d.oheaders,
+                'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
                 'cateID':fyclass, # 分类id
+                'MY_CATE':fyclass, # 分类id
+                'MY_FL':fl, # 筛选
+                'MY_PAGE':fypage,  # 页数
                 'detailUrl':self.detailUrl or '', # 详情页链接
                 'getParse': self.d.getParse,
                 'saveParse': self.d.saveParse,
@@ -688,7 +696,7 @@ class CMS:
             loader, _ = runJScode(jscode, ctx=ctx)
             # print(loader.toString())
             vods = loader.eval('VODS')
-            # print(vods)
+            # print('vods:',vods)
             if isinstance(vods, JsObjectWrapper):
                 videos = vods.to_list()
 
@@ -785,7 +793,8 @@ class CMS:
                     'input': url,
                     'TYPE': 'detail',  # 海阔js环境标志
                     'cateID': fyclass,  # 当前分类
-                    'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                    'oheaders': self.d.oheaders,
+                    'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                     'd': self.d,
                     'getParse': self.d.getParse,
                     'saveParse': self.d.saveParse,
@@ -869,7 +878,8 @@ class CMS:
                         'html': html,
                         'TYPE': 'detail',  # 海阔js环境标志
                         'cateID': fyclass,  # 当前分类
-                        'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                        'oheaders': self.d.oheaders,
+                        'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                         'd': self.d,
                         'getParse': self.d.getParse,
                         'saveParse': self.d.saveParse,
@@ -992,7 +1002,8 @@ class CMS:
             headers['Referer'] = getHome(url)
             py_ctx.update({
                 'input': url,
-                'fetch_params': {'headers': headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                'oheaders': self.d.oheaders,
+                'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
                 'KEY': key,  # 搜索关键字
                 'TYPE': 'search',  # 海阔js环境标志
@@ -1126,7 +1137,8 @@ class CMS:
                     headers['Referer'] = getHome(play_url)
                     py_ctx.update({
                         'input': play_url,
-                        'fetch_params':{'headers':headers,'timeout':self.d.timeout,'encoding':self.d.encoding},
+                        'oheaders': self.d.oheaders,
+                        'fetch_params':{'headers':self.d.headers,'timeout':self.d.timeout,'encoding':self.d.encoding},
                         'd': self.d,
                         'jxs':jxs,
                         'getParse':self.d.getParse,

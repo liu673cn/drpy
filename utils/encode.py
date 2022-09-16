@@ -235,7 +235,7 @@ def buildUrl(url,obj=None):
     if str(url).find('?') < 0:
         url = str(url) + '?'
     prs = '&'.join([f'{i}={obj[i]}' for i in obj])
-    if len(new_obj) > 0:
+    if len(new_obj) > 0 and not str(url).endswith('?'):
         url += '&'
     url = (url + prs).replace('"','').replace("'",'')
     # print(url)
