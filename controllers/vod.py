@@ -62,8 +62,8 @@ def vod_home():
             try:
                 for future in as_completed(to_do, timeout=timeout):  # 并发执行
                     ret = future.result()
-                    print(ret)
-                    if ret:
+                    # print(ret)
+                    if ret and isinstance(ret,dict) and ret.get('list'):
                         res.extend(ret['list'])
             except Exception as e:
                 print(f'发生错误:{e}')
@@ -81,7 +81,7 @@ def vod_home():
     if ac and ids and ids.find('#') > -1:  # 聚搜的二级
         id_list = ids.split(',')
         rule = id_list[0].split('#')[1]
-        print(rule)
+        # print(rule)
 
     ext = getParmas('ext')
     filters = getParmas('f')

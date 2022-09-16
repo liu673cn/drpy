@@ -3,7 +3,7 @@ let d=[];
 let html = request(input);
 // print(html);
 let jsonA = JSON.parse(html.match(/INITIAL_STATE.*?({.*});/)[1]);
-print(jsonA);
+// print(jsonA);
 jsonA = jsonA.result.longVideo.results;
 jsonA.forEach(function (it){
     let name=it.name;

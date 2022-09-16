@@ -772,7 +772,7 @@ class CMS:
             url = urljoin(self.homeUrl,detailUrl)
         else:
             url = detailUrl
-        print(url)
+        logger.info(f'进入详情页: {url}')
         try:
             p = self.二级  # 解析
             if p == '*':
