@@ -22,6 +22,4 @@ var rule = {
     一级:'json:data.items;name;image;duration_string;video_id',
     二级:'*',
     搜索:'.list-con&&.items;.text&&Text;mip-img&&src;.time&&Text;a&&href',
-    quickSearch:0,
-    searchable:1,
 }

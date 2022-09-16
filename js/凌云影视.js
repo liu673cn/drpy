@@ -18,6 +18,4 @@ var  rule={
     二级:{"title":".content-rt&&h1&&Text;.content-rt&&p:eq(0)&&Text","img":".img&&img&&data-src","desc":".content-rt&&p:eq(2)&&Text;.content-rt&&p:eq(3)&&Text","content":".movie-introduce&&.sqjj_a&&Text","tabs":".py-tabs&&option","lists":"ul.player:eq(#id)&&li"},
     // 搜索:'.hl-list-item;a&&title;a&&data-original;.remarks&&Text;a&&href',
     searchable:0,//是否启用全局搜索,
-    quickSearch:0,//是否启用快速搜索,
-    filterable:0,//是否启用分类筛选,
 };

@@ -3,7 +3,7 @@ var rule = {
     host:'https://waptv.sogou.com',
     homeUrl:'',
     searchUrl:'https://v.sogou.com/v?query=**&typemask=6&p=&dp=&dr=&_asf=v.sogou.com&enter=1&ie=utf8',
-    searchable:1,
+    searchable:2,
     quickSearch:0,
     filterable:1,
     // 分类链接fypage参数支持1个()表达式

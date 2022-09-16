@@ -4,8 +4,8 @@ var rule = {
     // homeUrl:'/',
     url:'/t/fyclass/fypage.html',
     searchUrl:'/s/**/fypage.html',
-    searchable:1,
-    quickSearch:1,
+    searchable:2,
+    quickSearch:0,
     headers:{
         'User-Agent':'UC_UA'
     },

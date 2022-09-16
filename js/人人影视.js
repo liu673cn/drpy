@@ -6,8 +6,6 @@ var rule = Object.assign(muban.首图2,{
     searchUrl:'/rrso**/page/fypage.html',
     class_parse:'.stui-header__menu li;a&&Text;a&&href;.*/(.*?).html',
     // cate_exclude:'解说',
-    searchable:1,
-    quickSearch:0,
     play_parse:true,
     lazy:'',
     搜索:'ul.stui-vodlist__media&&li;a&&title;.lazyload&&data-original;.pic-text&&Text;a&&href;.text-muted:eq(-1)&&Text',

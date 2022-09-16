@@ -4,7 +4,7 @@ var rule = {
     homeUrl:'',
     searchUrl:'',
     searchable:1,
-    quickSearch:0,
+    quickSearch:1,
     filterable:1,
     // 分类链接fypage参数支持1个()表达式
     url:'/?pg=fypage&class=fyclass&douban=',
