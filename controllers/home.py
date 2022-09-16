@@ -197,8 +197,15 @@ def config_render(mode):
     alists = getAlist()
     alists_str = json.dumps(alists, ensure_ascii=False)
     live_url = get_live_url(new_conf,mode)
+    rules = getRules('js')
+    multi_mode = lsg.getItem('MULTI_MODE')
+    fix_multi = ['drpy']
+    if not multi_mode:
+        rules['list'] = list(filter(lambda x:x['name'] in fix_multi or x.get('multi'),rules['list']))
+        rules['count'] = len(rules['list'])
+        print(rules)
     # html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,base64Encode=base64Encode,config=new_conf)
-    html = render_template('config.txt',pys=pys,rules=getRules('js'),host=host,mode=mode,jxs=jxs,alists=alists,alists_str=alists_str,live_url=live_url,config=new_conf)
+    html = render_template('config.txt',pys=pys,rules=rules,host=host,mode=mode,jxs=jxs,alists=alists,alists_str=alists_str,live_url=live_url,config=new_conf)
     merged_config = custom_merge(parseText(html),customConfig)
     # print(merged_config)
     # response = make_response(html)

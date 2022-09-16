@@ -6,6 +6,7 @@ var rule = {
     searchable:2,
     quickSearch:0,
     filterable:1,
+    multi:1,
     // 分类链接fypage参数支持1个()表达式
     url:'/napi/video/classlist?abtest=0&iploc=CN1304&spver=&listTab=fyclass&filter=&start=((fypage-1)*15)&len=15&fr=filter',
     filter_url:'style={{fl.style}}&zone={{fl.zone}}&year={{fl.year}}&fee={{fl.fee}}&order={{fl.order}}',

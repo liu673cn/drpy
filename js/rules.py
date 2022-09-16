@@ -60,12 +60,15 @@ def getRules(path='cache'):
     # print(rule_codes[0].quickSearch)
     new_rule_list = []
     for i in range(len(rule_list)):
-        new_rule_list.append({
+        tmpObj = {
             'name':rule_list[i],
             'searchable':rule_codes[i].searchable or 0,
             'quickSearch':rule_codes[i].quickSearch or 0,
             'filterable':rule_codes[i].filterable or 0,
-        })
+        }
+        if rule_codes[i].multi:
+            tmpObj['multi'] = 1
+        new_rule_list.append(tmpObj)
     # print(new_rule_list)
     rules = {'list': new_rule_list, 'count': len(rule_list)}
     logger.info(f'自动配置装载耗时:{get_interval(t1)}毫秒')

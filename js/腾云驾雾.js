@@ -5,6 +5,7 @@ var rule = {
     detailUrl:'https://node.video.%71%71.com/x/api/float_vinfo2?cid=fyid',
     searchUrl:'https://node.video.%71%71.com/x/api/msearch?keyWord=**',
     searchable:2,
+    multi:1,
     url:'/channel/fyclass?listpage=fypage&channel=fyclass&sort=18&_all=1',
     headers:{
         'User-Agent':'PC_UA'

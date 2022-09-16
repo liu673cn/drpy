@@ -18,6 +18,7 @@ from base.database import db
 from models.ruleclass import RuleClass
 from models.playparse import PlayParse
 from js.rules import getRules
+from controllers.service import storage_service
 from concurrent.futures import ThreadPoolExecutor,as_completed,thread  # 引入线程池
 vod = Blueprint("vod", __name__)
 
@@ -45,7 +46,12 @@ def vod_home():
             return None
 
     def multi_search(wd):
+        lsg = storage_service()
         t1 = time()
+        try:
+            timeout = round(int(lsg.getItem('SEARCH_TIMEOUT',5000))/1000,2)
+        except:
+            timeout = 5
         rules = getRules('js')['list']
         rule_names = list(map(lambda x:x['name'],rules))
         rules_exclude = ['drpy']
@@ -54,10 +60,9 @@ def vod_home():
         nosearch_sites = set(rule_names) ^ set(search_sites)
         nosearch_sites.remove('drpy')
         # print(nosearch_sites)
-        logger.info(f'开始聚搜{wd},共计{len(search_sites)}个规则')
+        logger.info(f'开始聚搜{wd},共计{len(search_sites)}个规则,聚搜超时{timeout}秒')
         logger.info(f'不支持聚搜的规则,共计{len(nosearch_sites)}个规则:{",".join(nosearch_sites)}')
         # print(search_sites)
-        timeout = 5
         res = []
         with open('js/模板.js', encoding='utf-8') as f:
             before = f.read()
