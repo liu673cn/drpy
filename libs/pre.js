@@ -77,6 +77,21 @@ Object.prototype.myValues=function(obj){
    }
    return res;
 }
+if (typeof Object.prototype.values != 'function') {
+	Object.prototype.values=function(obj){
+   if(obj ==null) {
+   	 throw new TypeError("Cannot convert undefined or null to object");
+   }
+   var res=[]
+   for(var k in obj){
+     if(obj.hasOwnProperty(k)){//需判断是否是本身的属性
+   		res.push(obj[k]);
+   	 }
+   }
+   return res;
+}
+}
+
 Array.prototype.join = function (emoji) {
     // emoji = emoji||',';
     emoji = emoji||'';
@@ -93,6 +108,7 @@ Array.prototype.join = function (emoji) {
       }
       return str;
 };
+Array.prototype.append = Array.prototype.push;
 function 是否正版(vipUrl){
     let flag = new RegExp('qq\.com|iqiyi\.com|youku\.com|mgtv\.com|bilibili\.com|sohu\.com|ixigua\.com|pptv\.com|miguvideo\.com|le\.com|1905\.com|fun\.tv');
     return  flag.test(vipUrl);
@@ -145,7 +161,7 @@ function setResult(d){
     return VODS
 }
 function setResult2(res){
-    VODS = res.list;
+    VODS = res.list||[];
     return VODS
 }
 function setHomeResult(res){

@@ -14,7 +14,7 @@ subprocess.Popen = partial(subprocess.Popen, encoding="utf-8")  # 固定写法
 # 解决execjs执行js时产生的乱码报错，需要在导入该模块之前，让Popen的encoding参数锁定为utf-8
 # import execjs
 import js2py
-from js2py.base import JsObjectWrapper,PyJsString
+from js2py.base import JsObjectWrapper,PyJsString,PyJsObject
 
 # os.environ["EXECJS_RUNTIME"] = "JScript"
 # print(execjs.get().name)

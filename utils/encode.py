@@ -5,7 +5,7 @@
 # Date  : 2022/8/29
 
 import base64
-from urllib.parse import urljoin
+from urllib.parse import urljoin,quote,unquote
 from js2py.base import PyJsString
 import requests,warnings
 # 关闭警告
@@ -225,19 +225,37 @@ def request(url,obj):
 
     return base_request(url, obj)
 
+def redx(text):
+    """
+    修正js2py交互的字符串自动加前后引号问题
+    :param text:
+    :return:
+    """
+    # return text.replace("'", "").replace('"', "")
+    text = str(text)
+    if text.startswith("'") and text.endswith("'"):
+        text = text[1:-1]
+    return text
+
 def buildUrl(url,obj=None):
-    url = str(url).replace("'", "")
+    # url = str(url).replace("'", "")
+    url = redx(url)
     if not obj:
         obj = {}
     new_obj = {}
     for i in obj:
-        new_obj[str(i).replace("'", "")] = str(obj[i]).replace("'", "")
+        # new_obj[str(i).replace("'", "")] = str(obj[i]).replace("'", "")
+        new_obj[redx(i)] = redx(obj[i])
+
     if str(url).find('?') < 0:
         url = str(url) + '?'
-    prs = '&'.join([f'{i}={obj[i]}' for i in obj])
+    param_list = [f'{i}={new_obj[i]}' for i in new_obj]
+    # print(param_list)
+    prs = '&'.join(param_list)
     if len(new_obj) > 0 and not str(url).endswith('?'):
         url += '&'
-    url = (url + prs).replace('"','').replace("'",'')
+    # url = (url + prs).replace('"','').replace("'",'')
+    url = url + prs
     # print(url)
     return url
 

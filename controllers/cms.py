@@ -15,7 +15,7 @@ from utils.log import logger
 from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl,getHome
 from utils.encode import verifyCode,setDetail,join,urljoin2,parseText
 from utils.safePython import safePython
-from utils.parser import runPy,runJScode,JsObjectWrapper
+from utils.parser import runPy,runJScode,JsObjectWrapper,PyJsObject
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin,quote,unquote
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
@@ -40,12 +40,18 @@ def encodeUrl(url):
     # return base64Encode(url)
     return quote(url)
 
+def stringify(obj):
+    if isinstance(obj,PyJsObject):
+        # obj = obj.to_dict()
+        obj = parseText(str(obj))
+    return json.dumps(obj, separators=(',', ':'), ensure_ascii=False)
+
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
 'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS,
 'buildUrl':buildUrl,'getHome':getHome,'setDetail':setDetail,'join':join,'urljoin2':urljoin2,
 'PC_UA':PC_UA,'MOBILE_UA':MOBILE_UA,'UC_UA':UC_UA,'IOS_UA':IOS_UA,
-'setItem':setItem,'getItem':getItem,'clearItem':clearItem
+'setItem':setItem,'getItem':getItem,'clearItem':clearItem,'stringify':stringify
 }
 # print(getCryptoJS())
 
@@ -780,7 +786,11 @@ class CMS:
                 print(vod)
                 return vod
 
-            if not isinstance(p,dict) and not isinstance(p,str) and not str(p).startswith('js:'):
+            if not p:
+                return vod
+            if not isinstance(p,dict) and not isinstance(p,str):
+                return vod
+            if isinstance(p,str) and not str(p).startswith('js:'):
                 return vod
 
             jsp = jsoup(self.url)

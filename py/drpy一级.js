@@ -1,10 +1,10 @@
 js:
-print(input);
-print(MY_CATE);
-print(MY_PAGE);
-print(MY_FL);
+// print(input);
+// print(MY_CATE);
+// print(MY_PAGE);
+// print(MY_FL);
 let d = [];
-
+let douban = input.split('douban=')[1].split('&')[0];
 let douban_api_host = 'https://frodo.douban.com/api/v2';
 let miniapp_apikey = '0ac44ae016490db2204ce0a042db2916';
 const count = 30;
@@ -30,7 +30,7 @@ function miniapp_request(path, query){
         return JSON.parse(html);
     }
     catch(e){
-    print(e.message);
+    print('发生了错误:'+e.message);
     return {}
     }
 }
@@ -39,6 +39,7 @@ function cate_filter(d,douban){
     douban = douban||'';
     try {
         if(MY_CATE==='interests'){
+            if(douban){
             let status = MY_FL.status||"mark";
             let subtype_tag = MY_FL.subtype_tag||"";
             let year_tag = MY_FL.year_tag||"全部";
@@ -51,20 +52,84 @@ function cate_filter(d,douban){
                 "start": (MY_PAGE - 1) * count,
                 "count": count
             });
-            print(res);
+            // print(res);
+            }else{
+             return {}
+            }
         }else if(MY_CATE === "hot_gaia"){
             let sort =MY_FL.sort||"recommend";
             let area =MY_FL.area||"全部";
             let path = '/movie/'+MY_CATE;
-            res = miniapp_request(path, {
+            let res = miniapp_request(path, {
                 "area": area,
                 "sort": sort,
                 "start": (MY_PAGE - 1) * count,
                 "count": count
             });
-            print(res);
+            // print(res);
+        }else if(MY_CATE === "tv_hot" || MY_CATE === "show_hot"){
+            let stype = MY_FL.type||MY_CATE;
+            let path = "/subject_collection/"+stype+"/items"
+            let res = miniapp_request(path, {
+                "start": (MY_PAGE - 1) * count,
+                "count": count
+            });
+            // print(res);
         }
-
+        else if(MY_CATE.startsWith("rank_list")){
+            let id = MY_CATE === "rank_list_movie"?"movie_real_time_hotest":"tv_real_time_hotest";
+            id = MY_FL.榜单||id;
+            let path = "/subject_collection/"+id+"/items";
+            let res = miniapp_request(path, {
+                "start": (MY_PAGE - 1) * count,
+                "count": count
+            });
+            // print(res);
+        }else{
+            let path = "/"+MY_CATE+"/recommend";
+            let selected_categories;
+            if(Object.keys(MY_FL).length > 0){
+                let sort = MY_FL.sort||"T";
+                let tags = Object.Values(MY_FL).join(',');
+                if(MY_CATE === "movie"){
+                    selected_categories = {
+                        "类型": MY_FL.类型||'',
+                        "地区": MY_FL.地区||''
+                    }
+                }else{
+                    selected_categories = {
+                        "类型": MY_FL.类型||"",
+                        "形式": MY_FL.类型?MY_FL.类型+'地区':'',
+                        "地区": MY_FL.地区||""
+                    }
+                }
+            }else{
+                let sort = "T";
+                let tags = "";
+                if(MY_CATE === "movie"){
+                selected_categories = {
+                    "类型": "",
+                    "地区": ""
+                };
+                }else{
+                selected_categories = {
+                    "类型": "",
+                    "形式": "",
+                    "地区": ""
+                }
+                }
+            }
+            let params = {
+                "tags": tags,
+                "sort": sort,
+                "refresh": 0,
+                "selected_categories": stringify(selected_categories),
+                "start": (MY_PAGE - 1) * count,
+                "count": count
+            }
+            // print(params);
+            let res = miniapp_request(path, params)
+        }
         let result = {
             "page": MY_PAGE,
             "pagecount": Math.ceil(res.total / count),
@@ -72,7 +137,7 @@ function cate_filter(d,douban){
             "total": res.total
         }
         let items = [];
-        if(/rank_list|tv_hot|show_hot/.test(MY_CATE)) {
+        if(/^rank_list|tv_hot|show_hot/.test(MY_CATE)) {
             items = res['subject_collection_items']
         }
         else if(MY_CATE==='interests'){
@@ -93,7 +158,7 @@ function cate_filter(d,douban){
                 let honor_str = honor.map(function (it){return it.title}).join('|');
                 let vod_obj = {
                     // "vod_id": f'msearch:{item.get("type", "")}__{item.get("id", "")}',
-                    "vod_id": item.type+'$'+item.id,
+                    // "vod_id": item.type+'$'+item.id,
                     "vod_name": title !== "未知电影"?title: "暂不支持展示",
                     "vod_pic": item.pic.normal,
                     "vod_remarks": rat_str + " " + honor_str
