@@ -46,6 +46,15 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/16
+- [X] 1.规则headers合并优化
+- [X] 2.基础js功能修复,如pdfh,request,Object.keys
+- [X] 3.菜狗改为PC_UA
+- [X] 4.增加drpy首页源,实现T4相同功能
+- [X] 5.增加多源模式,聚搜超时等后台设置中心
+- [X] 6.增加豆瓣首页插件以及详情评分功能,可以custom自定义
+- [X] 7.增加嗅探配置,可自定义
+- [X] 8.版本升级 至3.6.9
 ###### 2022/09/15
 - [X] 1.修复生成配置文件中静态文件链接对应的配置文本爬虫地址渲染异常问题
 - [X] 2.删除custom里的xb、xp源
