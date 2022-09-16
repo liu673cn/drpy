@@ -12,6 +12,7 @@ var rule = {
     class_name:'电视剧&电影&综艺&动漫',
     class_url:'2&1&3&4',
     limit:5,
+    searchable:2,
     play_parse:true,
     lazy:'js:input=input.split("?")[0];log(input);',
     // 疑似t4专用的

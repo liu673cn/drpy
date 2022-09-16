@@ -45,11 +45,18 @@ def vod_home():
             return None
 
     def multi_search(wd):
+        t1 = time()
         rules = getRules('js')['list']
+        rule_names = list(map(lambda x:x['name'],rules))
         rules_exclude = ['drpy']
         new_rules = list(filter(lambda x: x.get('searchable', 0) and x.get('name', '') not in rules_exclude, rules))
         search_sites = [new_rule['name'] for new_rule in new_rules]
+        nosearch_sites = set(rule_names) ^ set(search_sites)
+        nosearch_sites.remove('drpy')
+        # print(nosearch_sites)
         logger.info(f'开始聚搜{wd},共计{len(search_sites)}个规则')
+        logger.info(f'不支持聚搜的规则,共计{len(nosearch_sites)}个规则:{",".join(nosearch_sites)}')
+        # print(search_sites)
         timeout = 5
         res = []
         with open('js/模板.js', encoding='utf-8') as f:
@@ -70,6 +77,7 @@ def vod_home():
                 import atexit
                 atexit.unregister(thread._python_exit)
                 executor.shutdown = lambda wait: None
+        logger.info(f'drpy聚搜{len(search_sites)}个源共计耗时{get_interval(t1)}毫秒')
         return jsonify({
             "list": res
         })

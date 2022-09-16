@@ -5,6 +5,7 @@ var rule = {
     url:'/list/mip-data?typeId=fyclass&page=fypage&callback=',
     detailUrl:'/play/fyid',
     searchUrl:'/search/index?key=**',
+    searchable:2,
     headers:{
         'User-Agent':'MOBILE_UA'
     },

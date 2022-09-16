@@ -8,7 +8,7 @@ var rule = {
         "Cookie": "searchneed=ok"
     },
     searchUrl:'/vodsearch/**----------fypage---.html',
-    searchable:0,
+    searchable:2,
     // class_name:'电影&网剧&剧集&动漫&综艺&记录',
     // class_url:'20&1&2&3&4&23',
     class_parse:'.stui-header__menu li:gt(0):lt(5);a&&Text;a&&href;/(\\d+).html',
