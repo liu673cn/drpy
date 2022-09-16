@@ -2,7 +2,7 @@ var rule = {
     title:'drpy',
     host:'https://frodo.douban.com',
     homeUrl:'',
-    searchUrl:'https://v.sogou.com/v?query=**&typemask=6&p=&dp=&dr=&_asf=v.sogou.com&enter=1&ie=utf8',
+    searchUrl:'',
     searchable:1,
     quickSearch:0,
     filterable:1,
