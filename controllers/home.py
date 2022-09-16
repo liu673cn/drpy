@@ -17,7 +17,7 @@ from utils.system import getHost,is_linux
 from utils.cfg import cfg
 from utils import parser
 from utils.log import logger
-from utils.files import getAlist,get_live_url
+from utils.files import getAlist,get_live_url,get_multi_rules
 from utils.update import getLocalVer,getHotSuggest
 from utils.encode import parseText
 from utils.files import getCustonDict
@@ -198,12 +198,7 @@ def config_render(mode):
     alists_str = json.dumps(alists, ensure_ascii=False)
     live_url = get_live_url(new_conf,mode)
     rules = getRules('js')
-    multi_mode = lsg.getItem('MULTI_MODE')
-    fix_multi = ['drpy']
-    if not multi_mode:
-        rules['list'] = list(filter(lambda x:x['name'] in fix_multi or x.get('multi'),rules['list']))
-        rules['count'] = len(rules['list'])
-        print(rules)
+    rules = get_multi_rules(rules)
     # html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,base64Encode=base64Encode,config=new_conf)
     html = render_template('config.txt',pys=pys,rules=rules,host=host,mode=mode,jxs=jxs,alists=alists,alists_str=alists_str,live_url=live_url,config=new_conf)
     merged_config = custom_merge(parseText(html),customConfig)
@@ -230,6 +225,7 @@ def config_gen():
         alists = getAlist()
         alists_str = json.dumps(alists,ensure_ascii=False)
         rules = getRules('js')
+        rules = get_multi_rules(rules)
         set_local = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,host=getHost(0),jxs=jxs)
         # print(set_local)
         set_area = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)

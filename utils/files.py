@@ -104,3 +104,13 @@ def getCustonDict(host):
     except Exception as e:
         logger.info(f'用户自定义配置加载失败:{e}')
     return customConfig
+
+def get_multi_rules(rules):
+    lsg = storage_service()
+    multi_mode = lsg.getItem('MULTI_MODE')
+    fix_multi = ['drpy']
+    if not multi_mode:
+        rules['list'] = list(filter(lambda x: x['name'] in fix_multi or x.get('multi'), rules['list']))
+        rules['count'] = len(rules['list'])
+        # print(rules)
+    return rules
