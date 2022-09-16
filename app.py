@@ -35,6 +35,7 @@ def create_flask_app():
 
 app = create_flask_app()
 db.init_app(app)
+db.app = app
 db.create_all(app=app)
 migrate = Migrate(app, db)
 

@@ -17,12 +17,72 @@ from controllers.cms import CMS
 from base.database import db
 from models.ruleclass import RuleClass
 from models.playparse import PlayParse
+from js.rules import getRules
+from concurrent.futures import ThreadPoolExecutor,as_completed,thread  # 引入线程池
 vod = Blueprint("vod", __name__)
+
 
 @vod.route('/vod')
 def vod_home():
+    def search_one(rule, wd, before: str = ''):
+        t1 = time()
+        if not before:
+            with open('js/模板.js', encoding='utf-8') as f:
+                before = f.read()
+        js_path = f'js/{rule}.js'
+        ctx, js_code = parser.runJs(js_path, before=before)
+        if not js_code:
+            return None
+        ruleDict = ctx.rule.to_dict()
+        ruleDict['id'] = rule  # 把路由请求的id装到字典里,后面播放嗅探才能用
+        logger.info(f'规则{rule}装载耗时:{get_interval(t1)}毫秒')
+        try:
+            cms = CMS(ruleDict, db, RuleClass, PlayParse, cfg)
+            data = cms.searchContent(wd,show_name=True)
+            return data
+        except Exception as e:
+            print(f'{rule}发生错误:{e}')
+            return None
+
+    def multi_search(wd):
+        rules = getRules('js')['list']
+        rules_exclude = ['drpy']
+        new_rules = list(filter(lambda x: x.get('searchable', 0) and x.get('name', '') not in rules_exclude, rules))
+        search_sites = [new_rule['name'] for new_rule in new_rules]
+        logger.info(f'开始聚搜{wd},共计{len(search_sites)}个规则')
+        timeout = 5
+        res = []
+        with open('js/模板.js', encoding='utf-8') as f:
+            before = f.read()
+        with ThreadPoolExecutor(max_workers=len(search_sites)) as executor:
+            to_do = []
+            for site in search_sites:
+                future = executor.submit(search_one, site, wd, before)
+                to_do.append(future)
+            try:
+                for future in as_completed(to_do, timeout=timeout):  # 并发执行
+                    ret = future.result()
+                    print(ret)
+                    if ret:
+                        res.extend(ret['list'])
+            except Exception as e:
+                print(f'发生错误:{e}')
+                import atexit
+                atexit.unregister(thread._python_exit)
+                executor.shutdown = lambda wait: None
+        return jsonify({
+            "list": res
+        })
+
     t0 = time()
     rule = getParmas('rule')
+    ac = getParmas('ac')
+    ids = getParmas('ids')
+    if ac and ids and ids.find('#') > -1:  # 聚搜的二级
+        id_list = ids.split(',')
+        rule = id_list[0].split('#')[1]
+        print(rule)
+
     ext = getParmas('ext')
     filters = getParmas('f')
     tp = getParmas('type')
@@ -58,15 +118,13 @@ def vod_home():
     # print(rule)
     cms = CMS(ruleDict,db,RuleClass,PlayParse,cfg)
     wd = getParmas('wd')
-    ac = getParmas('ac')
     quick = getParmas('quick')
     play = getParmas('play') # 类型为4的时候点击播放会带上来
     flag = getParmas('flag') # 类型为4的时候点击播放会带上来
-    filter = getParmas('filter')
+    # myfilter = getParmas('filter')
     t = getParmas('t')
     pg = getParmas('pg','1')
     pg = int(pg)
-    ids = getParmas('ids')
     q = getParmas('q')
     play_url = getParmas('play_url')
 
@@ -105,15 +163,21 @@ def vod_home():
         return jsonify(data)
     if ac and ids: # 二级
         id_list = ids.split(',')
+        if ids.find('#') > -1:
+            id_list = list(map(lambda x:x.split('#')[0],id_list))
         # print('app:377',len(id_list))
         # print(id_list)
         data = cms.detailContent(pg,id_list)
         # print(data)
         return jsonify(data)
     if wd: # 搜索
-        data = cms.searchContent(wd)
-        # print(data)
-        return jsonify(data)
+        if rule == 'drpy':
+            # print(f'准备单独处理聚合搜索:{wd}')
+            return multi_search(wd)
+        else:
+            data = cms.searchContent(wd)
+            # print(data)
+            return jsonify(data)
     # return jsonify({'rule':rule,'js_code':js_code})
     home_data = cms.homeContent(pg)
     return jsonify(home_data)

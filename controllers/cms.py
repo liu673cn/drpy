@@ -152,8 +152,8 @@ class CMS:
             headers['User-Agent'] = UA
         if not 'referer' in lower_keys:
             headers['Referer'] = host
-        # print(headers)
         self.headers = headers
+        # print(headers)
         self.host = host
         self.homeUrl = urljoin(host,homeUrl) if host and homeUrl else homeUrl or host
         if url.find('[') >-1 and url.find(']') > -1:
@@ -190,7 +190,6 @@ class CMS:
             'jsp':jsoup(self.url),
             'getParse':self.getParse,
             'saveParse':self.saveParse,
-            'headers':self.headers,
             'oheaders':self.oheaders,
             'encoding':self.encoding,
             'name':self.title,
@@ -506,7 +505,7 @@ class CMS:
                 'HOST': self.host,
                 'TYPE': 'home',  # 海阔js环境标志
                 'oheaders':self.d.oheaders,
-                'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                'fetch_params': {'headers': self.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
                 'getParse': self.d.getParse,
                 'saveParse': self.d.saveParse,
@@ -684,7 +683,7 @@ class CMS:
                 'input': url,
                 'TYPE': 'cate',  # 海阔js环境标志
                 'oheaders': self.d.oheaders,
-                'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                'fetch_params': {'headers': self.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
                 'cateID':fyclass, # 分类id
                 'MY_CATE':fyclass, # 分类id
@@ -804,7 +803,7 @@ class CMS:
                     'TYPE': 'detail',  # 海阔js环境标志
                     'cateID': fyclass,  # 当前分类
                     'oheaders': self.d.oheaders,
-                    'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                    'fetch_params': {'headers': self.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                     'd': self.d,
                     'getParse': self.d.getParse,
                     'saveParse': self.d.saveParse,
@@ -889,7 +888,7 @@ class CMS:
                         'TYPE': 'detail',  # 海阔js环境标志
                         'cateID': fyclass,  # 当前分类
                         'oheaders': self.d.oheaders,
-                        'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                        'fetch_params': {'headers': self.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                         'd': self.d,
                         'getParse': self.d.getParse,
                         'saveParse': self.d.saveParse,
@@ -995,7 +994,7 @@ class CMS:
         # print(result)
         return result
 
-    def searchContent(self, key, fypage=1):
+    def searchContent(self, key, fypage=1,show_name=False):
         pg = str(fypage)
         if not self.searchUrl:
             return self.blank()
@@ -1013,11 +1012,12 @@ class CMS:
             py_ctx.update({
                 'input': url,
                 'oheaders': self.d.oheaders,
-                'fetch_params': {'headers': self.d.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
+                'fetch_params': {'headers': self.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
                 'KEY': key,  # 搜索关键字
                 'TYPE': 'search',  # 海阔js环境标志
-                'detailUrl': self.detailUrl or '',  # 详情页链接
+                'detailUrl': self.detailUrl or '',
+                # 详情页链接
                 'getParse': self.d.getParse,
                 'saveParse': self.d.saveParse,
                 'jsp': jsp, 'setDetail': setDetail,
@@ -1100,6 +1100,11 @@ class CMS:
                 # print(videos)
             except Exception as e:
                 logger.info(f'搜索{self.getName()}发生错误:{e}')
+        if show_name and len(videos) > 0:
+            for video in videos:
+                video['vod_name'] = self.id + ' '+video['vod_name']
+                video['vod_rule'] = self.id
+                video['vod_id'] = video['vod_id'] +'#' + self.id
         result = {
             'list': videos
         }
@@ -1148,7 +1153,7 @@ class CMS:
                     py_ctx.update({
                         'input': play_url,
                         'oheaders': self.d.oheaders,
-                        'fetch_params':{'headers':self.d.headers,'timeout':self.d.timeout,'encoding':self.d.encoding},
+                        'fetch_params':{'headers':self.headers,'timeout':self.d.timeout,'encoding':self.d.encoding},
                         'd': self.d,
                         'jxs':jxs,
                         'getParse':self.d.getParse,

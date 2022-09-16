@@ -227,7 +227,7 @@ function request(url,obj){
     }else{
         new_obj = obj||{}
     }
-    if(!obj||!obj.headers||(!obj.headers['User-Agent']&&!obj.headers['user-agent'])){
+    if(!new_obj||!new_obj.headers||(!new_obj.headers['User-Agent']&&!new_obj.headers['user-agent'])){
         new_obj.headers['User-Agent'] = MOBILE_UA;
     }
     // delete new_obj.headers['Referer'];

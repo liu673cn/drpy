@@ -1,7 +1,10 @@
 js:
 let d=[];
 let html = request(input);
-let jsonA = JSON.parse(html.match(/INITIAL_STATE.*?({.*});/)[1]).result.longVideo.results;
+// print(html);
+let jsonA = JSON.parse(html.match(/INITIAL_STATE.*?({.*});/)[1]);
+print(jsonA);
+jsonA = jsonA.result.longVideo.results;
 jsonA.forEach(function (it){
     let name=it.name;
     let introduction=it.introduction;
