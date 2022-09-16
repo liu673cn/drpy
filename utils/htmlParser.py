@@ -22,6 +22,7 @@ class jsoup:
     def pdfh(self,html,parse:str,add_url=False):
         if not parse:
             return ''
+
         doc = pq(html)
         option = None
         if parse.find('&&') > -1:
@@ -32,8 +33,9 @@ class jsoup:
             else:
                 parse = parse[0] if self.test(':eq|:lt|:gt|#',parse[0]) else f'{parse[0]}:eq(0)'
         # FIXME 暂时不支持jsonpath那样的|| 分割取或属性
+
         if option:
-            # print(f'parse:{parse}=>(option:{option})')
+            print(f'parse:{parse}=>(option:{option})')
             ret = doc(parse)
             # print(html)
             # FIXME 解析出来有多个的情况应该自动取第一个
@@ -42,8 +44,8 @@ class jsoup:
             elif option == 'Html':
                 ret = ret.html()
             else:
-                ret = ret.attr(option)
-                if add_url and option in ['url','src','href','data-original','data-src']:
+                ret = ret.attr(option) or ''
+                if ret and add_url and option in ['url','src','href','data-original','data-src']:
                     if 'http' in ret:
                         ret = ret[ret.find('http'):]
                     else:
