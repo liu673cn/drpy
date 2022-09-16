@@ -23,70 +23,116 @@ from concurrent.futures import ThreadPoolExecutor,as_completed,thread  # 引入�
 vod = Blueprint("vod", __name__)
 
 
-@vod.route('/vod')
-def vod_home():
-    def search_one(rule, wd, before: str = ''):
-        t1 = time()
-        if not before:
-            with open('js/模板.js', encoding='utf-8') as f:
-                before = f.read()
-        js_path = f'js/{rule}.js'
+def search_one(rule, wd, before: str = ''):
+    t1 = time()
+    if not before:
+        with open('js/模板.js', encoding='utf-8') as f:
+            before = f.read()
+    js_path = f'js/{rule}.js'
+    try:
         ctx, js_code = parser.runJs(js_path, before=before)
         if not js_code:
             return None
         ruleDict = ctx.rule.to_dict()
         ruleDict['id'] = rule  # 把路由请求的id装到字典里,后面播放嗅探才能用
         logger.info(f'规则{rule}装载耗时:{get_interval(t1)}毫秒')
+        cms = CMS(ruleDict, db, RuleClass, PlayParse, cfg)
+        data = cms.searchContent(wd, show_name=True)
+        return data
+    except Exception as e:
+        print(f'{rule}发生错误:{e}')
+        return None
+
+def multi_search2(wd):
+    t1 = time()
+    lsg = storage_service()
+    try:
+        timeout = round(int(lsg.getItem('SEARCH_TIMEOUT', 5000)) / 1000, 2)
+    except:
+        timeout = 5
+    rules = getRules('js')['list']
+    rule_names = list(map(lambda x: x['name'], rules))
+    rules_exclude = ['drpy']
+    new_rules = list(filter(lambda x: x.get('searchable', 0) and x.get('name', '') not in rules_exclude, rules))
+    search_sites = [new_rule['name'] for new_rule in new_rules]
+    nosearch_sites = set(rule_names) ^ set(search_sites)
+    nosearch_sites.remove('drpy')
+    # print(nosearch_sites)
+    logger.info(f'开始聚搜{wd},共计{len(search_sites)}个规则,聚搜超时{timeout}秒')
+    logger.info(f'不支持聚搜的规则,共计{len(nosearch_sites)}个规则:{",".join(nosearch_sites)}')
+    # print(search_sites)
+    res = []
+    with open('js/模板.js', encoding='utf-8') as f:
+        before = f.read()
+    logger.info(f'聚搜准备工作耗时:{get_interval(t1)}毫秒')
+    t2 = time()
+    thread_pool = ThreadPoolExecutor(len(search_sites))  # 定义线程池来启动多线程执行此任务
+    obj_list = []
+    try:
+        for site in search_sites:
+            obj = thread_pool.submit(search_one, site, wd, before)
+            obj_list.append(obj)
+        thread_pool.shutdown(wait=True)  # 等待所有子线程并行完毕
+        vod_list = [obj.result() for obj in obj_list]
+        for vod in vod_list:
+            if vod and isinstance(vod, dict) and vod.get('list') and len(vod['list']) > 0:
+                res.extend(vod['list'])
+        result = {
+            'list': res
+        }
+        logger.info(f'drpy聚搜{len(search_sites)}个源耗时{get_interval(t2)}毫秒,含准备共计耗时{get_interval(t1)}毫秒')
+    except Exception as e:
+        result = {
+            'list': []
+        }
+        logger.info(f'drpy聚搜{len(search_sites)}个源耗时{get_interval(t2)}毫秒,含准备共计耗时:{get_interval(t1)}毫秒,发生错误:{e}')
+    return jsonify(result)
+
+
+def multi_search(wd):
+    lsg = storage_service()
+    t1 = time()
+    try:
+        timeout = round(int(lsg.getItem('SEARCH_TIMEOUT',5000))/1000,2)
+    except:
+        timeout = 5
+    rules = getRules('js')['list']
+    rule_names = list(map(lambda x:x['name'],rules))
+    rules_exclude = ['drpy']
+    new_rules = list(filter(lambda x: x.get('searchable', 0) and x.get('name', '') not in rules_exclude, rules))
+    search_sites = [new_rule['name'] for new_rule in new_rules]
+    nosearch_sites = set(rule_names) ^ set(search_sites)
+    nosearch_sites.remove('drpy')
+    # print(nosearch_sites)
+    logger.info(f'开始聚搜{wd},共计{len(search_sites)}个规则,聚搜超时{timeout}秒')
+    logger.info(f'不支持聚搜的规则,共计{len(nosearch_sites)}个规则:{",".join(nosearch_sites)}')
+    # print(search_sites)
+    res = []
+    with open('js/模板.js', encoding='utf-8') as f:
+        before = f.read()
+    with ThreadPoolExecutor(max_workers=len(search_sites)) as executor:
+        to_do = []
+        for site in search_sites:
+            future = executor.submit(search_one, site, wd, before)
+            to_do.append(future)
         try:
-            cms = CMS(ruleDict, db, RuleClass, PlayParse, cfg)
-            data = cms.searchContent(wd,show_name=True)
-            return data
+            for future in as_completed(to_do, timeout=timeout):  # 并发执行
+                ret = future.result()
+                # print(ret)
+                if ret and isinstance(ret,dict) and ret.get('list'):
+                    res.extend(ret['list'])
         except Exception as e:
-            print(f'{rule}发生错误:{e}')
-            return None
+            print(f'发生错误:{e}')
+            import atexit
+            atexit.unregister(thread._python_exit)
+            executor.shutdown = lambda wait: None
+    logger.info(f'drpy聚搜{len(search_sites)}个源共计耗时{get_interval(t1)}毫秒')
+    return jsonify({
+        "list": res
+    })
 
-    def multi_search(wd):
-        lsg = storage_service()
-        t1 = time()
-        try:
-            timeout = round(int(lsg.getItem('SEARCH_TIMEOUT',5000))/1000,2)
-        except:
-            timeout = 5
-        rules = getRules('js')['list']
-        rule_names = list(map(lambda x:x['name'],rules))
-        rules_exclude = ['drpy']
-        new_rules = list(filter(lambda x: x.get('searchable', 0) and x.get('name', '') not in rules_exclude, rules))
-        search_sites = [new_rule['name'] for new_rule in new_rules]
-        nosearch_sites = set(rule_names) ^ set(search_sites)
-        nosearch_sites.remove('drpy')
-        # print(nosearch_sites)
-        logger.info(f'开始聚搜{wd},共计{len(search_sites)}个规则,聚搜超时{timeout}秒')
-        logger.info(f'不支持聚搜的规则,共计{len(nosearch_sites)}个规则:{",".join(nosearch_sites)}')
-        # print(search_sites)
-        res = []
-        with open('js/模板.js', encoding='utf-8') as f:
-            before = f.read()
-        with ThreadPoolExecutor(max_workers=len(search_sites)) as executor:
-            to_do = []
-            for site in search_sites:
-                future = executor.submit(search_one, site, wd, before)
-                to_do.append(future)
-            try:
-                for future in as_completed(to_do, timeout=timeout):  # 并发执行
-                    ret = future.result()
-                    # print(ret)
-                    if ret and isinstance(ret,dict) and ret.get('list'):
-                        res.extend(ret['list'])
-            except Exception as e:
-                print(f'发生错误:{e}')
-                import atexit
-                atexit.unregister(thread._python_exit)
-                executor.shutdown = lambda wait: None
-        logger.info(f'drpy聚搜{len(search_sites)}个源共计耗时{get_interval(t1)}毫秒')
-        return jsonify({
-            "list": res
-        })
-
+@vod.route('/vod')
+def vod_home():
     t0 = time()
     rule = getParmas('rule')
     ac = getParmas('ac')
@@ -187,6 +233,7 @@ def vod_home():
         if rule == 'drpy':
             # print(f'准备单独处理聚合搜索:{wd}')
             return multi_search(wd)
+            # return multi_search2(wd)
         else:
             data = cms.searchContent(wd)
             # print(data)
