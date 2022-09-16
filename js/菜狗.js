@@ -1,6 +1,6 @@
 var rule = {
     title:'菜狗',
-    host:'https://waptv.sogou.com/',
+    host:'https://waptv.sogou.com',
     homeUrl:'',
     searchUrl:'https://v.sogou.com/v?query=**&typemask=6&p=&dp=&dr=&_asf=v.sogou.com&enter=1&ie=utf8',
     searchable:1,
