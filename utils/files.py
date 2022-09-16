@@ -107,9 +107,9 @@ def getCustonDict(host):
 
 def get_multi_rules(rules):
     lsg = storage_service()
-    multi_mode = lsg.getItem('MULTI_MODE')
+    multi_mode = lsg.getItem('MULTI_MODE',0)
     fix_multi = ['drpy']
-    if not multi_mode:
+    if not multi_mode or str(multi_mode)=='0':
         rules['list'] = list(filter(lambda x: x['name'] in fix_multi or x.get('multi'), rules['list']))
         rules['count'] = len(rules['list'])
         # print(rules)
