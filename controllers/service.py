@@ -52,7 +52,7 @@ class storage_service(object):
     @classmethod
     def getItem(self, key, value=''):
         res = Storage.getItem(key,value)
-        if str(res) == '0' or str(res) == 'false' or str(res) == 'False':
+        if not str(res) or str(res) == '0' or str(res) == 'false' or str(res) == 'False':
             return 0
         return res
 
