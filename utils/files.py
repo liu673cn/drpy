@@ -78,7 +78,7 @@ def custom_merge(original:dict,custom:dict):
     new_keys = custom.keys()
     updateObj = {}
     extend_obj = {}
-    for key in ['wallpaper','spider','homepage','lives','hotSearch']:
+    for key in ['wallpaper','spider','homepage','lives','hotSearch','sniffer','recommend','rating']:
         if key in new_keys:
             updateObj[key] = custom[key]
 
