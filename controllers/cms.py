@@ -1048,7 +1048,7 @@ class CMS:
                 if is_json:
                     html = self.dealJson(html)
                     html = json.loads(html)
-                print(html)
+                # print(html)
                 if not is_json and html.find('输入验证码') > -1:
                     cookie = verifyCode(url,self.headers,self.timeout,self.retry_count,self.ocr_api)
                     # cookie = ''
@@ -1063,15 +1063,13 @@ class CMS:
                     html = r.text
 
                 items = pdfa(html,p[0].replace('json:','',1))
-                print(len(items),items)
+                # print(len(items),items)
                 videos = []
                 for item in items:
                     # print(item)
                     try:
                         # title = pdfh(item, p[1])
-                        print(p[1].split('||'))
                         title = ''.join([pdfh(item, i) for i in p[1].split('||')])
-                        print(title)
                         try:
                             img = pd(item, p[2])
                         except:
