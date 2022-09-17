@@ -46,6 +46,9 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/17
+- [X] 1.pluto1.5.1最新beta版支持drpy首页推荐点击跳drpy内部聚搜(原理同T4)
+- [X] 2.pluto1.5.1最新beta版支持searchable为2的源忽略参与聚搜,正常单一搜索
 ###### 2022/09/16
 - [X] 1.规则headers合并优化
 - [X] 2.基础js功能修复,如pdfh,request,Object.keys

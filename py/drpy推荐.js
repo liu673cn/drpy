@@ -29,8 +29,8 @@ function subject_real_time_hotest(){
                 let rating = item.rating?item.rating.value:"暂无评分";
                 let honnor = (item.honor_infos||[]).map(function (it){return it.title}).join('|');
                 lists.append({
-                    // "vod_id": "",
-                    "vod_id": TYPE+"$1",
+                    "vod_id": "msearch:"+TYPE,
+                    // "vod_id": TYPE+"$1",
                     "vod_name": item.title||"",
                     "vod_pic": item.pic.normal,
                     "vod_remarks": rating + " " + honnor
