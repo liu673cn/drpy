@@ -763,7 +763,7 @@ class CMS:
 
         return result
 
-    def detailOneVod(self,id,fyclass=''):
+    def detailOneVod(self,id,fyclass='',show_name=False):
         detailUrl = str(id)
         vod = {}
         if not detailUrl.startswith('http') and not '/' in detailUrl:
@@ -780,7 +780,7 @@ class CMS:
                 vod['vod_play_from'] = '道长在线'
                 vod['vod_remarks'] = detailUrl
                 vod['vod_actor'] = '没有二级,只有一级链接直接嗅探播放'
-                vod['vod_content'] = url
+                vod['vod_content'] = url if not show_name else f'({self.id}) {url}'
                 vod['vod_play_url'] = '嗅探播放$'+self.play_url+url
                 print(vod)
                 return vod
@@ -958,9 +958,11 @@ class CMS:
                 # print(vod_play_url)
         except Exception as e:
             logger.info(f'{self.getName()}获取单个详情页{detailUrl}出错{e}')
+        if show_name:
+            vod['vod_content'] = f'({self.id}){vod.get("vod_content","")}'
         return vod
 
-    def detailContent(self, fypage, array):
+    def detailContent(self, fypage, array,show_name=False):
         """
         cms二级数据
         :param array:
@@ -978,7 +980,7 @@ class CMS:
                     tmp = vod_url.split('$')
                     vod_class = tmp[0]
                     vod_url = tmp[1]
-                obj = thread_pool.submit(self.detailOneVod, vod_url,vod_class)
+                obj = thread_pool.submit(self.detailOneVod, vod_url,vod_class,show_name)
                 obj_list.append(obj)
             thread_pool.shutdown(wait=True)  # 等待所有子线程并行完毕
             vod_list = [obj.result() for obj in obj_list]

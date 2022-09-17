@@ -222,11 +222,13 @@ def vod_home():
         return jsonify(data)
     if ac and ids: # 二级
         id_list = ids.split(',')
+        show_name = False
         if ids.find('#') > -1:
             id_list = list(map(lambda x:x.split('#')[0],id_list))
+            show_name = True
         # print('app:377',len(id_list))
         # print(id_list)
-        data = cms.detailContent(pg,id_list)
+        data = cms.detailContent(pg,id_list,show_name)
         # print(data)
         return jsonify(data)
     if wd: # 搜索
