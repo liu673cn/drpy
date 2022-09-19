@@ -56,7 +56,7 @@ py_ctx = {
 # print(getCryptoJS())
 
 class CMS:
-    def __init__(self, rule, db=None, RuleClass=None, PlayParse=None,new_conf=None):
+    def __init__(self, rule, db=None, RuleClass=None, PlayParse=None,new_conf=None,ext=''):
         if new_conf is None:
             new_conf = {}
         self.lsg = storage_service()
@@ -104,7 +104,7 @@ class CMS:
             # print(play_url)
             if self.play_parse:
                 # self.play_url = play_url + self.vod + '?play_url='
-                self.play_url = f'{play_url}{self.vod}?rule={self.id}&play_url='
+                self.play_url = f'{play_url}{self.vod}?rule={self.id}&ext={ext}&play_url='
                 # logger.info(f'cms重定向链接:{self.play_url}')
             else:
                 self.play_url = ''

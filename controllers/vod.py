@@ -178,7 +178,7 @@ def vod_home():
     logger.info(f'js装载耗时:{get_interval(t2)}毫秒')
     # print(ruleDict)
     # print(rule)
-    cms = CMS(ruleDict,db,RuleClass,PlayParse,cfg)
+    cms = CMS(ruleDict,db,RuleClass,PlayParse,cfg,ext)
     wd = getParmas('wd')
     quick = getParmas('quick')
     play = getParmas('play') # 类型为4的时候点击播放会带上来
