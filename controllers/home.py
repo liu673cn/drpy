@@ -6,23 +6,24 @@
 import json
 import os
 
+
 from flask import Blueprint,abort,render_template,render_template_string,url_for,redirect,make_response,send_from_directory
 from controllers.service import storage_service
 from controllers.classes import getClasses,getClassInfo
-from utils.web import getParmas
-from utils.files import getPics,custom_merge
+
+from utils.files import getPics,custom_merge,getAlist,get_live_url,get_multi_rules,getCustonDict
 from js.rules import getRules,getPys
+from utils.encode import parseText
 from base.R import R
 from utils.system import getHost,is_linux
 from utils.cfg import cfg
 from utils import parser
 from utils.log import logger
-from utils.files import getAlist,get_live_url,get_multi_rules
 from utils.update import getLocalVer,getHotSuggest
-from utils.encode import parseText
-from utils.files import getCustonDict
 from js.rules import getJxs
 import random
+from utils.web import getParmas
+
 
 home = Blueprint("home", __name__,static_folder='/static')
 

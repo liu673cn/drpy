@@ -146,15 +146,18 @@ def vod_home():
     filters = getParmas('f')
     tp = getParmas('type')
     # print(f'type:{tp}')
-    if not ext.startswith('http') and not rule:
+    # if not ext.startswith('http') and not rule:
+    if not rule:
         return R.failed('规则字段必填')
     rule_list = getRuleLists()
-    if not ext.startswith('http') and not rule in rule_list:
+    # if not ext.startswith('http') and not rule in rule_list:
+    if not ext and not rule in rule_list:
         msg = f'服务端本地仅支持以下规则:{",".join(rule_list)}'
         return R.failed(msg)
     # logger.info(f'检验耗时:{get_interval(t0)}毫秒')
     t1 = time()
-    js_path = f'js/{rule}.js' if not ext.startswith('http') else ext
+    # js_path = f'js/{rule}.js' if not ext.startswith('http') else ext
+    js_path = f'js/{rule}.js' if not ext else ext
     with open('js/模板.js', encoding='utf-8') as f:
         before = f.read()
     # logger.info(f'js读取耗时:{get_interval(t1)}毫秒')

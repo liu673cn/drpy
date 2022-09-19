@@ -217,7 +217,7 @@ function getFileSize(fileObj) {
      <input type="button" id="upload" value="上传" class="btn"/>
 </form>
 <p id="file_size"></p>
-<h2>规则列表数据-共{{rules.count}}条</h2>
+<h4 >规则列表数据-共{{rules.count+cache_count}}条(内置:{{rules.count}} 缓存:{{cache_count}})</h4>
 {% if rules.count < 1 %}
 <h3>暂无内置的规则</h3>
 {% endif %}

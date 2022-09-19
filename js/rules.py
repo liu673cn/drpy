@@ -3,12 +3,13 @@
 # File  : rules.py.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/8/25
-
+import json
 import os
 from time import time
 import js2py
 from utils.log import logger
-from utils.web import get_interval,UA
+# from utils.web import get_interval,UA
+from utils.ua import UA,get_interval
 
 def getRuleLists():
     base_path = os.path.dirname(os.path.abspath(__file__)) # 当前文件所在目录
@@ -19,6 +20,13 @@ def getRuleLists():
     rule_list = [file.replace('.js','') for file in file_name]
     # print(rule_list)
     return rule_list
+
+def getCacheCount():
+    base_path = 'cache/'  # 当前缓存js所在目录
+    os.makedirs(base_path, exist_ok=True)
+    file_name = os.listdir(base_path)
+    file_name = list(filter(lambda x: str(x).endswith('.js') and str(x).find('模板') < 0, file_name))
+    return len(file_name)
 
 def getRules(path='cache'):
     t1 = time()
@@ -135,5 +143,38 @@ def getPys(path='txt/py'):
     logger.info(f'自动加载Pyramid耗时:{get_interval(t1)}毫秒')
     return new_rule_list
 
+def gen_cache(path='txt/js/tg'):
+    t1 = time()
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    py_path = os.path.join(base_path, path)
+    os.makedirs(py_path, exist_ok=True)
+    file_name = os.listdir(py_path)
+    file_name = list(filter(lambda x: str(x).endswith('.js'), file_name))
+    # print(file_name)
+    rule_list = [file.replace('.js', '') for file in file_name]
+    js_path = [f'{path}/{rule}.js' for rule in rule_list]
+    new_rule_list = []
+    for i in range(len(rule_list)):
+        # print(js_path[i])
+        rname = rule_list[i]
+        new_rule_list.append(
+            {
+                "key": f"dr_{rname}",
+                "name": f"{rname}(道长)",
+                "type": 1,
+                # "api": "{{host}}"+f"/vod?rule={rname}&ext="+"{{host}}/"+js_path[i],
+                "api": "{{host}}"+f"/vod?rule={rname}&ext="+js_path[i],
+                "searchable": 2,
+                "quickSearch": 0,
+                "filterable": 0
+            })
+    logger.info(f'自动加载{len(new_rule_list)}个缓存JS耗时:{get_interval(t1)}毫秒')
+    new_rules_texts = [json.dumps(new_rule,ensure_ascii=False) for new_rule in new_rule_list]
+    # new_rules_text = json.dumps(new_rule_list,ensure_ascii=False)
+    new_rules_text = ',\n'.join(new_rules_texts)+','
+    return new_rules_text
+
 if __name__ == '__main__':
     print(getRuleLists())
+    print(gen_cache())
+    print(gen_cache('txt/js/18'))

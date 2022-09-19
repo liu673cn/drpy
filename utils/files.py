@@ -8,9 +8,8 @@ import os
 import shutil
 
 from utils.system import getHost
-from utils.encode import base64Encode
 from controllers.service import storage_service
-from utils.encode import parseText
+from utils.encode import base64Encode,parseText
 from flask import render_template_string
 from utils.log import logger
 

@@ -11,7 +11,7 @@ from base.R import R
 from utils.update import getLocalVer,getOnlineVer,download_new_version,download_lives,copy_to_update
 from utils import parser
 from utils.web import getParmas,verfy_token
-from js.rules import getRules
+from js.rules import getRules,getCacheCount
 from utils.parser import runJScode
 from werkzeug.utils import secure_filename
 from utils.web import md5
@@ -35,7 +35,8 @@ def admin_index():  # 管理员界面
     live_url = lsg.getItem('LIVE_URL')
     use_py = lsg.getItem('USE_PY')
     # print(f'live_url:', live_url)
-    return render_template('admin.html', pystate=use_py,rules=getRules('js'), ver=getLocalVer(), live_url=live_url)
+    cache_count = getCacheCount()
+    return render_template('admin.html', pystate=use_py,rules=getRules('js'),cache_count=cache_count, ver=getLocalVer(), live_url=live_url)
 
 @admin.route('/settings')
 def admin_settings():  # 管理员界面

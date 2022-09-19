@@ -5,6 +5,7 @@
 # Date  : 2022/8/25
 
 import os
+import shutil
 
 import requests
 from flask import make_response, jsonify
@@ -41,7 +42,9 @@ def runJs(jsPath, before='', after='', ctx=None):
         print('远程规则:',js_name)
         if not os.path.exists(cache_path):
             try:
-                js_code = requests.get(jsPath,timeout=2).text
+                print(jsPath)
+                js_code = requests.get(url=jsPath,timeout=3).text
+                # js_code = requests.get(jsPath).text
                 with open(cache_path,mode='w+',encoding='utf-8') as f:
                     f.write(js_code)
             except Exception as e:
@@ -52,7 +55,13 @@ def runJs(jsPath, before='', after='', ctx=None):
                 js_code = fp.read()
     else:
         js_path = os.path.join(base_path, jsPath)
-        # print(js_path)
+        if not os.path.exists(js_path):
+            return None,''
+        js_name = jsPath.split('/')[-1]
+        cache_path = os.path.join(base_path, f'cache/{js_name}')
+        if not os.path.exists(cache_path) and os.path.exists(js_path):
+            shutil.copy(js_path,cache_path)
+        print(js_path)
         with open(js_path, 'r', encoding='UTF-8') as fp:
             js_code = fp.read()
     # print(js_code)
