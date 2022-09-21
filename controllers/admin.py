@@ -8,6 +8,9 @@ import os
 from flask import Blueprint,request,render_template,jsonify,make_response
 from controllers.service import storage_service,rules_service
 from base.R import R
+from base.database import db
+from utils.log import logger
+import shutil
 from utils.update import getLocalVer,getOnlineVer,download_new_version,download_lives,copy_to_update
 from utils import parser
 from utils.web import getParmas,verfy_token
@@ -97,12 +100,17 @@ def admin_update_db():
     if not verfy_token():
         # return render_template('login.html')
         return R.error('请登录后再试')
+    old_dbfile = 'migrations'
+    if os.path.exists(old_dbfile):
+        logger.info(f'开始删除历史数据库迁移文件:{old_dbfile}')
+        shutil.rmtree(old_dbfile)
+    db.session.execute('drop table if exists alembic_version')
     cmd = 'flask db migrate && flask db upgrade'
     if not os.path.exists('migrations'):
         cmd = 'flask db init && '+cmd
-    print(f'开始执行cmd:{cmd}')
+    logger.info(f'开始执行cmd:{cmd}')
     result = os.system(cmd)
-    print(f'cmd执行结果:{result}')
+    logger.info(f'cmd执行结果:{result}')
     return R.success('数据库升级完毕')
 
 @admin.route('/update_ver')

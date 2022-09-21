@@ -31,12 +31,12 @@ def create_flask_app():
     wlan_info,_ = get_wlan_info()
     logger.info(rule_list)
     logger.info(f'局域网: {getHost(1, app.config.get("HTTP_PORT"))}/index\n本地: {getHost(0, app.config.get("HTTP_PORT"))}/index\nwlan_info:{wlan_info}')
+    db.init_app(app)
+    db.app = app
+    db.create_all(app=app)
     return app
 
 app = create_flask_app()
-db.init_app(app)
-db.app = app
-db.create_all(app=app)
 migrate = Migrate(app, db)
 
 now_python_ver = ".".join([str(i) for i in sys.version_info[:3]])

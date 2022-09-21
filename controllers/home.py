@@ -254,21 +254,22 @@ def config_gen():
         # print(set_local)
         set_area = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
         set_online = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
+        ali_token = new_conf.ALI_TOKEN
         with open('txt/pycms0.json','w+',encoding='utf-8') as f:
-            customConfig = getCustonDict(getHost(0))
+            customConfig = getCustonDict(getHost(0),ali_token)
             set_dict = custom_merge(parseText(set_local), customConfig)
             merged_hide(set_dict)
             # set_dict = json.loads(set_local)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
         with open('txt/pycms1.json','w+',encoding='utf-8') as f:
-            customConfig = getCustonDict(getHost(1))
+            customConfig = getCustonDict(getHost(1),ali_token)
             set_dict = custom_merge(parseText(set_area), customConfig)
             merged_hide(set_dict)
             # set_dict = json.loads(set_area)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
 
         with open('txt/pycms2.json','w+',encoding='utf-8') as f:
-            customConfig = getCustonDict(getHost(2))
+            customConfig = getCustonDict(getHost(2),ali_token)
             set_dict = custom_merge(parseText(set_online), customConfig)
             merged_hide(set_dict)
             # set_dict = json.loads(set_online)

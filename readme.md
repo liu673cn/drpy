@@ -46,6 +46,8 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/22
+- [X] 1.v3.7.3修复静态文件阿里token没渲染的bug,修复数据库升级bug,优化app.py
 ###### 2022/09/21
 - [X] 1.未来功能增加显示和隐藏多选规则的实际逻辑，增加顺序字段等待有缘人
 - [X] 2.版本升级至3.7.0

@@ -47,7 +47,7 @@
         console.log(this);
       });
       $('#update_db').click(function (){
-        if(confirm('确定要升级数据库?判断标准为是否正常打开缓存文件列表-查看界面,如果正常就不需要进行此操作。升级数据库后将正常使用未来功能多选操作,可对规则进行多选显示或者隐藏')){
+        if(confirm('确定要升级数据库?升级过程可能较长,需要耐心等待提示完成。判断标准为是否正常打开缓存文件列表-查看界面,如果正常就不需要进行此操作。升级数据库后将正常使用未来功能多选操作,可对规则进行多选显示或者隐藏')){
           $.get("/admin/update_db",function(data,status){
                    console.log(data);
                    if(data.code === 200){
