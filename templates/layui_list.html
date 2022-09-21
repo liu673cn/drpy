@@ -18,6 +18,10 @@
 
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" id="moreTest">
+      多选操作
+      <i class="layui-icon layui-icon-down layui-font-12"></i>
+    </button>
     <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
     <button class="layui-btn layui-btn-sm" lay-event="getData">获取当前页数据</button>
     <button class="layui-btn layui-btn-sm" lay-event="isAll">是否全选</button>
@@ -31,10 +35,7 @@
     <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="default-row">
       单行
     </button>
-    <button class="layui-btn layui-btn-sm" id="moreTest">
-      更多测试
-      <i class="layui-icon layui-icon-down layui-font-12"></i>
-    </button>
+
   </div>
 </script>
 
@@ -52,17 +53,48 @@
 </script>
 
 
+
+
 <script>
 layui.use(['table', 'dropdown'], function(){
   var table = layui.table;
   var dropdown = layui.dropdown;
   var $ = layui.$;
+  var form = layui.form;
   layer.msg('本页面展示数据为未来功能，<br>可能并没有实际作用,等道长弃坑后续有缘人补上。', {
     closeBtn: 1,
     icon: 6,
     time: 21*1000,
     offset: '21px'
   });
+
+  function setState(data,to_set_state){
+    if(data.length < 1){
+      return layer.msg('请至少选择一行');
+    }
+    to_set_state = to_set_state||0;
+    console.log(data);
+    let site_names = data.map(it=>it.site_name);
+    let site_names_str = site_names.join(',');
+    console.log('准备将'+site_names_str+'的显示状态设置为:'+to_set_state);
+    let params = {"names":site_names_str};
+    console.log(params);
+    $.post("/admin/rule_state/"+to_set_state,params,function(data,status){
+               console.log(data);
+               if(data.code === 200){
+                   // alert(data.msg);
+                  // location.reload();
+                 table.reload('test', {
+                    // page: {
+                    //     curr: 3 //重新从第 1 页开始
+                    // }
+                });
+               }else{
+                   console.log('修改失败了...');
+                   return false
+               }
+       });
+  }
 
   // 创建渲染实例
   table.render({
@@ -79,16 +111,28 @@ layui.use(['table', 'dropdown'], function(){
     // ,totalRow: true // 开启合计行
     ,page: true
     ,limit:12
+    ,limits:[10,20,40,60,80,100,150,200]
     ,cols: [[
       {type: 'checkbox', fixed: 'left'}
       // ,{field: 'id', fixed: 'left',title: 'ID', width: 20, sort: true,totalRowText: '合计：'}
       ,{field: 'id',title: 'ID', width: 20, sort: true}
-      ,{field: 'name', title: '名称', width: 120}
+      ,{field: 'site_name', title: '存储名称', width: 120}
+      ,{field: 'name', title: '显示名称', width: 120}
       ,{field: 'key', title: '唯一标识', width: 120}
       ,{field: 'type', title: '<i class="layui-icon layui-icon-email">类型</i>', minWidth: 80}
       ,{field: 'searchable', title: '可搜索', minWidth: 80}
       ,{field: 'quickSearch', title: '可快搜', minWidth: 80}
       ,{field: 'filterable', title: '可筛选', minWidth: 80}
+      , {
+        field: 'state', title: '是否显示', minWidth: 80, templet: function (res) {
+          let menuId = res.site_name;
+          if (res.state === 1) {
+            return "   <input type='checkbox'  menuId = '" + menuId + "' lay-filter='state' lay-skin='switch' lay-text='显示|已隐藏' checked>"
+          } else if (res.state === 0) {
+            return "   <input type='checkbox'  menuId = '" + menuId + "'  lay-filter='state' lay-skin='switch' lay-text='显示|已隐藏'>"
+          }
+        }
+      }
       // ,{field:'city', width:115, title: '城市', minWidth:115, templet: '#cityTpl', exportTemplet: function(d, obj){
       //   //console.log(obj)
       //   // 处理该字段的导出数据
@@ -172,6 +216,12 @@ layui.use(['table', 'dropdown'], function(){
       dropdown.render({
         elem: '#moreTest' //可绑定在任意元素中，此处以上述按钮为例
         ,data: [{
+          id: 'show',
+          title: '显示'
+        },{
+          id: 'hide',
+          title: '隐藏'
+        },{
           id: 'add',
           title: '添加'
         },{
@@ -186,6 +236,14 @@ layui.use(['table', 'dropdown'], function(){
           var checkStatus = table.checkStatus(id)
           var data = checkStatus.data; // 获取选中的数据
           switch(obj.id){
+            case 'show':
+              // console.log(obj);
+              setState(data,1)
+              break;
+            case 'hide':
+              // console.log(obj);
+              setState(data,0)
+              break;
             case 'add':
               layer.open({
                 title: '添加',
@@ -270,13 +328,21 @@ layui.use(['table', 'dropdown'], function(){
         console.log(obj);
         let params = {"names":[obj_name].join(',')};
         console.log(params);
-        $.post("/admin/rule_state/0",params,function(data,status){
-                   console.log(data);
-                   if(data.code === 200){
-                       alert(data.msg);
+        $.post("/admin/rule_state/0",params,function(res,status){
+                   console.log(res);
+                   if(res.code === 200){
+                     data.state = 0;
+                     obj.update({
+                          // 这里的字段必须要在 table.render.cols.filed 有定义，否则无法触发表格渲染
+                          // key 决定是否重新渲染某一列，value 由 templet 里的语句进行逻辑处理
+                          state: data.state
+                      });
+                     // $('input[menuid="'+obj_name+'"]').removeAttr('checked');
+                     // table.render();
+                       // alert(data.msg);
                       // location.reload();
                    }else{
-                       alert(data.msg);
+                       // alert(data.msg);
                        console.log('修改失败了...');
                        return false
                    }
@@ -324,6 +390,31 @@ layui.use(['table', 'dropdown'], function(){
     var update = {};
     update[field] = value;
     obj.update(update);
+  });
+
+  form.on('switch(state)', function (data) {
+        let site_name = data.elem.attributes['menuId'].nodeValue;
+        let to_set_state = data.elem.checked?1:0;
+        console.log('准备将'+site_name+'的显示状态设置为:'+to_set_state);
+        let params = {"names":[site_name].join(',')};
+        console.log(params);
+        $.post("/admin/rule_state/"+to_set_state,params,function(data,status){
+                   console.log(data);
+                   if(data.code === 200){
+                       // alert(data.msg);
+                      // location.reload();
+                   }else{
+                       // alert(data.msg);
+                       console.log('修改失败了...');
+                       data.elem.checked = !to_set_state;
+                       return false
+                   }
+           });
+        // console.log(data.value);          // 开关value值，也可以通过data.elem.value得到
+
+                    // let menuId = data.elem.attributes['menuId'].nodeValue;
+                    //console.log(data.elem);         // 得到checkbox原始DOM对象
+                    // console.log(data.othis);        // 得到美化后的DOM对象
   });
 });
 </script>

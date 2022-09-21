@@ -7,7 +7,7 @@
 from flask import Blueprint,request,render_template,jsonify,make_response,redirect
 from utils.web import getParmas,get_interval,layuiBack,verfy_token
 from utils.cfg import cfg
-from controllers.service import storage_service
+from controllers.service import storage_service,rules_service
 from utils.system import getHost
 from utils.files import getCustonDict,custom_merge
 from utils.encode import parseText
@@ -48,7 +48,22 @@ def layui_rule_list():
                            alists_str='[]', live_url=live_url, config=new_conf)
     merged_config = custom_merge(parseText(html), customConfig)
     sites = merged_config['sites']
+    rules = rules_service()
+    rule_list = rules.query_all()
+    rule_names = list(map(lambda x:x['name'],rule_list))
+    # print(rule_list)
+    # print(rule_names)
     for i in range(len(sites)):
         sites[i]['id'] = i+1
+        site_name = sites[i]['api'].split('rule=')[1].split('&')[0] if 'rule=' in sites[i]['api'] else sites[i]['key']
+        # print(site_name)
+        if site_name in rule_names:
+            site_rule = rule_list[rule_names.index(site_name)]
+            sites[i]['state'] = 1 if site_rule['state'] is None else site_rule['state']
+        else:
+            sites[i]['state'] = 1
+        sites[i]['site_name'] = site_name
+
     new_sites = sites[(page-1)*limit:page*limit]
+    # print(new_sites)
     return layuiBack('获取成功',new_sites,count=len(sites))
