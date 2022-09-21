@@ -56,6 +56,7 @@
 layui.use(['table', 'dropdown'], function(){
   var table = layui.table;
   var dropdown = layui.dropdown;
+  var $ = layui.$;
   layer.msg('本页面展示数据为未来功能，<br>可能并没有实际作用,等道长弃坑后续有缘人补上。', {
     closeBtn: 1,
     icon: 6,
@@ -259,8 +260,24 @@ layui.use(['table', 'dropdown'], function(){
     var data = obj.data;
     //console.log(obj)
     if(obj.event === 'del'){
-      layer.confirm('真的隐藏行么', function(index){
-        obj.del();
+      let obj_name = obj.data.api.match(/rule=(.*)/)[1].split('&')[0];
+      layer.confirm('真的要隐藏规则'+obj_name+'么', function(index){
+        console.log(obj);
+        let params = {"names":[obj_name].join(',')};
+        console.log(params);
+        $.post("/admin/rule_state/0",params,function(data,status){
+                   console.log(data);
+                   if(data.code === 200){
+                       alert(data.msg);
+                      // location.reload();
+                   }else{
+                       alert(data.msg);
+                       console.log('修改失败了...');
+                       return false
+                   }
+           });
+
+        // obj.del();
         layer.close(index);
       });
     } else if(obj.event === 'edit'){

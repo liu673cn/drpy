@@ -51,9 +51,8 @@ def admin_settings():  # 管理员界面
 @admin.route('/save_conf',methods=['POST'])
 def admin_save_conf():  # 管理员界面
     if not verfy_token():
-        if not verfy_token():
-            # return render_template('login.html')
-            return R.error('请登录后再试')
+        # return render_template('login.html')
+        return R.error('请登录后再试')
     key = getParmas('key')
     value = getParmas('value')
     print(f'key:{key},value:{value}')
@@ -112,6 +111,16 @@ def admin_update_ver():
         return R.failed('请登录后再试')
     msg = download_new_version()
     return R.success(msg)
+
+@admin.route('/rule_state/<int:state>',methods=['POST'])
+def admin_rule_state(state=0):  # 管理员修改规则状态
+    if not verfy_token():
+        return R.error('请登录后再试')
+    names = getParmas('names')
+    print(names,type(names))
+    # lsg = storage_service()
+    res_id = 0
+    return R.success(f'修改成功,记录ID为:{res_id}')
 
 @admin.route('/force_update')
 def admin_force_update():
