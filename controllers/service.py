@@ -6,7 +6,9 @@
 
 from base.R import copy_utils
 from models.storage import Storage
+from models.ruleclass import RuleClass
 from utils.cfg import cfg
+from base.database import db
 
 class storage_service(object):
 
@@ -67,3 +69,41 @@ class storage_service(object):
     @classmethod
     def clearItem(self,key):
         return Storage.clearItem(key)
+
+class rules_service(object):
+
+    @staticmethod
+    def query_all():
+        # 查询所有
+        res = RuleClass.query.all()
+        return copy_utils.obj_to_list(res)
+
+    @classmethod
+    def hasItem(self, key):
+        return RuleClass.hasItem(key)
+
+    def getState(self,key):
+        res = RuleClass.query.filter(RuleClass.name == key).first()
+        if not res:
+            return 1
+        # print(res)
+        state = res.state
+        if state is None:
+            state = 1
+        return state or 0
+
+    def setState(self,key,state=0):
+        res = RuleClass.query.filter(RuleClass.name == key).first()
+        if res:
+            res.state = state
+            db.session.add(res)
+        else:
+            res = RuleClass(name=key, state=state)
+            db.session.add(res)
+            db.session.flush()  # 获取id
+        try:
+            db.session.commit()
+            return res.id
+        except Exception as e:
+            print(f'发生了错误:{e}')
+            return None

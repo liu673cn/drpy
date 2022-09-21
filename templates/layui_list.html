@@ -260,7 +260,12 @@ layui.use(['table', 'dropdown'], function(){
     var data = obj.data;
     //console.log(obj)
     if(obj.event === 'del'){
-      let obj_name = obj.data.api.match(/rule=(.*)/)[1].split('&')[0];
+      let obj_name;
+      try{
+        obj_name = obj.data.api.match(/rule=(.*)/)[1].split('&')[0];
+      }catch (e){
+        obj_name = obj.data.key;
+      }
       layer.confirm('真的要隐藏规则'+obj_name+'么', function(index){
         console.log(obj);
         let params = {"names":[obj_name].join(',')};
@@ -277,7 +282,7 @@ layui.use(['table', 'dropdown'], function(){
                    }
            });
 
-        // obj.del();
+        // obj.del(); //这是删除,隐藏规则是不需要删除规则的,最多也就刷新一下
         layer.close(index);
       });
     } else if(obj.event === 'edit'){

@@ -6,7 +6,7 @@
 import os
 
 from flask import Blueprint,request,render_template,jsonify,make_response
-from controllers.service import storage_service
+from controllers.service import storage_service,rules_service
 from base.R import R
 from utils.update import getLocalVer,getOnlineVer,download_new_version,download_lives,copy_to_update
 from utils import parser
@@ -117,10 +117,22 @@ def admin_rule_state(state=0):  # 管理员修改规则状态
     if not verfy_token():
         return R.error('请登录后再试')
     names = getParmas('names')
-    print(names,type(names))
-    # lsg = storage_service()
-    res_id = 0
-    return R.success(f'修改成功,记录ID为:{res_id}')
+    if not names:
+        return R.success(f'修改失败,没有传递names参数')
+    rule_list = names.split(',')
+    rules = rules_service()
+    # print(rules.query_all())
+    # print(rules.getState(rule_list[0]))
+    # print(rule_list)
+    success_list = []
+    for rule in rule_list:
+        try:
+            res_id = rules.setState(rule,state)
+            success_list.append(f'{rule}:{res_id}')
+        except:
+            success_list.append(rule)
+
+    return R.success(f'修改成功,服务器反馈信息为:{success_list}')
 
 @admin.route('/force_update')
 def admin_force_update():
