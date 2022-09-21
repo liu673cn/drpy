@@ -8,7 +8,7 @@ import os
 
 
 from flask import Blueprint,abort,render_template,render_template_string,url_for,redirect,make_response,send_from_directory
-from controllers.service import storage_service
+from controllers.service import storage_service,rules_service
 from controllers.classes import getClasses,getClassInfo
 
 from utils.files import getPics,custom_merge,getAlist,get_live_url,get_multi_rules,getCustonDict
@@ -18,6 +18,7 @@ from base.R import R
 from utils.system import getHost,is_linux
 from utils.cfg import cfg
 from utils import parser
+from utils.ua import time,get_interval
 from utils.log import logger
 from utils.update import getLocalVer,getHotSuggest
 from js.rules import getJxs
@@ -176,6 +177,22 @@ def get_hot_search():
     data = getHotSuggest()
     return R.success('获取成功',data)
 
+def merged_hide(merged_config):
+    t1 = time()
+    store_rule = rules_service()
+    hide_rules = store_rule.getHideRules()
+    hide_rule_names = list(map(lambda x: x['name'], hide_rules))
+    # print(hide_rule_names)
+    all_cnt = len(merged_config['sites'])
+
+    def filter_show(x):
+        name = x['api'].split('rule=')[1].split('&')[0] if 'rule=' in x['api'] else x['key']
+        # print(name)
+        return name not in hide_rule_names
+
+    merged_config['sites'] = list(filter(filter_show, merged_config['sites']))
+    logger.info(f'数据库筛选隐藏规则耗时{get_interval(t1)}毫秒,共计{all_cnt}条规则,隐藏后可渲染{len(merged_config["sites"])}条规则')
+
 @home.route('/config/<int:mode>')
 def config_render(mode):
     # print(dict(app.config))
@@ -206,8 +223,11 @@ def config_render(mode):
     # html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,base64Encode=base64Encode,config=new_conf)
     html = render_template('config.txt',pys=pys,rules=rules,host=host,mode=mode,jxs=jxs,alists=alists,alists_str=alists_str,live_url=live_url,config=new_conf)
     merged_config = custom_merge(parseText(html),customConfig)
-    # print(merged_config)
+    # print(merged_config['sites'])
+
+    merged_hide(merged_config)
     # response = make_response(html)
+    # print(len(merged_config['sites']))
     response = make_response(json.dumps(merged_config,ensure_ascii=False,indent=1))
     # response = make_response(str(merged_config))
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
@@ -237,17 +257,20 @@ def config_gen():
         with open('txt/pycms0.json','w+',encoding='utf-8') as f:
             customConfig = getCustonDict(getHost(0))
             set_dict = custom_merge(parseText(set_local), customConfig)
+            merged_hide(set_dict)
             # set_dict = json.loads(set_local)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
         with open('txt/pycms1.json','w+',encoding='utf-8') as f:
             customConfig = getCustonDict(getHost(1))
             set_dict = custom_merge(parseText(set_area), customConfig)
+            merged_hide(set_dict)
             # set_dict = json.loads(set_area)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
 
         with open('txt/pycms2.json','w+',encoding='utf-8') as f:
             customConfig = getCustonDict(getHost(2))
             set_dict = custom_merge(parseText(set_online), customConfig)
+            merged_hide(set_dict)
             # set_dict = json.loads(set_online)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
         files = [os.path.abspath(rf'txt\pycms{i}.json') for i in range(3)]

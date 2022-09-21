@@ -92,6 +92,7 @@ class rules_service(object):
             state = 1
         return state or 0
 
+
     def setState(self,key,state=0):
         res = RuleClass.query.filter(RuleClass.name == key).first()
         if res:
@@ -107,3 +108,8 @@ class rules_service(object):
         except Exception as e:
             print(f'发生了错误:{e}')
             return None
+
+    @staticmethod
+    def getHideRules():
+        res = RuleClass.query.filter(RuleClass.state == 0).all()
+        return copy_utils.obj_to_list(res)
