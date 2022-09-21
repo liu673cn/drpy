@@ -60,8 +60,10 @@ def layui_rule_list():
         if site_name in rule_names:
             site_rule = rule_list[rule_names.index(site_name)]
             sites[i]['state'] = 1 if site_rule['state'] is None else site_rule['state']
+            sites[i]['order'] = 0 if site_rule['order'] is None else site_rule['order']
         else:
             sites[i]['state'] = 1
+            sites[i]['order'] = 0
         sites[i]['site_name'] = site_name
 
     new_sites = sites[(page-1)*limit:page*limit]
