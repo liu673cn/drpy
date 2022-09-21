@@ -18,14 +18,14 @@
 
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container">
-    <button class="layui-btn layui-btn-sm" id="moreTest">
+    <button class="layui-btn layui-btn-sm layui-bg-blue" id="moreTest">
       多选操作
       <i class="layui-icon layui-icon-down layui-font-12"></i>
     </button>
     <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
     <button class="layui-btn layui-btn-sm" lay-event="getData">获取当前页数据</button>
     <button class="layui-btn layui-btn-sm" lay-event="isAll">是否全选</button>
-    <button class="layui-btn layui-btn-sm layui-bg-blue" id="reloadTest">
+    <button class="layui-btn layui-btn-sm" id="reloadTest">
       重载测试
       <i class="layui-icon layui-icon-down layui-font-12"></i>
     </button>
@@ -111,28 +111,29 @@ layui.use(['table', 'dropdown'], function(){
     // ,totalRow: true // 开启合计行
     ,page: true
     ,limit:12
-    ,limits:[10,20,40,60,80,100,150,200]
+    ,limits:[10,12,15,20,40,60,80,100,150,200]
     ,cols: [[
       {type: 'checkbox', fixed: 'left'}
       // ,{field: 'id', fixed: 'left',title: 'ID', width: 20, sort: true,totalRowText: '合计：'}
       ,{field: 'id',title: 'ID', width: 20, sort: true}
       ,{field: 'site_name', title: '存储名称', width: 120}
+      , {
+      field: 'state', title: '显示状态', minWidth: 100, templet: function (res) {
+        let menuId = res.site_name;
+        if (res.state === 1) {
+          return "   <input type='checkbox'  menuId = '" + menuId + "' lay-filter='state' lay-skin='switch' lay-text='显示|已隐藏' checked>"
+        } else if (res.state === 0) {
+          return "   <input type='checkbox'  menuId = '" + menuId + "'  lay-filter='state' lay-skin='switch' lay-text='显示|已隐藏'>"
+        }
+      }
+    }
       ,{field: 'name', title: '显示名称', width: 120}
       ,{field: 'key', title: '唯一标识', width: 120}
       ,{field: 'type', title: '<i class="layui-icon layui-icon-email">类型</i>', minWidth: 80}
       ,{field: 'searchable', title: '可搜索', minWidth: 80}
       ,{field: 'quickSearch', title: '可快搜', minWidth: 80}
       ,{field: 'filterable', title: '可筛选', minWidth: 80}
-      , {
-        field: 'state', title: '是否显示', minWidth: 80, templet: function (res) {
-          let menuId = res.site_name;
-          if (res.state === 1) {
-            return "   <input type='checkbox'  menuId = '" + menuId + "' lay-filter='state' lay-skin='switch' lay-text='显示|已隐藏' checked>"
-          } else if (res.state === 0) {
-            return "   <input type='checkbox'  menuId = '" + menuId + "'  lay-filter='state' lay-skin='switch' lay-text='显示|已隐藏'>"
-          }
-        }
-      }
+
       // ,{field:'city', width:115, title: '城市', minWidth:115, templet: '#cityTpl', exportTemplet: function(d, obj){
       //   //console.log(obj)
       //   // 处理该字段的导出数据
