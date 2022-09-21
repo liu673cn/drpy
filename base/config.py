@@ -43,3 +43,4 @@ TAB_EXCLUDE = '猜你|喜欢|APP|下载|剧情|简介'  # 动态线路名过滤
 # {% if config.WALL_PAPER %}"wallpaper":"{{ config.WALL_PAPER }}",{% endif %}
 SEARCH_TIMEOUT = 5000 # 聚搜超时毫秒
 MULTI_MODE = 0  # 多源模式
+ALI_TOKEN = '' # 适用于初始配置的阿里云token

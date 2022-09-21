@@ -90,7 +90,7 @@ def custom_merge(original:dict,custom:dict):
         original[key].extend(extend_obj[key])
     return original
 
-def getCustonDict(host):
+def getCustonDict(host,ali_token=''):
     customFile = 'base/custom.conf'
     if not os.path.exists(customFile):
         with open(customFile, 'w+', encoding='utf-8') as f:
@@ -99,7 +99,7 @@ def getCustonDict(host):
     try:
         with open(customFile,'r',encoding='utf-8') as f:
             text = f.read()
-            customConfig = parseText(render_template_string(text,host=host))
+            customConfig = parseText(render_template_string(text,host=host,ali_token=ali_token))
     except Exception as e:
         logger.info(f'用户自定义配置加载失败:{e}')
     return customConfig

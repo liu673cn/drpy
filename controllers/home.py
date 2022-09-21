@@ -188,7 +188,10 @@ def config_render(mode):
     new_conf.update(store_conf_dict)
     # print(type(new_conf),new_conf)
     host = getHost(mode)
-    customConfig = getCustonDict(host)
+    # ali_token = lsg.getItem('ALI_TOKEN')
+    ali_token = new_conf.ALI_TOKEN
+    # print(ali_token)
+    customConfig = getCustonDict(host,ali_token)
     # print(customConfig)
     jxs = getJxs()
     lsg = storage_service()
