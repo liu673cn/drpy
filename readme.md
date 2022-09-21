@@ -46,6 +46,9 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/21
+- [X] 1.未来功能增加显示和隐藏多选规则的实际逻辑，增加顺序字段等待有缘人
+- [X] 2.版本升级至3.7.0
 ###### 2022/09/19
 - [X] 1.增加20多个缓存源,需要在custom.conf文件自定义添加
 - [X] 2.修复缓存js播放免嗅问题
