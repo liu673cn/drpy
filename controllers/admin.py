@@ -93,6 +93,19 @@ def admin_get_ver():
     online_ver,msg = getOnlineVer()
     return jsonify({'local_ver':getLocalVer(),'online_ver':online_ver,'msg':msg})
 
+@admin.route('/update_db')
+def admin_update_db():
+    if not verfy_token():
+        # return render_template('login.html')
+        return R.error('请登录后再试')
+    cmd = 'flask db migrate && flask db upgrade'
+    if not os.path.exists('migrations'):
+        cmd = 'flask db init && '+cmd
+    print(f'开始执行cmd:{cmd}')
+    result = os.system(cmd)
+    print(f'cmd执行结果:{result}')
+    return R.success('数据库升级完毕')
+
 @admin.route('/update_ver')
 def admin_update_ver():
     if not verfy_token():

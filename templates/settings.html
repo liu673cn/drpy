@@ -46,6 +46,19 @@
       $(".save_conf1").click(function () {
         console.log(this);
       });
+      $('#update_db').click(function (){
+        $.get("/admin/update_db",function(data,status){
+                   console.log(data);
+                   if(data.code === 200){
+                       alert(data.msg);
+                      // location.reload();
+                   }else{
+                       alert(data.msg);
+                       console.log('升级失败了...');
+                       return false
+                   }
+           });
+      });
     });
 </script>
 <h2 class="title">欢迎使用DR-PY配置界面<div><span class="ver_title">当前版本: {{ ver }}</span><span
@@ -54,6 +67,8 @@
 <h4>
     <button type="button" class="yongyin"><a href="/admin">返回管理页</a></button>
 <!--    <button type="button" class="yongyin"><a href="/index">返回首页</a></button>-->
+  <button type="button" class="yongyin3"><a href="javascript:void(0);"
+            class="funcbtn" id="update_db">升级数据库</a></button>
   <button type="button" class="yongyin2"><a href="javascript:copy('cp ./tmp/dr_py-master/app.py ./app.py');"
             class="funcbtn" id="update_by_self">升级指令</a></button>
     <button type="button" class="yongyin2"><a href="javascript:copy('cp ./tmp/dr_py-master/base/custom.conf base');"
