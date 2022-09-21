@@ -39,10 +39,9 @@ def runJs(jsPath, before='', after='', ctx=None):
     if str(jsPath).startswith('http'):
         js_name = jsPath.split('/')[-1]
         cache_path = os.path.join(base_path, f'cache/{js_name}')
-        print('远程规则:',js_name)
         if not os.path.exists(cache_path):
             try:
-                print(jsPath)
+                print(f'开始缓存远程规则:{js_name},来源{jsPath}')
                 js_code = requests.get(url=jsPath,timeout=3).text
                 # js_code = requests.get(jsPath).text
                 with open(cache_path,mode='w+',encoding='utf-8') as f:
@@ -61,7 +60,7 @@ def runJs(jsPath, before='', after='', ctx=None):
         cache_path = os.path.join(base_path, f'cache/{js_name}')
         if not str(jsPath).startswith('js/') and not os.path.exists(cache_path) and os.path.exists(js_path):
             shutil.copy(js_path,cache_path) # 本地txt目录的复制过去凑数,实际不使用
-        print(js_path)
+        # print(js_path)
         with open(js_path, 'r', encoding='UTF-8') as fp:
             js_code = fp.read()
     # print(js_code)
