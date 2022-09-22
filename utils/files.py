@@ -87,7 +87,11 @@ def custom_merge(original:dict,custom:dict):
 
     original.update(updateObj)
     for key in extend_obj.keys():
-        original[key].extend(extend_obj[key])
+        if original.get('key') and isinstance(original[key],list):
+            original[key].extend(extend_obj[key])
+        else:
+            original[key] = extend_obj[key]
+
     return original
 
 def getCustonDict(host,ali_token=''):
