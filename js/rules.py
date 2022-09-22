@@ -176,5 +176,10 @@ def gen_cache(path='txt/js/tg'):
 
 if __name__ == '__main__':
     print(getRuleLists())
-    print(gen_cache())
-    print(gen_cache('txt/js/18'))
+    # print(gen_cache())
+    # print(gen_cache('txt/js/18'))
+
+    custom_file = gen_cache() + '\n'+gen_cache('txt/js/18')
+    print(custom_file)
+    with open('custom.conf','w+',encoding='utf-8') as f:
+        f.write(custom_file)
