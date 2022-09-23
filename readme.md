@@ -46,6 +46,9 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/23
+- [X] 1.v3.7.5 优化了首图2模板的搜索定位以及几个相关的源
+- [X] 2.二级渲染功能拆分,js单独调用
 ###### 2022/09/22
 - [X] 1.v3.7.3修复静态文件阿里token没渲染的bug,修复数据库升级bug,优化app.py
 - [X] 2.v3.7.4修复自定义drives合并配置报错问题
