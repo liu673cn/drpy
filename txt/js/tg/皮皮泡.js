@@ -7,4 +7,5 @@ searchUrl:'/vodsearch**/page/fypage.html',
 class_name:'电视剧&电影&综艺&动漫&纪录片',//静态分类名称拼接
 class_url:'dianshiju&dianying&zongyi&dongman&jilupian',//静态分类标识拼接
 class_parse:' ',
+搜索:'ul.stui-vodlist__media&&li;a&&title;.lazyload&&data-original;.text-muted&&Text;a&&href;.text-muted:eq(-1)&&Text',
 });
