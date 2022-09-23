@@ -221,6 +221,7 @@ function maoss(jxurl, ref, key) {
 
 function request(url,obj){
     // obj = obj||{'user-agent': MOBILE_UA};
+    print('224');
     let new_obj;
     if(typeof(fetch_params)!=='undefined'){
         new_obj = obj?Object.assign(fetch_params,obj):fetch_params;
@@ -241,6 +242,7 @@ function request(url,obj){
         }
         return html
     }
+    print('245');
     return ''
 }
 

@@ -13,8 +13,8 @@ from pprint import pprint
 headers1 = {
         'user-agent': 'Mozilla/5.0 (Linux; Android 11; M2007J3SC Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045714 Mobile Safari/537.36'
         # ,'x-requested-with':'XMLHttpRequest'
-        ,'sec-fetch-site':'same-origin'
-        ,'sec-fetch-mode':'cors'
+        # ,'sec-fetch-site':'same-origin'
+        # ,'sec-fetch-mode':'cors'
         # ,'referer':'https://www.youku.com/category/show/type_%E7%94%B5%E8%A7%86%E5%89%A7_mainArea_%E4%B8%AD%E5%9B%BD%E5%86%85%E5%9C%B0_tags_%E9%9D%92%E6%98%A5.html?spm=a2ha1.14919748_WEBTV_JINGXUAN.drawer3.27'
         ,'referer':'https://www.youku.com'
     }
@@ -23,6 +23,7 @@ html = r.json()
 cates_data = html['data']['filterData']['filter']['filterData'][0]['subFilter']
 cates_data = list(map(lambda x:x['title'],cates_data))
 print(cates_data)
+exit()
 # cates = cates_data[:1]
 cates = cates_data
 urls = ['https://www.youku.com/category/data?params='+'{"type":"'+cate+'"}&optionRefresh=1&pageNo=1' for cate in cates]

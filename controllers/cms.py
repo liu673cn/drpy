@@ -15,7 +15,7 @@ from utils.log import logger
 from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl,getHome
 from utils.encode import verifyCode,setDetail,join,urljoin2,parseText
 from utils.safePython import safePython
-from utils.parser import runPy,runJScode,JsObjectWrapper,PyJsObject
+from utils.parser import runPy,runJScode,JsObjectWrapper,PyJsObject,PyJsString
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin,quote,unquote
 from concurrent.futures import ThreadPoolExecutor  # 引入线程池
@@ -25,19 +25,33 @@ from controllers.service import storage_service
 
 def setItem(key,value):
     lsg = storage_service()
+    if isinstance(key,PyJsString):
+        key = parseText(str(key))
+    if isinstance(value,PyJsString):
+        value = parseText(str(value))
     return lsg.setItem(key,value)
 
 def getItem(key,value=''):
     lsg = storage_service()
+    if isinstance(key,PyJsString):
+        key = parseText(str(key))
+    if isinstance(value,PyJsString):
+        value = parseText(str(value))
     return lsg.getItem(key,value)
 
 def clearItem(key):
     lsg = storage_service()
+    if isinstance(key,PyJsString):
+        key = parseText(str(key))
     return lsg.clearItem(key)
 
 def encodeUrl(url):
     # return base64Encode(quote(url))
     # return base64Encode(url)
+    # print(type(url))
+    if isinstance(url,PyJsString):
+        # obj = obj.to_dict()
+        url = parseText(str(url))
     return quote(url)
 
 def stringify(obj):
@@ -51,7 +65,7 @@ py_ctx = {
 'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS,
 'buildUrl':buildUrl,'getHome':getHome,'setDetail':setDetail,'join':join,'urljoin2':urljoin2,
 'PC_UA':PC_UA,'MOBILE_UA':MOBILE_UA,'UC_UA':UC_UA,'IOS_UA':IOS_UA,
-'setItem':setItem,'getItem':getItem,'clearItem':clearItem,'stringify':stringify
+'setItem':setItem,'getItem':getItem,'clearItem':clearItem,'stringify':stringify,'encodeUrl':encodeUrl
 }
 # print(getCryptoJS())
 
@@ -117,6 +131,7 @@ class CMS:
         self.RuleClass = RuleClass
         self.PlayParse = PlayParse
         host = rule.get('host','').rstrip('/')
+        host = unquote(host)
         timeout = rule.get('timeout',5000)
         homeUrl = rule.get('homeUrl','/')
         url = rule.get('url','')
@@ -673,7 +688,7 @@ class CMS:
                 url = url.replace('fypage',pg)
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
-        print(url)
+        # print(url)
         p = self.一级
         jsp = jsoup(self.url)
         videos = []
@@ -723,6 +738,8 @@ class CMS:
             try:
                 r = requests.get(url, headers=self.headers, timeout=self.timeout)
                 html = self.checkHtml(r)
+                print(self.headers)
+                print(html)
                 if is_json:
                     html = self.dealJson(html)
                     html = json.loads(html)
