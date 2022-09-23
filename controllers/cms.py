@@ -673,7 +673,7 @@ class CMS:
                 url = url.replace('fypage',pg)
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
-        # print(url)
+        print(url)
         p = self.一级
         jsp = jsoup(self.url)
         videos = []
