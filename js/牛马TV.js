@@ -6,5 +6,4 @@ var rule = Object.assign(muban.首图2,{
     url:'/type/fyclass-fypage.html',
     searchUrl:'/vodsearch**/page/fypage.html',
     class_parse:'.stui-header__menu&&li;a&&Text;a&&href;.*/(.*?).html',
-    搜索:'ul.stui-vodlist&&li;a&&title;.lazyload&&data-original;.pic-text&&Text;a&&href;.text-muted:eq(-1)&&Text',
 });

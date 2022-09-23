@@ -4,5 +4,4 @@ var rule = Object.assign(muban.首图2,{
     host:'https://www.007ts.me',
     url:'/channel/fyclass-fypage.html',
     searchUrl:'/search/**----------fypage---.html',
-    搜索:'ul.stui-vodlist&&li;a&&title;.lazyload&&data-original;.pic-text&&Text;a&&href;.text-muted:eq(-1)&&Text',
 });

@@ -8,5 +8,4 @@ var rule = Object.assign(muban.首图2,{
     // cate_exclude:'解说',
     play_parse:true,
     lazy:'',
-    搜索:'ul.stui-vodlist__media&&li;a&&title;.lazyload&&data-original;.pic-text&&Text;a&&href;.text-muted:eq(-1)&&Text',
 });
