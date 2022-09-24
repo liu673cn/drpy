@@ -13,7 +13,8 @@ from utils.system import getHost
 from utils.config import playerConfig
 from utils.log import logger
 from utils.encode import base64Encode,baseDecode,fetch,post,request,getCryptoJS,getPreJs,buildUrl,getHome
-from utils.encode import verifyCode,setDetail,join,urljoin2,parseText
+from utils.encode import verifyCode,setDetail,join,urljoin2,parseText,requireCache
+from utils.encode import md5 as mmd5
 from utils.safePython import safePython
 from utils.parser import runPy,runJScode,JsObjectWrapper,PyJsObject,PyJsString
 from utils.htmlParser import jsoup
@@ -60,12 +61,23 @@ def stringify(obj):
         obj = parseText(str(obj))
     return json.dumps(obj, separators=(',', ':'), ensure_ascii=False)
 
+def requireObj(url):
+    if isinstance(url,PyJsString):
+        url = parseText(str(url))
+    return requireCache(url)
+
+def md5(text):
+    if isinstance(text,PyJsString):
+        text = parseText(str(text))
+    return mmd5(text)
+
 py_ctx = {
 'requests':requests,'print':print,'base64Encode':base64Encode,'baseDecode':baseDecode,
 'log':logger.info,'fetch':fetch,'post':post,'request':request,'getCryptoJS':getCryptoJS,
 'buildUrl':buildUrl,'getHome':getHome,'setDetail':setDetail,'join':join,'urljoin2':urljoin2,
 'PC_UA':PC_UA,'MOBILE_UA':MOBILE_UA,'UC_UA':UC_UA,'IOS_UA':IOS_UA,
-'setItem':setItem,'getItem':getItem,'clearItem':clearItem,'stringify':stringify,'encodeUrl':encodeUrl
+'setItem':setItem,'getItem':getItem,'clearItem':clearItem,'stringify':stringify,'encodeUrl':encodeUrl,
+'requireObj':requireObj,'md5':md5
 }
 # print(getCryptoJS())
 
@@ -963,6 +975,7 @@ class CMS:
                 py_ctx.update({
                     'input': url,
                     'TYPE': 'detail',  # 海阔js环境标志
+                    # 'VID': id,  # 传递的vod_id
                     '二级': self.二级渲染,  # 二级解析函数,可以解析dict
                     'cateID': fyclass,  # 当前分类
                     'oheaders': self.d.oheaders,
@@ -1046,6 +1059,7 @@ class CMS:
                 'oheaders': self.d.oheaders,
                 'fetch_params': {'headers': self.headers, 'timeout': self.d.timeout, 'encoding': self.d.encoding},
                 'd': self.d,
+                'MY_PAGE': fypage,
                 'KEY': key,  # 搜索关键字
                 'TYPE': 'search',  # 海阔js环境标志
                 'detailUrl': self.detailUrl or '',

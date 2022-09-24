@@ -57,28 +57,32 @@ def getRules(path='cache'):
             codes.append(new_code)
     newCodes = before + '\n'+ '\n'.join(codes)
     # print(newCodes)
-    ctx.execute(newCodes)
-    for i in range(len(js_path)):
-        rule_codes.append(ctx.eval(f'rule{i}'))
+    try:
+        ctx.execute(newCodes)
+        for i in range(len(js_path)):
+            rule_codes.append(ctx.eval(f'rule{i}'))
 
-    # print(rule_codes)
-    # print(type(rule_codes[0]),rule_codes[0])
-    # print(rule_codes[0].title)
-    # print(rule_codes[0].searchable)
-    # print(rule_codes[0].quickSearch)
-    new_rule_list = []
-    for i in range(len(rule_list)):
-        tmpObj = {
-            'name':rule_list[i],
-            'searchable':rule_codes[i].searchable or 0,
-            'quickSearch':rule_codes[i].quickSearch or 0,
-            'filterable':rule_codes[i].filterable or 0,
-        }
-        if rule_codes[i].multi:
-            tmpObj['multi'] = 1
-        new_rule_list.append(tmpObj)
-    # print(new_rule_list)
-    rules = {'list': new_rule_list, 'count': len(rule_list)}
+        # print(rule_codes)
+        # print(type(rule_codes[0]),rule_codes[0])
+        # print(rule_codes[0].title)
+        # print(rule_codes[0].searchable)
+        # print(rule_codes[0].quickSearch)
+        new_rule_list = []
+        for i in range(len(rule_list)):
+            tmpObj = {
+                'name':rule_list[i],
+                'searchable':rule_codes[i].searchable or 0,
+                'quickSearch':rule_codes[i].quickSearch or 0,
+                'filterable':rule_codes[i].filterable or 0,
+            }
+            if rule_codes[i].multi:
+                tmpObj['multi'] = 1
+            new_rule_list.append(tmpObj)
+        # print(new_rule_list)
+        rules = {'list': new_rule_list, 'count': len(rule_list)}
+    except Exception as e:
+        logger.info(f'装载js内置源列表失败,置空内置源')
+        rules = []
     logger.info(f'自动配置装载耗时:{get_interval(t1)}毫秒')
     return rules
 

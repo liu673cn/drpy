@@ -24,7 +24,7 @@ def runJScode(jscode,loader=None,ctx=None):
     if loader is None:
         if ctx is None:
             ctx = {}
-        loader = js2py.EvalJs(ctx)
+        loader = js2py.EvalJs(ctx,enable_require=False) # enable_require启用require关键字,会自动获取系统nodejs环境
     loader.execute(jscode)
     return loader, jscode
 

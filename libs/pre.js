@@ -1,4 +1,5 @@
 var VODS = [];
+var $ = {};
  if (!String.prototype.includes) {
     String.prototype.includes = function (search, start) {
 
@@ -233,6 +234,7 @@ function request(url,obj){
     }
     // delete new_obj.headers['Referer'];
     // print(obj);
+    // print(new_obj);
     if(typeof(fetch)!==undefined){
         let html = fetch(url,new_obj);
         if (/\?btwaf=/.test(html)) {//宝塔验证
@@ -244,6 +246,15 @@ function request(url,obj){
     }
     return ''
 }
+
+function rc(url){// 系统已经有require方法了,再覆盖的话无法操作了
+    res =  eval(requireObj(url));
+    // print(res);
+    return res;
+    // return eval.call(null, requireObj(url));
+}
+
+$.require = rc;
 
 function urlencode (str) {
     str = (str + '').toString();

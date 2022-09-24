@@ -14,10 +14,12 @@ from requests.packages import urllib3
 urllib3.disable_warnings()
 
 import requests.utils
+import hashlib
 from time import sleep
 import os
 from utils.web import UC_UA,PC_UA
 from ast import literal_eval
+from utils.log import logger
 
 def getPreJs():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目
@@ -36,6 +38,41 @@ def getCryptoJS():
     with open(lib_path,encoding='utf-8') as f:
         code = f.read()
     return code
+
+def md5(str):
+    return hashlib.md5(str.encode(encoding='UTF-8')).hexdigest()
+
+def requireCache(lib:str):
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目
+    os.makedirs(os.path.join(base_path, f'libs'), exist_ok=True)
+    logger.info(f'开始加载:{lib}')
+    code = 'undefiend'
+    if not lib.startswith('http'):
+        lib_path = os.path.join(base_path, f'libs/{lib}')
+        if not os.path.exists(lib_path):
+            pass
+        else:
+            with open(lib_path, encoding='utf-8') as f:
+                code = f.read()
+    else:
+        lib_path = os.path.join(base_path, f'libs/{md5(lib)}.js')
+        if not os.path.exists(lib_path):
+            try:
+                r = requests.get(lib,headers={
+                    'Referer': lib,
+                    'User-Agent': UC_UA,
+                },timeout=5)
+                with open(lib_path,mode='wb+') as f:
+                    f.write(r.content)
+                code =  r.text
+            except Exception as e:
+                print(f'获取远程依赖失败:{e}')
+        else:
+            with open(lib_path,encoding='utf-8') as f:
+                code = f.read()
+    # print(code)
+    return code
+
 
 def getHome(url):
     # http://www.baidu.com:9000/323
@@ -95,6 +132,10 @@ def base64Encode(text):
 def baseDecode(text):
     return base64.b64decode(text).decode("utf-8") #base64解码
 
+def parseText(text:str):
+    text = text.replace('false','False').replace('true','True').replace('null','None')
+    return literal_eval(text)
+
 def setDetail(title:str,img:str,desc:str,content:str,tabs:list=None,lists:list=None):
     vod = {
         "vod_name": title.split('/n')[0],
@@ -142,10 +183,13 @@ def dealObj(obj=None):
         obj = {}
     encoding = obj.get('encoding') or 'utf-8'
     encoding = str(encoding).replace("'", "")
+    # encoding = parseText(str(encoding))
     method = obj.get('method') or 'get'
     method = str(method).replace("'", "")
+    # method = parseText(str(method))
     withHeaders = obj.get('withHeaders') or ''
     withHeaders = str(withHeaders).replace("'", "")
+    # withHeaders = parseText(str(withHeaders))
     # print(type(url),url)
     # headers = dict(obj.get('headers')) if obj.get('headers') else {}
     # headers = obj.get('headers').to_dict() if obj.get('headers') else {}
@@ -159,6 +203,16 @@ def dealObj(obj=None):
     timeout = float(obj.get('timeout').to_int()) if obj.get('timeout') else None
     # print(type(timeout), timeout)
     body = obj.get('body') if obj.get('body') else {}
+    # print(body)
+    # print(type(body))
+    if isinstance(body,PyJsString):
+        body = parseText(str(body))
+        new_dict = {}
+        new_tmp = body.split('&')
+        for i in new_tmp:
+            new_dict[i.split('=')[0]] = i.split('=')[1]
+        body = new_dict
+
     new_body = {}
     for i in body:
         new_body[str(i).replace("'", "")] = str(body[i]).replace("'", "")
@@ -173,6 +227,7 @@ def dealObj(obj=None):
 
 def base_request(url,obj):
     # verify=False 关闭证书验证
+    # print(obj)
     url = str(url).replace("'", "")
     method = obj.get('method') or ''
     withHeaders = obj.get('withHeaders') or ''
@@ -181,7 +236,7 @@ def base_request(url,obj):
         method = 'get'
         obj['method'] = 'method'
     # print(obj)
-    print(f"{method}:{url}:{obj['headers']}")
+    print(f"{method}:{url}:{obj['headers']}:{obj.get('body','')}")
     try:
         # r = requests.get(url, headers=headers, params=body, timeout=timeout)
         if method.lower() == 'get':
@@ -207,6 +262,7 @@ def base_request(url,obj):
         return {} if withHeaders else ''
 
 def fetch(url,obj):
+    # print('fetch')
     obj = dealObj(obj)
     if not obj.get('headers') or not any([obj['headers'].get('User-Agent'),obj['headers'].get('user-agent')]):
         obj['headers']['User-Agent'] = obj['headers'].get('user-agent',PC_UA)
@@ -258,7 +314,3 @@ def buildUrl(url,obj=None):
     url = url + prs
     # print(url)
     return url
-
-def parseText(text:str):
-    text = text.replace('false','False').replace('true','True').replace('null','None')
-    return literal_eval(text)
