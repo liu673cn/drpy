@@ -46,6 +46,9 @@
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
 [获取本地设备信息](https://m.jb51.net/article/140716.htm)   
+###### 2022/09/25
+- [X] 1.v3.7.10 增加了自定义解析功能,解析.conf支持变量{{host}}
+- [X] 2.新增了 jiexi/无名.js作为示例,接受vipUrl返回realUrl
 ###### 2022/09/23
 - [X] 1.v3.7.5 优化了首图2模板的搜索定位以及几个相关的源
 - [X] 2.二级渲染功能拆分,js单独调用

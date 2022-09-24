@@ -12,3 +12,4 @@ from . import cms
 from . import cls
 from . import classes
 from . import layui
+from . import parse

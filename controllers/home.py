@@ -210,7 +210,7 @@ def config_render(mode):
     # print(ali_token)
     customConfig = getCustonDict(host,ali_token)
     # print(customConfig)
-    jxs = getJxs()
+    jxs = getJxs(host=host)
     lsg = storage_service()
     use_py = lsg.getItem('USE_PY')
     pys = getPys() if use_py else []
@@ -242,7 +242,6 @@ def config_gen():
     store_conf_dict = lsg.getStoreConfDict()
     new_conf.update(store_conf_dict)
     try:
-        jxs = getJxs()
         lsg = storage_service()
         use_py = lsg.getItem('USE_PY')
         pys = getPys() if use_py else False
@@ -250,26 +249,32 @@ def config_gen():
         alists_str = json.dumps(alists,ensure_ascii=False)
         rules = getRules('js')
         rules = get_multi_rules(rules)
-        set_local = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,host=getHost(0),jxs=jxs)
+        host0 = getHost(0)
+        jxs = getJxs(host=host0)
+        set_local = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,host=host0,jxs=jxs)
         # print(set_local)
-        set_area = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=getHost(1),jxs=jxs)
-        set_online = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,host=getHost(2),jxs=jxs)
+        host1 = getHost(1)
+        jxs = getJxs(host=host1)
+        set_area = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,host=host1,jxs=jxs)
+        host2 = getHost(2)
+        jxs = getJxs(host=host2)
+        set_online = render_template('config.txt',pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,host=host2,jxs=jxs)
         ali_token = new_conf.ALI_TOKEN
         with open('txt/pycms0.json','w+',encoding='utf-8') as f:
-            customConfig = getCustonDict(getHost(0),ali_token)
+            customConfig = getCustonDict(host0,ali_token)
             set_dict = custom_merge(parseText(set_local), customConfig)
             merged_hide(set_dict)
             # set_dict = json.loads(set_local)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
         with open('txt/pycms1.json','w+',encoding='utf-8') as f:
-            customConfig = getCustonDict(getHost(1),ali_token)
+            customConfig = getCustonDict(host1,ali_token)
             set_dict = custom_merge(parseText(set_area), customConfig)
             merged_hide(set_dict)
             # set_dict = json.loads(set_area)
             f.write(json.dumps(set_dict,ensure_ascii=False,indent=4))
 
         with open('txt/pycms2.json','w+',encoding='utf-8') as f:
-            customConfig = getCustonDict(getHost(2),ali_token)
+            customConfig = getCustonDict(host2,ali_token)
             set_dict = custom_merge(parseText(set_online), customConfig)
             merged_hide(set_dict)
             # set_dict = json.loads(set_online)

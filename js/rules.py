@@ -10,6 +10,7 @@ import js2py
 from utils.log import logger
 # from utils.web import get_interval,UA
 from utils.ua import UA,get_interval
+from flask import render_template_string
 
 def getRuleLists():
     base_path = os.path.dirname(os.path.abspath(__file__)) # 当前文件所在目录
@@ -86,8 +87,12 @@ def getRules(path='cache'):
     logger.info(f'自动配置装载耗时:{get_interval(t1)}毫秒')
     return rules
 
-def jxTxt2Json(text:str):
-    data = text.strip().split('\n')
+def jxTxt2Json(text:str,host:str):
+    try:
+        data = render_template_string(text,host=host).strip().split('\n')
+    except Exception as e:
+        logger.info(f'jxTxt2Json发生错误:{e}')
+        data = []
     jxs = []
     for i in data:
         i = i.strip()
@@ -104,7 +109,7 @@ def jxTxt2Json(text:str):
                 logger.info(f'解析行有错误:{e}')
     return jxs
 
-def getJxs(path='js'):
+def getJxs(path='js',host=None):
     custom_jx = 'base/解析.conf'
     if not os.path.exists(custom_jx):
         with open(custom_jx,'w+',encoding='utf-8') as f1:
@@ -118,10 +123,10 @@ def getJxs(path='js'):
 
     with open(f'{path}/解析.conf',encoding='utf-8') as f:
         text = f.read()
-    jxs = jxTxt2Json(text)
+    jxs = jxTxt2Json(text,host)
     with open(custom_jx,encoding='utf-8') as f2:
         text = f2.read()
-    jxs2 = jxTxt2Json(text)
+    jxs2 = jxTxt2Json(text,host)
     jxs.extend(jxs2)
     print(f'共计{len(jxs)}条解析')
     return jxs

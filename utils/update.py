@@ -127,8 +127,8 @@ def copy_to_update():
         logger.info(f'升级失败,找不到目录{dr_path}')
         return False
     # 千万不能覆盖super，base
-    paths = ['js','models','controllers','libs','static','templates','utils','txt']
-    exclude_files = ['txt/pycms0.json','txt/pycms1.json','txt/pycms2.json']
+    paths = ['js','models','controllers','libs','static','templates','utils','txt','jiexi']
+    exclude_files = ['txt/pycms0.json','txt/pycms1.json','txt/pycms2.json','base/rules.db']
     for path in paths:
         force_copy_files(os.path.join(dr_path, path),os.path.join(base_path, path),exclude_files)
     try:
