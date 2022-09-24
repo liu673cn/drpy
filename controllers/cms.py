@@ -1036,7 +1036,7 @@ class CMS:
                 'list': []
             }
             logger.info(f'{self.getName()}获取详情页耗时:{get_interval(t1)}毫秒,发生错误:{e}')
-        print(result)
+        # print(result)
         return result
 
     def searchContent(self, key, fypage=1,show_name=False):
@@ -1094,7 +1094,7 @@ class CMS:
                 if is_json:
                     html = self.dealJson(html)
                     html = json.loads(html)
-                # print(html)
+
                 if not is_json and html.find('输入验证码') > -1:
                     cookie = verifyCode(url,self.headers,self.timeout,self.retry_count,self.ocr_api)
                     # cookie = ''
@@ -1107,6 +1107,9 @@ class CMS:
                     r = requests.get(url, headers=self.headers, timeout=self.timeout)
                     r.encoding = self.encoding
                     html = r.text
+                if not show_name and not html.find(key) > -1:
+                    logger.info('搜索结果源码未包含关键字,疑似搜索失败,正为您打印结果源码')
+                    print(html)
 
                 items = pdfa(html,p[0].replace('json:','',1))
                 # print(len(items),items)
@@ -1141,7 +1144,7 @@ class CMS:
                             "vod_content": content, # 无用参数
                         })
                     except Exception as e:
-                        print(e)
+                        print(f'搜索列表解析发生错误:{e}')
                         pass
                 # print(videos)
             except Exception as e:
