@@ -81,7 +81,7 @@ def custom_merge(original:dict,custom:dict):
         if key in new_keys:
             updateObj[key] = custom[key]
 
-    for key in ['drives','sites','flags','ads']:
+    for key in ['drives','sites','flags','ads','parses']:
         if key in new_keys:
             extend_obj[key] = custom[key]
 
@@ -93,7 +93,7 @@ def custom_merge(original:dict,custom:dict):
             original[key].extend(extend_obj[key])
         else:
             original[key] = extend_obj[key]
-
+    logger.info(f'合并配置共有解析数量:{len(original.get("parses"))}')
     return original
 
 def getCustonDict(host,ali_token=''):
