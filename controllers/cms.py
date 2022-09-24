@@ -702,6 +702,7 @@ class CMS:
         if fypage == 1 and self.test('[\[\]]',url):
             url = url.split('[')[1].split(']')[0]
         # print(url)
+        logger.info(url)
         p = self.一级
         jsp = jsoup(self.url)
         videos = []
@@ -752,11 +753,13 @@ class CMS:
                 r = requests.get(url, headers=self.headers, timeout=self.timeout)
                 html = self.checkHtml(r)
                 print(self.headers)
-                print(html)
+                # print(html)
                 if is_json:
                     html = self.dealJson(html)
                     html = json.loads(html)
                 # print(html)
+                # with open('1.html',mode='w+',encoding='utf-8') as f:
+                #     f.write(html)
                 items = pdfa(html,p[0].replace('json:','',1))
             except:
                 pass
@@ -1107,7 +1110,7 @@ class CMS:
                     r = requests.get(url, headers=self.headers, timeout=self.timeout)
                     r.encoding = self.encoding
                     html = r.text
-                if not show_name and not html.find(key) > -1:
+                if not show_name and not str(html).find(key) > -1:
                     logger.info('搜索结果源码未包含关键字,疑似搜索失败,正为您打印结果源码')
                     print(html)
 
