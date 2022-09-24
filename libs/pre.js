@@ -109,6 +109,7 @@ Array.prototype.join = function (emoji) {
       return str;
 };
 Array.prototype.append = Array.prototype.push;
+String.prototype.strip = String.prototype.trim;
 function 是否正版(vipUrl){
     let flag = new RegExp('qq\.com|iqiyi\.com|youku\.com|mgtv\.com|bilibili\.com|sohu\.com|ixigua\.com|pptv\.com|miguvideo\.com|le\.com|1905\.com|fun\.tv');
     return  flag.test(vipUrl);
