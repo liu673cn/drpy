@@ -106,6 +106,8 @@ def force_copy_files(from_path, to_path, exclude_files=None):
     if exclude_files is None:
         exclude_files = []
     logger.info(f'开始拷贝文件{from_path}=>{to_path}')
+    if not os.path.exists(to_path):
+        os.makedirs(to_path,exist_ok=True)
     try:
         if sys.version_info < (3, 8):
             copytree(from_path, to_path,exclude_files)
