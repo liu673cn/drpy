@@ -1,0 +1,1 @@
+realUrl = 重定向('http://211.99.99.236:4567/jhjson/ceshi.php?url='+vipUrl)

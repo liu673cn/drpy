@@ -3,7 +3,7 @@
 # File  : parse.py
 # Author: DaShenHan&道长-----先苦后甜，任凭晚风拂柳颜------
 # Date  : 2022/9/24
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify,redirect
 from utils.web import getParmas,get_interval
 import os
 from utils.log import logger
@@ -37,6 +37,14 @@ class R(object):
     def failed(self,msg="系统异常", code=404,extra=None):
         return self.error(msg,code,extra)
 
+def 重定向(url:str):
+    if isinstance(url, PyJsString):
+        url = parseText(str(url))
+    if str(url).startswith('http'):
+        return f'redirect://{url}'
+    else:
+        return str(url)
+
 @parse.route('/api/<path:filename>')
 def parse_home(filename):
     url = getParmas('url')
@@ -50,11 +58,14 @@ def parse_home(filename):
         return R.failed(f'{file_path}文件不存在')
     logger.info(f'开始尝试通过{filename}解析:{url}')
 
+
+
     jsp = jsoup(url)
     py_ctx.update({
         'vipUrl': url,
         'fetch_params': {'headers': {'Referer':url}, 'timeout': 10, 'encoding': 'utf-8'},
-        'jsp':jsp
+        'jsp':jsp,
+        '重定向':重定向
     })
     ctx = py_ctx
     with open(file_path,encoding='utf-8') as f:
@@ -69,6 +80,9 @@ def parse_home(filename):
             return R.failed(f'解析失败:{realUrl}')
         if isinstance(realUrl, PyJsString):
             realUrl = parseText(str(realUrl))
+        # print(realUrl)
+        if str(realUrl).startswith('redirect://'):
+            return redirect(realUrl.split('redirect://')[1])
         return R.success(f'{filename}解析成功',realUrl,{'time':f'{get_interval(t1)}毫秒'})
     except Exception as e:
         msg = f'{filename}解析出错:{e}'
